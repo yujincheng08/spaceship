@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>assets/SpaceShipModeling2.mtl</file>
+        <file>assets/SpaceShipModeling2.obj</file>
+        <file>assets/SpaceShipModeling2.fbx</file>
+    </qresource>
+</RCC>
