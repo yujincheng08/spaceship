@@ -33,7 +33,7 @@ Entity
         InputSettings { }
     }
 
-    OrbitCameraController {
+    CameraController {
         camera: camera
         linearSpeed: 10
     }
