@@ -1,5 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>assets/SpaceShipModeling2.fbx</file>
+        <file>assets/SpaceShip.dae</file>
     </qresource>
 </RCC>
