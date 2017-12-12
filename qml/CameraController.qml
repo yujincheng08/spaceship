@@ -115,7 +115,7 @@ Entity {
                             buttons: [Qt.Key_PageDown]
                             scale: -1.0
                         }
-                        s]
+                    ]
                 }
             ] // axes
         },
