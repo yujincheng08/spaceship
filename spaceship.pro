@@ -1,4 +1,4 @@
-QT += widgets quickwidgets 3dcore 3drender 3dinput 3dquick 3dlogic qml quick 3dquickextras
+QT += widgets quickwidgets 3dcore 3drender 3dinput 3dquick 3dlogic qml quick 3dquickextras gamepad datavisualization
 CONFIG += c++11
 
 # The following define makes your compiler emit warnings if you use

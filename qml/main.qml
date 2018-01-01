@@ -3,6 +3,7 @@ import Qt3D.Render 2.0
 import Qt3D.Extras 2.0
 import Qt3D.Input 2.0
 import QtQuick 2.0
+import QtQuick.Controls 2.2
 import QtQuick.Scene3D 2.0
 Item {
     Scene3D {
@@ -54,6 +55,17 @@ Item {
                     }
                 }
             ]
+        }
+    }
+    Button {
+        text: "Fuck!"
+        focus: false
+        onFocusChanged: function() {
+            scene3d.forceActiveFocus();
+        }
+
+        onClicked: function(){
+            console.log("fuck!")
         }
     }
 }
