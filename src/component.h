@@ -3,8 +3,15 @@
 
 #include <QString>
 #include <QtOpenGL>
+#include <gl/glaux.h>
 #include <gl/glut.h>
 #include <vector>
+
+#pragma comment(lib, "opengl32.lib")
+#pragma comment(lib, "glut32.lib")
+#pragma comment(lib, "glu32.lib")
+#pragma comment(lib, "glut.lib")
+#pragma comment(lib, "glaux.lib")
 
 using namespace std;
 
@@ -40,6 +47,7 @@ public:
   void setSpecular(GLfloat spe[]);
   void setShininess(GLfloat shi);
   void repaint();
+  void LoadTexture(char *filename, GLuint &texture);
 
   enum Material {
     COPPER = 0,
@@ -48,6 +56,7 @@ public:
     EMERALD,
     PEARL,
     RUBBER,
+    LIGHTSILVER
   };
 
 private:
@@ -55,7 +64,7 @@ private:
   GLdouble xRot, yRot, zRot;
   GLint r, g, b, a;
   GLfloat ambient[4], diffuse[4], specular[4], shininess;
-
+  UINT g_bmp[1];
   vector<POINT3> V;
   vector<WenLi> VT;
   vector<FaXiangLiang> VN;

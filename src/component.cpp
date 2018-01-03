@@ -7,7 +7,7 @@
 Component::Component() {
   xPos = yPos = zPos = 0;
   xRot = yRot = zRot = 0;
-  setMaterial(SILVER);
+  setMaterial(LIGHTSILVER);
 }
 
 void Component::getPostion(GLdouble &a, GLdouble &b, GLdouble &c) {
@@ -123,6 +123,17 @@ void Component::setMaterial(int material) {
     setShininess(shi);
     break;
   }
+  case LIGHTSILVER: {
+
+    GLfloat amb[] = {0.231250, 0.231250, 0.231250, 1.000000},
+            dif[] = {0.277500, 0.277500, 0.277500, 1.000000},
+            spe[] = {0.773911, 0.773911, 0.773911, 1.000000}, shi = 89.599998;
+    setAmbient(amb);
+    setDiffuse(dif);
+    setSpecular(spe);
+    setShininess(shi);
+    break;
+  }
   case EMERALD: {
     GLfloat amb[] = {0.021500, 0.174500, 0.021500, 0.550000},
             dif[] = {0.075680, 0.614240, 0.075680, 0.550000},
@@ -173,7 +184,16 @@ void Component::setSpecular(GLfloat spe[]) {
 
 void Component::setShininess(GLfloat shi) { shininess = shi; }
 
+void Component::LoadTexture(char *filename, GLuint &texture) {
+  AUX_RGBImageRec *pImage = auxDIBImageLoadA(filename); //装入位图
+  glGenTextures(1, &texture);                           //生成贴图
+  glBindTexture(GL_TEXTURE_2D, g_bmp[0]);               //贴图生效
+  gluBuild2DMipmaps(GL_TEXTURE_2D, 4, pImage->sizeX, pImage->sizeY, GL_RGB,
+                    GL_UNSIGNED_BYTE, pImage->data); //贴图数据
+}
+
 void Component::repaint() {
+  LoadTexture("img/texture.bmp", g_bmp[0]);
   glPushMatrix();
   glTranslated(xPos, yPos, zPos);
   glRotated(xRot, 1, 0, 0);
@@ -191,7 +211,8 @@ void Component::repaint() {
   // GLfloat gray[] = {0.75f, 0.75f, 0.75f, 1.0f};
   // glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, gray);
   // glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
-  // glColor3f(0.75f, 0.75f, 0.75f);
+  glColor3f((GLfloat)(128.0 / 256), (GLfloat)(128.0 / 256),
+            (GLfloat)(126.0 / 256));
 
   for (int i = 0; i < F.size(); i++) {
     glBegin(GL_TRIANGLES);
