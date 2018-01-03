@@ -2,7 +2,7 @@
 #define MYCAMERA_H
 
 #include "vector.h"
-#include <GL/glu.h>
+#include <GL/glut.h>
 #include <QtOpenGL>
 
 class MyCamera {

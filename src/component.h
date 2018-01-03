@@ -3,6 +3,7 @@
 
 #include <QString>
 #include <QtOpenGL>
+#include <gl/glut.h>
 #include <vector>
 
 using namespace std;

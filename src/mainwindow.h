@@ -4,7 +4,7 @@
 #include "component.h"
 #include "mycamera.h"
 #include "mylight.h"
-#include <GL/glu.h>
+#include <GL/glut.h>
 #include <QBasicTimer>
 #include <QtOpenGL>
 #include <vector>

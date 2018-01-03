@@ -175,10 +175,17 @@ void Component::repaint() {
   glRotated(zRot, 0, 0, 1);
 
   glColor4i(r, g, b, a);
+
   glMaterialfv(GL_FRONT, GL_AMBIENT, ambient);
   glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse);
   glMaterialfv(GL_FRONT, GL_SPECULAR, specular);
   glMaterialfv(GL_FRONT, GL_SHININESS, &shininess);
+
+  glEnable(GL_COLOR_MATERIAL);
+  // GLfloat gray[] = {0.75f, 0.75f, 0.75f, 1.0f};
+  // glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, gray);
+  // glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
+  // glColor3f(0.75f, 0.75f, 0.75f);
 
   for (int i = 0; i < F.size(); i++) {
     glBegin(GL_TRIANGLES);
