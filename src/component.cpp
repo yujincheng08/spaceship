@@ -10,6 +10,12 @@ Component::Component() {
   setMaterial(SILVER);
 }
 
+void Component::getPostion(GLdouble &a, GLdouble &b, GLdouble &c) {
+  a = xPos;
+  b = yPos;
+  c = zPos;
+}
+
 void Component::setSource(string filename) {
   QFile inputFile(QString::fromStdString(filename));
   inputFile.open(QIODevice::ReadOnly);
