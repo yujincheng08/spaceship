@@ -1,4 +1,4 @@
-QT += widgets quickwidgets 3dcore 3drender 3dinput 3dquick 3dlogic qml quick 3dquickextras gamepad datavisualization
+QT += widgets quickwidgets 3dcore 3drender 3dinput 3dquick 3dlogic qml quick 3dquickextras gamepad datavisualization opengl core gui
 CONFIG += c++11
 
 # The following define makes your compiler emit warnings if you use
@@ -12,32 +12,31 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
+LIBS += -lopengl32 \
+    -lglu32 \
+    -lglut
+
 SOURCES += \
     src/main.cpp \
-    src/mainwindow.cpp
+    src/mainwindow.cpp \
+    src/mycamera.cpp \
+    src/vector.cpp \
+    src/component.cpp \
+    src/mylight.cpp
 
 RESOURCES += \
     assets.qrc \
-    qml.qrc \
 
 INCLUDEPATH += src
-
-OTHER_FILES += \
-    qml/main.qml
-
-# Additional import path used to resolve QML modules in Qt Creator's code model
-QML_IMPORT_PATH =
-
-# Additional import path used to resolve QML modules just for Qt Quick Designer
-QML_DESIGNER_IMPORT_PATH =
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-DISTFILES += \
-    qml/CameraController.qml
-
 HEADERS += \
-    src/mainwindow.h
+    src/mainwindow.h \
+    src/mycamera.h \
+    src/vector.h \
+    src/component.h \
+    src/mylight.h

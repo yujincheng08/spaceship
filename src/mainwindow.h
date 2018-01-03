@@ -1,28 +1,49 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QMainWindow>
-#include <QQuickWidget>
-#include <QMenu>
-#include <QAction>
+#include "component.h"
+#include "mycamera.h"
+#include "mylight.h"
+#include <GL/glu.h>
+#include <QBasicTimer>
+#include <QtOpenGL>
+#include <vector>
 
-class MainWindow : public QMainWindow
-{
-    Q_OBJECT
-    QQuickWidget *quickWidget = new QQuickWidget(this);
-    QMenu *fileMenu = new QMenu(tr("File"), this);
-    QMenu *aboutMenu = new QMenu(tr("About"), this);
-    QAction *exitAction = new QAction(tr("Exit"), this);
-    QAction *aboutQtAction = new QAction(tr("About Qt"), this);
-
-    void createWidgets();
-    void createConnections();
+class MainWindow : public QGLWidget {
 public:
-    explicit MainWindow(QWidget *parent = nullptr);
+  MainWindow(QWidget *parent = 0);
+  ~MainWindow();
 
-signals:
+protected:
+  void initParams();
+  void initWidget();
+  void initElement();
+  void initTimer();
+  void initLight();
+  void loadTextures();
+  void initializeGL();
+  void paintGL() override;
+  void resizeGL(int width, int height) override;
 
-public slots:
+  void keyPressEvent(QKeyEvent *e) override;
+  void mousePressEvent(QMouseEvent *e) override;
+  void mouseMoveEvent(QMouseEvent *e) override;
+  void mouseReleaseEvent(QMouseEvent *e) override;
+  void wheelEvent(QWheelEvent *e) override;
+  void timerEvent(QTimerEvent *e) override;
+
+  void closeEvent(QCloseEvent *e) override;
+
+private:
+  MyCamera *camera;
+
+  std::vector<MyLight> lights;
+  std::vector<Component> components;
+
+  int isMousePresseed;
+  double mouse_x, mouse_y;
+
+  QBasicTimer timer;
 };
 
 #endif // MAINWINDOW_H
