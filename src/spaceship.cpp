@@ -3,7 +3,9 @@
 SpaceShip::SpaceShip() {
   isTurnDown = isTurnLeft = isTurnRight = isTurnUp = false;
   isMoveForward = isMoveBack = false;
-  maxTurnLRSpeed = maxTurnUDSpeed = maxMoveSpeed = 1;
+  setMaxMoveSpeed(1);
+  setMaxTurnLRSpeed(1);
+  setMaxTurnUDSpeed(1);
   turnLRSpeed = turnUDSpeed = moveSpeed = 0;
   towardX = 1;
   towardY = 0;
@@ -44,15 +46,53 @@ void SpaceShip::setMaxTurnUDSpeed(GLdouble UD) { maxTurnUDSpeed = UD; }
 void SpaceShip::setMaxMoveSpeed(GLdouble M) { maxMoveSpeed = M; }
 
 void SpaceShip::setTowardDirection(GLdouble tx, GLdouble ty, GLdouble tz) {
-  towardX = tx;
-  towardY = ty;
-  towardZ = tz;
+  double twd[3] = {tx, ty, tz};
+  MyVector::unit(twd, 3);
+  towardX = twd[0];
+  towardY = twd[1];
+  towardZ = twd[2];
 }
 
 void SpaceShip::setUpDirection(GLdouble ux, GLdouble uy, GLdouble uz) {
-  upX = ux;
-  upY = uy;
-  upZ = uz;
+  double twd[3] = {towardX, towardY, towardZ}, up[3] = {ux, uy, uz};
+
+  double length =
+      MyVector::dotMulti(twd, up, 3) / MyVector::dotMulti(twd, twd, 3);
+  MyVector::kMulti(twd, 3, length);
+  Vct upVec = MyVector::sub(up, twd, 3);
+  MyVector::unit(upVec, 3);
+
+  upX = upVec[0];
+  upY = upVec[1];
+  upZ = upVec[2];
+
+  delete[] upVec;
 }
 
-void SpaceShip::refresh() {}
+void SpaceShip::refresh() {
+  if (isTurnLeft && !isTurnRight)
+    if (turnLRSpeed > -maxTurnLRSpeed)
+      turnLRSpeed -= maxTurnLRSpeed / 25;
+  if (isTurnRight && !isTurnLeft)
+    if (turnLRSpeed < maxTurnLRSpeed)
+      turnLRSpeed += maxTurnUDSpeed / 25;
+  if (isTurnUp && !isTurnDown)
+    if (turnUDSpeed < maxTurnUDSpeed)
+      turnUDSpeed += maxTurnUDSpeed / 25;
+  if (isTurnDown && !isTurnUp)
+    if (turnUDSpeed > -maxTurnUDSpeed)
+      turnUDSpeed -= maxTurnUDSpeed / 25;
+  qDebug() << this << isMoveForward << isMoveBack << maxMoveSpeed << moveSpeed;
+  if (isMoveForward && !isMoveBack)
+    if (moveSpeed < maxMoveSpeed) {
+      qDebug() << maxMoveSpeed << moveSpeed;
+      moveSpeed += maxMoveSpeed / 25;
+    }
+  if (isMoveBack && !isMoveForward)
+    if (moveSpeed > -maxMoveSpeed)
+      moveSpeed -= maxMoveSpeed / 25;
+
+  xPos += moveSpeed * towardX;
+  yPos += moveSpeed * towardY;
+  zPos += moveSpeed * towardZ;
+}

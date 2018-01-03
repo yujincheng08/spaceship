@@ -38,6 +38,7 @@ public:
   void setDiffuse(GLfloat dif[]);
   void setSpecular(GLfloat spe[]);
   void setShininess(GLfloat shi);
+  void setPosition(GLdouble px, GLdouble py, GLdouble pz);
   void repaint();
 
   enum Material {
@@ -49,7 +50,7 @@ public:
     RUBBER,
   };
 
-private:
+protected:
   GLdouble xPos, yPos, zPos;
   GLdouble xRot, yRot, zRot;
   GLint r, g, b, a;

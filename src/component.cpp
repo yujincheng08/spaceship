@@ -173,6 +173,12 @@ void Component::setSpecular(GLfloat spe[]) {
 
 void Component::setShininess(GLfloat shi) { shininess = shi; }
 
+void Component::setPosition(GLdouble px, GLdouble py, GLdouble pz) {
+  xPos = px;
+  yPos = py;
+  zPos = pz;
+}
+
 void Component::repaint() {
   glPushMatrix();
   glTranslated(xPos, yPos, zPos);

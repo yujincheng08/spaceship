@@ -15,9 +15,9 @@ void MyCamera::setView() {
 }
 
 void MyCamera::resetView() {
-  setEye(0, 20, 20);
+  setEye(0, 10, 25);
   setCenter(0, 0, 0);
-  setUp(0, -1, 1);
+  setUp(0, 1, -1);
 }
 
 void MyCamera::setEye(GLdouble ex, GLdouble ey, GLdouble ez) {

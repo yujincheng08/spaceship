@@ -39,7 +39,7 @@ private:
   MyCamera *camera;
 
   std::vector<MyLight> lights;
-  std::vector<Component> components;
+  std::vector<Component *> components;
 
   int isMousePresseed;
   double mouse_x, mouse_y;

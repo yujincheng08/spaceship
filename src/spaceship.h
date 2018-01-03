@@ -2,6 +2,7 @@
 #define SPACESHIP_H
 
 #include "component.h"
+#include "vector.h"
 #include <QtOpenGL>
 
 class SpaceShip : public Component {
@@ -28,7 +29,7 @@ public:
 
   void refresh();
 
-private:
+public:
   GLdouble turnLRSpeed, turnUDSpeed, moveSpeed;
   GLdouble maxTurnLRSpeed, maxTurnUDSpeed, maxMoveSpeed;
   GLdouble towardX, towardY, towardZ, upX, upY, upZ;
