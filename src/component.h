@@ -30,6 +30,7 @@ struct Mian {
 class Component {
 public:
   Component();
+  void getPostion(GLdouble &a, GLdouble &b, GLdouble &c);
   void setSource(string filename);
   void setColor(int r, int g, int b, int a = 255);
   void setMaterial(int material);

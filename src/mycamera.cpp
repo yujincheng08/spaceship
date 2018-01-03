@@ -1,9 +1,11 @@
 #include "mycamera.h"
+#include "component.h"
 
 MyCamera::MyCamera() {
   resetView();
   step = 0.5;
   rotate = 0.5;
+  trace = NULL;
 }
 
 void MyCamera::setView() {
@@ -13,9 +15,9 @@ void MyCamera::setView() {
 }
 
 void MyCamera::resetView() {
-  setEye(0, -20, 20);
+  setEye(0, 20, 20);
   setCenter(0, 0, 0);
-  setUp(0, 1, 1);
+  setUp(0, -1, 1);
 }
 
 void MyCamera::setEye(GLdouble ex, GLdouble ey, GLdouble ez) {
@@ -55,6 +57,23 @@ void MyCamera::setUp(GLdouble ux, GLdouble uy, GLdouble uz) {
   delete[] upVec;
 }
 
+void MyCamera::traceComponent(Component *cpnt) {
+  trace = cpnt;
+  GLdouble x, y, z;
+  trace->getPostion(x, y, z);
+  setCenter(x, y, z);
+}
+
+void MyCamera::keepTrace() {
+  if (trace == NULL)
+    return;
+  GLdouble x, y, z;
+  trace->getPostion(x, y, z);
+  setEye(x - centerx + eyex, y - centery + eyey, z - centerz + eyez);
+  setCenter(x, y, z);
+  setView();
+}
+
 void MyCamera::posMove(GLdouble mx, GLdouble my, GLdouble mz) {
   GLdouble viewx = centerx - eyex, viewy = centery - eyey,
            viewz = centerz - eyez;
@@ -65,35 +84,44 @@ void MyCamera::posMove(GLdouble mx, GLdouble my, GLdouble mz) {
   Vct product = MyVector::crossMulti3(view, up);
   MyVector::unit(product, 3);
   MyVector::kMulti(product, 3, step);
-  centerx += mx * product[0];
-  centery += mx * product[1];
-  centerz += mx * product[2];
   eyex += mx * product[0];
   eyey += mx * product[1];
   eyez += mx * product[2];
+  if (trace == NULL) {
+    centerx += mx * product[0];
+    centery += mx * product[1];
+    centerz += mx * product[2];
+  }
   delete[] product;
 
   // move up & down
   MyVector::kMulti(up, 3, step);
-  centerx += my * up[0];
-  centery += my * up[1];
-  centerz += my * up[2];
   eyex += my * up[0];
   eyey += my * up[1];
   eyez += my * up[2];
+  if (trace == NULL) {
+    centerx += my * up[0];
+    centery += my * up[1];
+    centerz += my * up[2];
+  }
 
   // move front & back
   MyVector::unit(view, 3);
   MyVector::kMulti(view, 3, step);
-  centerx += mz * view[0];
-  centery += mz * view[1];
-  centerz += mz * view[2];
   eyex += mz * view[0];
   eyey += mz * view[1];
   eyez += mz * view[2];
+  if (trace == NULL) {
+    centerx += mz * view[0];
+    centery += mz * view[1];
+    centerz += mz * view[2];
+  }
 }
 
 void MyCamera::viewRotate(GLdouble lr, GLdouble ud) {
+  if (trace != NULL)
+    return;
+
   GLdouble viewx = centerx - eyex, viewy = centery - eyey,
            viewz = centerz - eyez;
 

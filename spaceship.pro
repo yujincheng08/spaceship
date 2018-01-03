@@ -22,7 +22,8 @@ SOURCES += \
     src/mycamera.cpp \
     src/vector.cpp \
     src/component.cpp \
-    src/mylight.cpp
+    src/mylight.cpp \
+    src/spaceship.cpp
 
 RESOURCES += \
     assets.qrc \
@@ -39,4 +40,5 @@ HEADERS += \
     src/mycamera.h \
     src/vector.h \
     src/component.h \
-    src/mylight.h
+    src/mylight.h \
+    src/spaceship.h

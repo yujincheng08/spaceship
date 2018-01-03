@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "spaceship.h"
 #include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent) : QGLWidget(parent) {
@@ -40,10 +41,11 @@ void MainWindow::initWidget() {
 
 void MainWindow::initElement() {
   camera = new MyCamera();
-  Component spaceship;
+  SpaceShip spaceship;
   spaceship.setSource(":/assets/fj.obj");
   spaceship.setColor(36, 40, 51);
   components.insert(components.begin(), spaceship);
+  camera->traceComponent(&spaceship);
 }
 
 void MainWindow::initTimer() { timer.start(20, this); }
@@ -83,46 +85,36 @@ void MainWindow::resizeGL(int width, int height) {
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *e) {
+  SpaceShip *a = (SpaceShip *)(&(components[0]));
   switch (e->key()) {
-  case Qt::Key_Up:
-    camera->viewRotate(0, 5);
-    updateGL();
-    break;
-  case Qt::Key_Down:
-    camera->viewRotate(0, -5);
-    updateGL();
-    break;
-  case Qt::Key_Left:
-    camera->viewRotate(-5, 0);
-    updateGL();
-    break;
-  case Qt::Key_Right:
-    camera->viewRotate(5, 0);
-    updateGL();
-    break;
-
   case Qt::Key_A:
-    camera->posMove(-1, 0, 0);
+    a->startTurnLeft();
+    camera->keepTrace();
     updateGL();
     break;
   case Qt::Key_D:
-    camera->posMove(1, 0, 0);
+    a->startTurnRight();
+    camera->keepTrace();
     updateGL();
     break;
   case Qt::Key_W:
-    camera->posMove(0, 1, 0);
+    a->startMoveForward();
+    camera->keepTrace();
     updateGL();
     break;
   case Qt::Key_S:
-    camera->posMove(0, -1, 0);
+    a->startMoveBack();
+    camera->keepTrace();
     updateGL();
     break;
-  case Qt::Key_Z:
-    camera->posMove(0, 0, 1);
+  case Qt::Key_E:
+    a->startTurnUp();
+    camera->keepTrace();
     updateGL();
     break;
-  case Qt::Key_X:
-    camera->posMove(0, 0, -1);
+  case Qt::Key_C:
+    a->startTurnDown();
+    camera->keepTrace();
     updateGL();
     break;
 
@@ -131,6 +123,42 @@ void MainWindow::keyPressEvent(QKeyEvent *e) {
       timer.stop();
     else
       timer.start(20, this);
+    break;
+  }
+}
+
+void MainWindow::keyReleaseEvent(QKeyEvent *e) {
+  SpaceShip *a = (SpaceShip *)(&(components[0]));
+  switch (e->key()) {
+  case Qt::Key_A:
+    a->endTurnLeft();
+    camera->keepTrace();
+    updateGL();
+    break;
+  case Qt::Key_D:
+    a->endTurnRight();
+    camera->keepTrace();
+    updateGL();
+    break;
+  case Qt::Key_W:
+    a->endMoveForward();
+    camera->keepTrace();
+    updateGL();
+    break;
+  case Qt::Key_S:
+    a->endMoveBack();
+    camera->keepTrace();
+    updateGL();
+    break;
+  case Qt::Key_E:
+    a->endTurnUp();
+    camera->keepTrace();
+    updateGL();
+    break;
+  case Qt::Key_C:
+    a->endTurnDown();
+    camera->keepTrace();
+    updateGL();
     break;
   }
 }
@@ -177,6 +205,9 @@ void MainWindow::wheelEvent(QWheelEvent *e) {
   }
 }
 
-void MainWindow::timerEvent(QTimerEvent *e) {}
+void MainWindow::timerEvent(QTimerEvent *e) {
+  SpaceShip *a = (SpaceShip *)(&(components[0]));
+  a->refresh();
+}
 
 void MainWindow::closeEvent(QCloseEvent *e) {}

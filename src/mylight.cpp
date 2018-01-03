@@ -58,6 +58,7 @@ void MyLight::initLight() {
 
 void MyLight::lightOn() {
   glEnable(number);
+  glEnable(GL_LIGHTING);
   isLightOn = true;
 }
 
