@@ -4,6 +4,8 @@
 #include <QPainter>
 #include <QWidget>
 
+class MainWindow;
+
 class InfoSurface : public QWidget {
   Q_OBJECT
 public:
@@ -13,6 +15,7 @@ protected:
   void paintEvent(QPaintEvent *e);
 
 private:
+  MainWindow *ftr;
   int shootSize;
 };
 

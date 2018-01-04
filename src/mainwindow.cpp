@@ -267,6 +267,7 @@ void MainWindow::timerEvent(QTimerEvent *e) {
   a->refresh();
   camera->keepTrace();
   update();
+  is->update();
 }
 
 void MainWindow::closeEvent(QCloseEvent *e) {}
