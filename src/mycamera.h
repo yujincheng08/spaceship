@@ -15,7 +15,7 @@ public:
   void setEye(GLdouble ex, GLdouble ey, GLdouble ez);
   void setCenter(GLdouble cx, GLdouble cy, GLdouble cz);
   void setUp(GLdouble ux, GLdouble uy, GLdouble uz);
-  void traceComponent(Component *cpnt);
+  void traceComponent(Component *cpnt, GLdouble off = 0);
   void keepTrace();
   void posMove(GLdouble mx, GLdouble my, GLdouble mz);
   void viewRotate(GLdouble lr, GLdouble ud);
@@ -25,6 +25,7 @@ private:
   GLdouble eyex, eyey, eyez;
   GLdouble centerx, centery, centerz;
   GLdouble upx, upy, upz;
+  GLdouble offset;
 
   Component *trace;
 

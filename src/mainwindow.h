@@ -27,9 +27,9 @@ protected:
 
   void keyPressEvent(QKeyEvent *e) override;
   void keyReleaseEvent(QKeyEvent *e) override;
-  void mousePressEvent(QMouseEvent *e) override;
-  void mouseMoveEvent(QMouseEvent *e) override;
-  void mouseReleaseEvent(QMouseEvent *e) override;
+  //  void mousePressEvent(QMouseEvent *e) override;
+  //  void mouseMoveEvent(QMouseEvent *e) override;
+  //  void mouseReleaseEvent(QMouseEvent *e) override;
   void wheelEvent(QWheelEvent *e) override;
   void timerEvent(QTimerEvent *e) override;
 
@@ -45,6 +45,7 @@ private:
   double mouse_x, mouse_y;
 
   QBasicTimer timer;
+  QTimer *cursorTimer;
 };
 
 #endif // MAINWINDOW_H

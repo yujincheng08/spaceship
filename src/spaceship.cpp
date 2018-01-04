@@ -126,7 +126,7 @@ void SpaceShip::repaint() {
   glTranslated(xPos, yPos, zPos);
   spaceshipRotate();
 
-  glColor4i(r, g, b, a);
+  glColor3f(r / 255.0, g / 255.0, b / 255.0);
   glMaterialfv(GL_FRONT, GL_AMBIENT, ambient);
   glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse);
   glMaterialfv(GL_FRONT, GL_SPECULAR, specular);
@@ -155,8 +155,8 @@ void SpaceShip::spaceshipRotate() {
   Vct axis = MyVector::crossMulti3(orgT, T);
   //  qDebug() << "cT" << T[0] << T[1] << T[2];
   //  qDebug() << "oT" << orgT[0] << orgT[1] << orgT[2];
-  qDebug() << "AX" << axis[0] << axis[1] << axis[2];
-  qDebug() << "AG" << MyVector::angle(T, orgT, 3);
+  //  qDebug() << "AX" << axis[0] << axis[1] << axis[2];
+  //  qDebug() << "AG" << MyVector::angle(T, orgT, 3);
   GLdouble ang = MyVector::angle(T, orgT, 3);
   if (ang < 0)
     ang = ang + M_PI + M_PI;

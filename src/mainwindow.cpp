@@ -12,6 +12,9 @@ MainWindow::MainWindow(QWidget *parent) : QGLWidget(parent) {
 
 MainWindow::~MainWindow() {
   makeCurrent();
+  for (int i = 0; i < components.length(); i++)
+    delete components[i];
+  delete cursorTimer;
   doneCurrent();
 }
 
@@ -42,7 +45,28 @@ void MainWindow::initWidget() {
   setWindowTitle(tr("War of Spaceship"));
 
   // reference: tieba.baidu.com/p/3879195450
-  QTimer *t = new QTimer(this);
+  cursorTimer = new QTimer(this);
+  QPoint center(this->width() / 2, this->height() / 2);
+  QCursor cur = this->cursor();
+  cur.setShape(Qt::BlankCursor);
+  this->setCursor(cur);
+
+  connect(cursorTimer, &QTimer::timeout, [=]() {
+    static bool isFirst = true;
+
+    QPoint offet = QPoint(QCursor::pos() - this->pos()) - center;
+    //    qDebug() << offet.x() << offet.y();
+    camera->viewRound(offet.x(), offet.y());
+    updateGL();
+    if (isFirst) {
+      offet.setX(0);
+      offet.setY(0);
+      isFirst = false;
+    }
+    QCursor::setPos(this->x() + this->width() / 2,
+                    this->y() + this->height() / 2);
+  });
+  cursorTimer->start(10);
 
   qDebug() << "initWidget successfully!";
 }
@@ -54,7 +78,7 @@ void MainWindow::initElement() {
   SpaceShip *spaceship = new SpaceShip();
   qDebug() << "spaceship construct successfully!";
   spaceship->setSource(":/assets/fj.obj");
-  spaceship->setColor(36, 40, 51);
+  spaceship->setColor(128, 128, 128);
   spaceship->setTowardDirection(0, 0, -1);
   spaceship->setUpDirection(0, 1, 0);
   spaceship->setMaxMoveSpeed(1);
@@ -62,13 +86,12 @@ void MainWindow::initElement() {
   components.append(spaceship);
   qDebug() << "spaceship add successfully!";
 
-  camera->traceComponent(spaceship);
-
+  camera->traceComponent(spaceship, 3);
   qDebug() << "camera trace successfully!";
 
   Component *compare = new Component();
   compare->setSource(":/assets/fj.obj");
-  compare->setColor(36, 40, 51);
+  compare->setColor(128, 128, 128);
   compare->setPosition(0, 10, 0);
   components.append(compare);
   qDebug() << "initElement successfully!";
@@ -147,10 +170,13 @@ void MainWindow::keyPressEvent(QKeyEvent *e) {
     break;
 
   case Qt::Key_P:
-    if (timer.isActive())
+    if (timer.isActive()) {
       timer.stop();
-    else
+      cursorTimer->stop();
+    } else {
       timer.start(20, this);
+      cursorTimer->start(10);
+    }
     break;
   }
 }
@@ -193,44 +219,43 @@ void MainWindow::keyReleaseEvent(QKeyEvent *e) {
   }
 }
 
-void MainWindow::mousePressEvent(QMouseEvent *e) {
-  if (e->button() == Qt::LeftButton)
-    isMousePresseed = 1;
-  else if (e->button() == Qt::RightButton)
-    isMousePresseed = 2;
-  else if (e->button() == Qt::MiddleButton)
-    camera->resetView();
+// void MainWindow::mousePressEvent(QMouseEvent *e) {
+//  if (e->button() == Qt::LeftButton)
+//    isMousePresseed = 1;
+//  else if (e->button() == Qt::RightButton)
+//    isMousePresseed = 2;
+//  else if (e->button() == Qt::MiddleButton)
+//    camera->resetView();
 
-  mouse_x = e->x();
-  mouse_y = e->y();
-}
+//  mouse_x = e->x();
+//  mouse_y = e->y();
+//}
 
-void MainWindow::mouseMoveEvent(QMouseEvent *e) {
-  switch (isMousePresseed) {
-  case 0:
-    break;
-  case 1:
-    camera->viewRotate((e->x() - mouse_x), (e->y() - mouse_y));
-    updateGL();
-    break;
-  case 2:
-    camera->viewRound((e->x() - mouse_x), (e->y() - mouse_y));
-    updateGL();
-    break;
-  }
+// void MainWindow::mouseMoveEvent(QMouseEvent *e) {
+//  switch (isMousePresseed) {
+//  case 0:
+//    break;
+//  case 1:
+//    camera->viewRotate((e->x() - mouse_x), (e->y() - mouse_y));
+//    updateGL();
+//    break;
+//  case 2:
 
-  mouse_x = e->x();
-  mouse_y = e->y();
-}
+//    break;
+//  }
 
-void MainWindow::mouseReleaseEvent(QMouseEvent *e) { isMousePresseed = 0; }
+//  mouse_x = e->x();
+//  mouse_y = e->y();
+//}
+
+// void MainWindow::mouseReleaseEvent(QMouseEvent *e) { isMousePresseed = 0; }
 
 void MainWindow::wheelEvent(QWheelEvent *e) {
   if (e->delta() > 0) {
-    camera->posMove(0, 0, 1);
+    camera->posMove(0, 0, 3);
     updateGL();
   } else if (e->delta() < 0) {
-    camera->posMove(0, 0, -1);
+    camera->posMove(0, 0, -3);
     updateGL();
   }
 }
