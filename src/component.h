@@ -1,17 +1,13 @@
 #ifndef COMPONENT_H
 #define COMPONENT_H
 
+#define BITMAP_ID 0x4D42
+
 #include <QString>
 #include <QtOpenGL>
 #include <gl/glaux.h>
 #include <gl/glut.h>
 #include <vector>
-
-#pragma comment(lib, "opengl32.lib")
-#pragma comment(lib, "glut32.lib")
-#pragma comment(lib, "glu32.lib")
-#pragma comment(lib, "glut.lib")
-#pragma comment(lib, "glaux.lib")
 
 using namespace std;
 
@@ -35,6 +31,13 @@ struct Mian {
   int N[3];
 };
 
+typedef struct {
+  int width;           //纹理宽度
+  int height;          //纹理高度
+  unsigned int texID;  //纹理对象 ID
+  unsigned char *data; //实际纹理数据
+} texture;
+
 class Component {
 public:
   Component();
@@ -46,8 +49,12 @@ public:
   void setDiffuse(GLfloat dif[]);
   void setSpecular(GLfloat spe[]);
   void setShininess(GLfloat shi);
+  void setPosition(GLdouble px, GLdouble py, GLdouble pz);
   void repaint();
-  void LoadTexture(char *filename, GLuint &texture);
+  void LoadTexture(char *filename);
+  texture *LoadTexFile(char *filename);
+  bool LoadAllTextures();
+  unsigned char *LoadBmpFile(char *filename, BITMAPINFOHEADER *bmpInfoHeader);
 
   enum Material {
     COPPER = 0,
@@ -59,16 +66,17 @@ public:
     LIGHTSILVER
   };
 
-private:
+protected:
   GLdouble xPos, yPos, zPos;
   GLdouble xRot, yRot, zRot;
   GLint r, g, b, a;
   GLfloat ambient[4], diffuse[4], specular[4], shininess;
-  UINT g_bmp[1];
   vector<POINT3> V;
   vector<WenLi> VT;
   vector<FaXiangLiang> VN;
   vector<Mian> F;
+
+  texture *spaceship;
 };
 
 #endif // COMPONENT_H

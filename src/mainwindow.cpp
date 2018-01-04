@@ -41,11 +41,23 @@ void MainWindow::initWidget() {
 
 void MainWindow::initElement() {
   camera = new MyCamera();
-  SpaceShip spaceship;
-  spaceship.setSource(":/assets/fj.obj");
-  spaceship.setColor(36, 40, 51);
-  components.insert(components.begin(), spaceship);
-  camera->traceComponent(&spaceship);
+
+  SpaceShip *spaceship = new SpaceShip();
+  components.push_back(spaceship);
+  spaceship = (SpaceShip *)(components[0]);
+  spaceship->setSource(":/assets/fj.obj");
+  spaceship->setColor(36, 40, 51);
+  spaceship->setTowardDirection(0, 0, -1);
+  spaceship->setMaxMoveSpeed(1);
+  qDebug() << spaceship->maxMoveSpeed;
+
+  camera->traceComponent(spaceship);
+
+  Component *compare = new Component();
+  compare->setSource(":/assets/fj.obj");
+  compare->setColor(36, 40, 51);
+  compare->setPosition(0, 10, 0);
+  components.push_back(compare);
 }
 
 void MainWindow::initTimer() { timer.start(20, this); }
@@ -63,9 +75,9 @@ void MainWindow::paintGL() {
   if (camera != NULL)
     camera->setView();
 
-  vector<Component>::iterator t;
+  vector<Component *>::iterator t;
   for (t = components.begin(); t != components.end(); t++) {
-    t->repaint();
+    (*t)->repaint();
   }
 }
 
@@ -85,7 +97,7 @@ void MainWindow::resizeGL(int width, int height) {
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *e) {
-  SpaceShip *a = (SpaceShip *)(&(components[0]));
+  SpaceShip *a = (SpaceShip *)(components[0]);
   switch (e->key()) {
   case Qt::Key_A:
     a->startTurnLeft();
@@ -128,7 +140,7 @@ void MainWindow::keyPressEvent(QKeyEvent *e) {
 }
 
 void MainWindow::keyReleaseEvent(QKeyEvent *e) {
-  SpaceShip *a = (SpaceShip *)(&(components[0]));
+  SpaceShip *a = (SpaceShip *)(components[0]);
   switch (e->key()) {
   case Qt::Key_A:
     a->endTurnLeft();
@@ -206,8 +218,10 @@ void MainWindow::wheelEvent(QWheelEvent *e) {
 }
 
 void MainWindow::timerEvent(QTimerEvent *e) {
-  SpaceShip *a = (SpaceShip *)(&(components[0]));
+  SpaceShip *a = (SpaceShip *)(components[0]);
   a->refresh();
+  camera->keepTrace();
+  updateGL();
 }
 
 void MainWindow::closeEvent(QCloseEvent *e) {}

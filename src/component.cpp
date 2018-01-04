@@ -7,6 +7,7 @@
 Component::Component() {
   xPos = yPos = zPos = 0;
   xRot = yRot = zRot = 0;
+  LoadAllTextures();
   setMaterial(LIGHTSILVER);
 }
 
@@ -184,16 +185,106 @@ void Component::setSpecular(GLfloat spe[]) {
 
 void Component::setShininess(GLfloat shi) { shininess = shi; }
 
-void Component::LoadTexture(char *filename, GLuint &texture) {
-  AUX_RGBImageRec *pImage = auxDIBImageLoadA(filename); //装入位图
-  glGenTextures(1, &texture);                           //生成贴图
-  glBindTexture(GL_TEXTURE_2D, g_bmp[0]);               //贴图生效
-  gluBuild2DMipmaps(GL_TEXTURE_2D, 4, pImage->sizeX, pImage->sizeY, GL_RGB,
-                    GL_UNSIGNED_BYTE, pImage->data); //贴图数据
+unsigned char *Component::LoadBmpFile(char *filename,
+                                      BITMAPINFOHEADER *bmpInfoHeader) {
+
+  FILE *file;
+  BITMAPFILEHEADER bmpFileHeader;
+  unsigned char *image;
+  unsigned int imageIdx = 0;
+  unsigned char tempRGB;
+
+  file = fopen(filename, "rb");
+  if (file == NULL)
+    return 0;
+
+  fread(&bmpFileHeader, sizeof(BITMAPFILEHEADER), 1, file); // 读取 BMP 文件头
+
+  if (bmpFileHeader.bfType != BITMAP_ID) // 验证是否是一个 BMP 文件
+  {
+    fclose(file);
+    return 0;
+  }
+
+  fread(bmpInfoHeader, sizeof(BITMAPINFOHEADER), 1, file); // 读位图信息头
+  fseek(file, bmpFileHeader.bfOffBits,
+        SEEK_SET); // 将文件指针移到位图数据的开始处
+  image =
+      (unsigned char *)malloc(bmpInfoHeader->biSizeImage); // 分配内存给位图数据
+
+  if (!image) {
+    free(image);
+    fclose(file);
+    return 0;
+  }
+
+  fread(image, 1, bmpInfoHeader->biSizeImage, file); // 读取位图数据
+
+  if (image == NULL) {
+    fclose(file);
+    return 0;
+  }
+
+  // 反转 R 和 B 值以得到 RGB，因为位图颜色格式是 BGR
+  for (imageIdx = 0; imageIdx < bmpInfoHeader->biSizeImage; imageIdx += 3) {
+    tempRGB = image[imageIdx];
+    image[imageIdx] = image[imageIdx + 2];
+    image[imageIdx + 2] = tempRGB;
+  }
+
+  fclose(file);
+  return image;
+}
+
+//---------- 调入纹理文件
+texture *Component::LoadTexFile(char *filename) {
+
+  BITMAPINFOHEADER texInfo;
+  texture *thisTexture;
+
+  thisTexture = (texture *)malloc(sizeof(texture));
+  if (thisTexture == NULL)
+    return 0;
+
+  thisTexture->data =
+      LoadBmpFile(filename, &texInfo); // 调入纹理数据并检查有效性
+  if (thisTexture->data == NULL) {
+    free(thisTexture);
+    return 0;
+  }
+
+  thisTexture->width = texInfo.biWidth; // 设置纹理的宽和高
+  thisTexture->height = texInfo.biHeight;
+
+  glGenTextures(1, &thisTexture->texID); // 生成纹理对象名
+
+  return thisTexture;
+}
+
+bool Component::LoadAllTextures() {
+
+  spaceship = LoadTexFile(":/assets/img/texture.bmp");
+  if (spaceship == NULL)
+    return FALSE;
+
+  glBindTexture(GL_TEXTURE_2D, spaceship->texID);
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, spaceship->width, spaceship->height,
+                    GL_RGB, GL_UNSIGNED_BYTE, spaceship->data);
+
+  return TRUE;
+}
+
+void Component::setPosition(GLdouble px, GLdouble py, GLdouble pz) {
+  xPos = px;
+  yPos = py;
+  zPos = pz;
 }
 
 void Component::repaint() {
-  LoadTexture("img/texture.bmp", g_bmp[0]);
   glPushMatrix();
   glTranslated(xPos, yPos, zPos);
   glRotated(xRot, 1, 0, 0);
