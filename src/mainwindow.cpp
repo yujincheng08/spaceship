@@ -13,7 +13,7 @@ MainWindow::MainWindow(QWidget *parent) : QGLWidget(parent) {
 MainWindow::~MainWindow() {
   makeCurrent();
   for (int i = 0; i < components.length(); i++)
-    delete components[i];
+    delete components.at(i);
   delete cursorTimer;
   doneCurrent();
 }
@@ -25,7 +25,7 @@ void MainWindow::initializeGL() {
   glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
   loadTextures();
   glShadeModel(GL_SMOOTH);
-  glClearColor(0.0, 0.0, 1.0, 0.5);
+  glClearColor(18 / 255.0, 20 / 255.0, 20 / 255.0, 0.5);
   glClearDepth(1.0);
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LEQUAL);
@@ -55,7 +55,6 @@ void MainWindow::initWidget() {
     static bool isFirst = true;
 
     QPoint offet = QPoint(QCursor::pos() - this->pos()) - center;
-    //    qDebug() << offet.x() << offet.y();
     camera->viewRound(offet.x(), offet.y());
     updateGL();
     if (isFirst) {
@@ -90,7 +89,7 @@ void MainWindow::initElement() {
   qDebug() << "camera trace successfully!";
 
   Component *compare = new Component();
-  compare->setSource(":/assets/fj.obj");
+  compare->copySourceFrom(spaceship);
   compare->setColor(128, 128, 128);
   compare->setPosition(0, 10, 0);
   components.append(compare);
@@ -112,7 +111,7 @@ void MainWindow::paintGL() {
   if (camera != NULL)
     camera->setView();
 
-  QVector<Component *>::iterator t;
+  QList<Component *>::iterator t;
   for (t = components.begin(); t != components.end(); t++) {
     (*t)->repaint();
   }

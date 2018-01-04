@@ -87,6 +87,13 @@ void Component::setSource(string filename) {
   }
 }
 
+void Component::copySourceFrom(Component *src) {
+  V.append(src->V);
+  VT.append(src->VT);
+  VN.append(src->VN);
+  F.append(src->F);
+}
+
 void Component::setColor(int r, int g, int b, int a) {
   this->r = r;
   this->g = g;

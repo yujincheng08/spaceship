@@ -38,8 +38,8 @@ protected:
 private:
   MyCamera *camera;
 
-  QVector<MyLight> lights;
-  QVector<Component *> components;
+  QList<MyLight> lights;
+  QList<Component *> components;
 
   int isMousePresseed;
   double mouse_x, mouse_y;
