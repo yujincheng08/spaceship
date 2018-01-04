@@ -273,9 +273,10 @@ texture *Component::LoadTexFile(char *filename) {
 bool Component::LoadAllTextures() {
 
   spaceship = LoadTexFile(":/assets/img/texture.bmp");
-  if (spaceship == NULL)
+  if (spaceship == NULL) {
+    qDebug() << "Wrong too...." << endl;
     return FALSE;
-
+  }
   glBindTexture(GL_TEXTURE_2D, spaceship->texID);
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -284,7 +285,19 @@ bool Component::LoadAllTextures() {
   gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, spaceship->width, spaceship->height,
                     GL_RGB, GL_UNSIGNED_BYTE, spaceship->data);
 
-  return TRUE;
+  earth = LoadTexFile("img/earth.bmp");
+  if (earth == NULL) {
+    qDebug() << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
+    qDebug() << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
+    qDebug() << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
+    qDebug() << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
+    qDebug() << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
+    qDebug() << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
+  } else {
+    qDebug() << "I found it!!!!!!" << endl;
+  }
+
+  return true;
 }
 
 void Component::setPosition(GLdouble px, GLdouble py, GLdouble pz) {

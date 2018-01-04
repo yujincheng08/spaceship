@@ -25,7 +25,8 @@ SOURCES += \
     src/vector.cpp \
     src/component.cpp \
     src/mylight.cpp \
-    src/spaceship.cpp
+    src/spaceship.cpp \
+    src/planet.cpp
 
 RESOURCES += \
     assets.qrc \
@@ -43,7 +44,8 @@ HEADERS += \
     src/vector.h \
     src/component.h \
     src/mylight.h \
-    src/spaceship.h
+    src/spaceship.h \
+    src/planet.h
 
 
 

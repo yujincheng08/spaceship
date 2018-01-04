@@ -76,7 +76,7 @@ protected:
   GLint r, g, b, a;
   GLfloat ambient[4], diffuse[4], specular[4], shininess;
 
-  texture *spaceship;
+  texture *spaceship, *earth;
 
   QVector<POINT3> V;
   QVector<WenLi> VT;
