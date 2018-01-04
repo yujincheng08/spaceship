@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "infosurface.h"
 #include "spaceship.h"
 #include <QDebug>
 
@@ -66,6 +67,8 @@ void MainWindow::initWidget() {
                     this->y() + this->height() / 2);
   });
   cursorTimer->start(10);
+
+  is = new InfoSurface(this);
 
   qDebug() << "initWidget successfully!";
 }

@@ -9,10 +9,13 @@
 #include <QVector>
 #include <QtOpenGL>
 
+class InfoSurface;
+
 class MainWindow : public QOpenGLWidget {
 public:
   MainWindow(QWidget *parent = 0);
   ~MainWindow();
+  friend class InfoSurface;
 
 protected:
   void initParams();
@@ -24,6 +27,8 @@ protected:
   void initializeGL();
   void paintGL() override;
   void resizeGL(int width, int height) override;
+
+  //  void paintEvent(QPaintEvent *e);
 
   void keyPressEvent(QKeyEvent *e) override;
   void keyReleaseEvent(QKeyEvent *e) override;
@@ -46,6 +51,8 @@ private:
 
   QBasicTimer timer;
   QTimer *cursorTimer;
+
+  InfoSurface *is;
 };
 
 #endif // MAINWINDOW_H

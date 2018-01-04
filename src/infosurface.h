@@ -1,17 +1,19 @@
 #ifndef INFOSURFACE_H
 #define INFOSURFACE_H
 
+#include <QPainter>
 #include <QWidget>
 
-class InfoSurface : public QWidget
-{
-    Q_OBJECT
+class InfoSurface : public QWidget {
+  Q_OBJECT
 public:
-    explicit InfoSurface(QWidget *parent = nullptr);
+  explicit InfoSurface(QWidget *parent = nullptr);
 
-signals:
+protected:
+  void paintEvent(QPaintEvent *e);
 
-public slots:
+private:
+  int shootSize;
 };
 
 #endif // INFOSURFACE_H
