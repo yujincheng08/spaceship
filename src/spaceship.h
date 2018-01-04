@@ -7,6 +7,7 @@
 
 class SpaceShip : public Component {
 public:
+  friend class InfoSurface;
   SpaceShip();
   void startTurnLeft();
   void startTurnRight();
