@@ -194,7 +194,7 @@ void Component::setSpecular(GLfloat spe[]) {
 
 void Component::setShininess(GLfloat shi) { shininess = shi; }
 
-unsigned char *Component::LoadBmpFile(char *filename,
+unsigned char *Component::LoadBmpFile(const char *filename,
                                       BITMAPINFOHEADER *bmpInfoHeader) {
 
   FILE *file;
@@ -204,6 +204,9 @@ unsigned char *Component::LoadBmpFile(char *filename,
   unsigned char tempRGB;
 
   file = fopen(filename, "rb");
+  qDebug() << "filename=" << filename << endl;
+  if (file == NULL)
+    qDebug() << "Empty FILE" << endl;
   if (file == NULL)
     return 0;
 
@@ -211,6 +214,7 @@ unsigned char *Component::LoadBmpFile(char *filename,
 
   if (bmpFileHeader.bfType != BITMAP_ID) // 验证是否是一个 BMP 文件
   {
+    qDebug() << "NOT BITMAP_ID" << endl;
     fclose(file);
     return 0;
   }
@@ -230,6 +234,7 @@ unsigned char *Component::LoadBmpFile(char *filename,
   fread(image, 1, bmpInfoHeader->biSizeImage, file); // 读取位图数据
 
   if (image == NULL) {
+    qDebug() << "Empty IMAGE" << endl;
     fclose(file);
     return 0;
   }
@@ -246,46 +251,41 @@ unsigned char *Component::LoadBmpFile(char *filename,
 }
 
 //---------- 调入纹理文件
-texture *Component::LoadTexFile(char *filename) {
+texture *Component::LoadTexFile(const char *filename) {
 
   BITMAPINFOHEADER texInfo;
   texture *thisTexture;
 
   thisTexture = (texture *)malloc(sizeof(texture));
+  qDebug() << "0" << endl;
   if (thisTexture == NULL)
     return 0;
-
+  qDebug() << "1" << endl;
   thisTexture->data =
       LoadBmpFile(filename, &texInfo); // 调入纹理数据并检查有效性
+  qDebug() << "2" << endl;
   if (thisTexture->data == NULL) {
     free(thisTexture);
     return 0;
   }
-
+  qDebug() << "3" << endl;
   thisTexture->width = texInfo.biWidth; // 设置纹理的宽和高
   thisTexture->height = texInfo.biHeight;
 
   glGenTextures(1, &thisTexture->texID); // 生成纹理对象名
-
+  qDebug() << "4" << endl;
   return thisTexture;
 }
 
 bool Component::LoadAllTextures() {
+  QDir *dir;
+  qDebug() << dir->currentPath();
+  qDebug() << dir->current();
+  QString applicationDirPath = dir->currentPath();
+  string fileName_earth =
+      applicationDirPath.toStdString() + "/../spaceship/src/img/earth.bmp";
 
-  spaceship = LoadTexFile(":/assets/img/texture.bmp");
-  if (spaceship == NULL) {
-    qDebug() << "Wrong too...." << endl;
-    return FALSE;
-  }
-  glBindTexture(GL_TEXTURE_2D, spaceship->texID);
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-  gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, spaceship->width, spaceship->height,
-                    GL_RGB, GL_UNSIGNED_BYTE, spaceship->data);
-
-  earth = LoadTexFile("img/earth.bmp");
+  earth = LoadTexFile(fileName_earth.c_str());
   if (earth == NULL) {
     qDebug() << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
     qDebug() << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
@@ -297,6 +297,29 @@ bool Component::LoadAllTextures() {
     qDebug() << "I found it!!!!!!" << endl;
   }
 
+  /* glBindTexture(GL_TEXTURE_2D, earth->texID);
+   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+   gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, earth->width, earth->height,
+   GL_RGB, GL_UNSIGNED_BYTE, earth->data);*/
+
+  string fileName_spaceship =
+      applicationDirPath.toStdString() + "/../spaceship/src/img/spaceship.bmp";
+  spaceship = LoadTexFile(fileName_spaceship.c_str());
+  if (spaceship == NULL) {
+    qDebug() << "Wrong too...." << endl;
+    return FALSE;
+  }
+  /*glBindTexture(GL_TEXTURE_2D, spaceship->texID);
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, spaceship->width, spaceship->height,
+                    GL_RGB, GL_UNSIGNED_BYTE, spaceship->data);
+*/
   return true;
 }
 

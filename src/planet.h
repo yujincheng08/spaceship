@@ -6,10 +6,10 @@
 #include <QtOpenGL>
 #include <gl/glut.h>
 
-class planet : public Component {
+class Planet : public Component {
 public:
-  planet();
-  ~planet();
+  Planet();
+  ~Planet();
   void setRotateSpeed(GLfloat speed);
   void setTexID(unsigned int texID);
   void repaint();

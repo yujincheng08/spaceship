@@ -1,14 +1,14 @@
-#include "planet.h"
+#include "Planet.h"
 
-planet::planet() { setRotateSpeed(0); }
+Planet::Planet() { setRotateSpeed(0); }
 
-planet::~planet() {}
+Planet::~Planet() {}
 
-void planet::setRotateSpeed(GLfloat speed) { RotateSpeed = speed; }
+void Planet::setRotateSpeed(GLfloat speed) { RotateSpeed = speed; }
 
-void planet::setTexID(unsigned int id) { texID = id; }
+void Planet::setTexID(unsigned int id) { texID = id; }
 
-void planet::gltDrawSphere(GLfloat fRadius, GLint iSlices, GLint iStacks) {
+void Planet::gltDrawSphere(GLfloat fRadius, GLint iSlices, GLint iStacks) {
   GLfloat drho = (GLfloat)(3.141592653589) / (GLfloat)iStacks;
   GLfloat dtheta = 2.0f * (GLfloat)(3.141592653589) / (GLfloat)iSlices;
   GLfloat ds = 1.0f / (GLfloat)iSlices;
@@ -53,7 +53,16 @@ void planet::gltDrawSphere(GLfloat fRadius, GLint iSlices, GLint iStacks) {
   }
 }
 
-void planet::repaint() {
+void Planet::repaint() {
+
+  glBindTexture(GL_TEXTURE_2D, earth->texID);
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, earth->width, earth->height, GL_RGB,
+                    GL_UNSIGNED_BYTE, earth->data);
+
   glPushMatrix();
   glBindTexture(GL_TEXTURE_2D, texID);
   glRotatef(RotateSpeed, 0.0, 1.0, 0.0); //自转

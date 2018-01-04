@@ -54,10 +54,10 @@ public:
   void setSpecular(GLfloat spe[]);
   void setShininess(GLfloat shi);
   void setPosition(GLdouble px, GLdouble py, GLdouble pz);
-  void LoadTexture(char *filename);
-  texture *LoadTexFile(char *filename);
+  texture *LoadTexFile(const char *filename);
   bool LoadAllTextures();
-  unsigned char *LoadBmpFile(char *filename, BITMAPINFOHEADER *bmpInfoHeader);
+  unsigned char *LoadBmpFile(const char *filename,
+                             BITMAPINFOHEADER *bmpInfoHeader);
   virtual void repaint();
 
   enum Material {

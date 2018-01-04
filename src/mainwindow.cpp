@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "planet.h"
 #include "spaceship.h"
 #include <QDebug>
 
@@ -94,6 +95,9 @@ void MainWindow::initElement() {
   compare->setPosition(0, 10, 0);
   components.append(compare);
   qDebug() << "initElement successfully!";
+
+  Planet *earth = new Planet();
+  earth->setPosition(20, 20, 0);
 }
 
 void MainWindow::initTimer() { timer.start(20, this); }
