@@ -9,7 +9,7 @@
 #include <QVector>
 #include <QtOpenGL>
 
-class MainWindow : public QOpenGLWidget {
+class MainWindow : public QGLWidget {
 public:
   MainWindow(QWidget *parent = 0);
   ~MainWindow();
