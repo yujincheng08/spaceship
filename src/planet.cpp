@@ -6,7 +6,7 @@ Planet::~Planet() {}
 
 void Planet::setRotateSpeed(GLfloat speed) { RotateSpeed = speed; }
 
-void Planet::setTexID(unsigned int id) { texID = id; }
+void Planet::setRadius(GLfloat R) { radius = R; }
 
 void Planet::gltDrawSphere(GLfloat fRadius, GLint iSlices, GLint iStacks) {
   GLfloat drho = (GLfloat)(3.141592653589) / (GLfloat)iStacks;
@@ -63,17 +63,16 @@ void Planet::repaint() {
   gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, earth->width, earth->height, GL_RGB,
                     GL_UNSIGNED_BYTE, earth->data);
 
+  qDebug() << "width=" << earth->width << " height=" << earth->height << endl;
+  qDebug() << "ID=" << earth->texID << endl;
+  qDebug() << "data=" << *(earth->data) << endl;
+
   glPushMatrix();
-  glBindTexture(GL_TEXTURE_2D, texID);
+  glTranslated(xPos, yPos, zPos);
   glRotatef(RotateSpeed, 0.0, 1.0, 0.0); //自转
-  glMaterialfv(GL_FRONT, GL_AMBIENT, ambient);
-  // glMaterialfv(GL_FRONT, GL_EMISSION, mat_emission);
   glRotatef(90, -1, 0, 0);
 
-  glDisable(GL_LIGHTING);
-  gltDrawSphere(radius, xPos, yPos); //绘制
-  glEnable(GL_LIGHTING);
-  // glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
+  gltDrawSphere(radius, 40, 40); //绘制
 
   glPopMatrix();
 }

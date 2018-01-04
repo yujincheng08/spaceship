@@ -1,9 +1,6 @@
 #include "mainwindow.h"
-<<<<<<< HEAD
-#include "planet.h"
-=======
 #include "infosurface.h"
->>>>>>> 2683b589c443ee595b26210d117c04f485081eae
+#include "planet.h"
 #include "spaceship.h"
 #include <QDebug>
 
@@ -103,7 +100,10 @@ void MainWindow::initElement() {
   qDebug() << "initElement successfully!";
 
   Planet *earth = new Planet();
-  earth->setPosition(20, 20, 0);
+  earth->setPosition(60, 60, 0);
+  earth->setRadius(40);
+  components.append(earth);
+  qDebug() << "earth load succefully!";
 }
 
 void MainWindow::initTimer() { timer.start(20, this); }

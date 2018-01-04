@@ -11,7 +11,7 @@ public:
   Planet();
   ~Planet();
   void setRotateSpeed(GLfloat speed);
-  void setTexID(unsigned int texID);
+  void setRadius(GLfloat R);
   void repaint();
   void gltDrawSphere(GLfloat fRadius, GLint iSlices, GLint iStacks);
 

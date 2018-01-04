@@ -228,6 +228,7 @@ unsigned char *Component::LoadBmpFile(const char *filename,
   if (!image) {
     free(image);
     fclose(file);
+    qDebug() << "?" << endl;
     return 0;
   }
 
@@ -257,23 +258,18 @@ texture *Component::LoadTexFile(const char *filename) {
   texture *thisTexture;
 
   thisTexture = (texture *)malloc(sizeof(texture));
-  qDebug() << "0" << endl;
   if (thisTexture == NULL)
     return 0;
-  qDebug() << "1" << endl;
   thisTexture->data =
       LoadBmpFile(filename, &texInfo); // 调入纹理数据并检查有效性
-  qDebug() << "2" << endl;
   if (thisTexture->data == NULL) {
     free(thisTexture);
     return 0;
   }
-  qDebug() << "3" << endl;
   thisTexture->width = texInfo.biWidth; // 设置纹理的宽和高
   thisTexture->height = texInfo.biHeight;
 
   glGenTextures(1, &thisTexture->texID); // 生成纹理对象名
-  qDebug() << "4" << endl;
   return thisTexture;
 }
 
@@ -286,40 +282,23 @@ bool Component::LoadAllTextures() {
       applicationDirPath.toStdString() + "/../spaceship/src/img/earth.bmp";
 
   earth = LoadTexFile(fileName_earth.c_str());
-  if (earth == NULL) {
-    qDebug() << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
-    qDebug() << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
-    qDebug() << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
-    qDebug() << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
-    qDebug() << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
-    qDebug() << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
-  } else {
-    qDebug() << "I found it!!!!!!" << endl;
-  }
-
-  /* glBindTexture(GL_TEXTURE_2D, earth->texID);
-   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-   gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, earth->width, earth->height,
-   GL_RGB, GL_UNSIGNED_BYTE, earth->data);*/
+  if (earth == NULL)
+    return false;
 
   string fileName_spaceship =
       applicationDirPath.toStdString() + "/../spaceship/src/img/spaceship.bmp";
   spaceship = LoadTexFile(fileName_spaceship.c_str());
-  if (spaceship == NULL) {
-    qDebug() << "Wrong too...." << endl;
+  if (spaceship == NULL)
     return FALSE;
-  }
-  /*glBindTexture(GL_TEXTURE_2D, spaceship->texID);
+
+  glBindTexture(GL_TEXTURE_2D, spaceship->texID);
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
   gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, spaceship->width, spaceship->height,
                     GL_RGB, GL_UNSIGNED_BYTE, spaceship->data);
-*/
+
   return true;
 }
 

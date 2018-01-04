@@ -133,6 +133,9 @@ void SpaceShip::repaint() {
 
   glPushMatrix();
   glTranslated(xPos, yPos, zPos);
+
+  // glBindTexture(GL_TEXTURE_2D, earth->texID);
+
   spaceshipRotate();
 
   glColor3f(r / 255.0, g / 255.0, b / 255.0);
