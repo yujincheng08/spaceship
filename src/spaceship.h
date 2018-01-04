@@ -28,10 +28,15 @@ public:
   void setUpDirection(GLdouble ux, GLdouble uy, GLdouble uz);
 
   void refresh();
+  void repaint();
 
-public:
+private:
+  void spaceshipRotate();
+
+private:
   GLdouble turnLRSpeed, turnUDSpeed, moveSpeed;
   GLdouble maxTurnLRSpeed, maxTurnUDSpeed, maxMoveSpeed;
+  GLdouble originTX, originTY, originTZ, originUX, originUY, originUZ;
   GLdouble towardX, towardY, towardZ, upX, upY, upZ;
 
   GLboolean isTurnLeft, isTurnRight, isTurnUp, isTurnDown, isMoveForward,

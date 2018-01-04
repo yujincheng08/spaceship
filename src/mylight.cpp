@@ -1,5 +1,7 @@
 #include "mylight.h"
 
+MyLight::MyLight() {}
+
 MyLight::MyLight(GLint number) {
   this->number = number;
   ambient = new GLfloat[4]();

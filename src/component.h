@@ -2,8 +2,8 @@
 #define COMPONENT_H
 
 #include <QString>
+#include <QVector>
 #include <QtOpenGL>
-#include <vector>
 
 using namespace std;
 
@@ -39,7 +39,7 @@ public:
   void setSpecular(GLfloat spe[]);
   void setShininess(GLfloat shi);
   void setPosition(GLdouble px, GLdouble py, GLdouble pz);
-  void repaint();
+  virtual void repaint();
 
   enum Material {
     COPPER = 0,
@@ -56,10 +56,10 @@ protected:
   GLint r, g, b, a;
   GLfloat ambient[4], diffuse[4], specular[4], shininess;
 
-  vector<POINT3> V;
-  vector<WenLi> VT;
-  vector<FaXiangLiang> VN;
-  vector<Mian> F;
+  QVector<POINT3> V;
+  QVector<WenLi> VT;
+  QVector<FaXiangLiang> VN;
+  QVector<Mian> F;
 };
 
 #endif // COMPONENT_H

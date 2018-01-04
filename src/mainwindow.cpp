@@ -3,6 +3,7 @@
 #include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent) : QGLWidget(parent) {
+  qDebug() << "construct for mw";
   initParams();
   initWidget();
   initElement();
@@ -15,6 +16,7 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::initializeGL() {
+  qDebug() << "initGL start";
   glEnable(GL_TEXTURE_2D);
   glEnable(GL_COLOR_MATERIAL);
   glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
@@ -35,29 +37,37 @@ void MainWindow::initParams() {
 }
 
 void MainWindow::initWidget() {
+  qDebug() << "initWidget start!";
   setGeometry(0, 27, 960, 540);
   setWindowTitle(tr("War of Spaceship"));
+  qDebug() << "initWidget successfully!";
 }
 
 void MainWindow::initElement() {
   camera = new MyCamera();
+  qDebug() << "camera construct successfully!";
 
   SpaceShip *spaceship = new SpaceShip();
-  components.push_back(spaceship);
-  spaceship = (SpaceShip *)(components[0]);
+  qDebug() << "spaceship construct successfully!";
   spaceship->setSource(":/assets/fj.obj");
   spaceship->setColor(36, 40, 51);
   spaceship->setTowardDirection(0, 0, -1);
+  spaceship->setUpDirection(0, 1, 0);
   spaceship->setMaxMoveSpeed(1);
-  qDebug() << spaceship->maxMoveSpeed;
+  qDebug() << "spaceship set successfully!";
+  components.append(spaceship);
+  qDebug() << "spaceship add successfully!";
 
   camera->traceComponent(spaceship);
+
+  qDebug() << "camera trace successfully!";
 
   Component *compare = new Component();
   compare->setSource(":/assets/fj.obj");
   compare->setColor(36, 40, 51);
   compare->setPosition(0, 10, 0);
-  components.push_back(compare);
+  components.append(compare);
+  qDebug() << "initElement successfully!";
 }
 
 void MainWindow::initTimer() { timer.start(20, this); }
@@ -75,7 +85,7 @@ void MainWindow::paintGL() {
   if (camera != NULL)
     camera->setView();
 
-  vector<Component *>::iterator t;
+  QVector<Component *>::iterator t;
   for (t = components.begin(); t != components.end(); t++) {
     (*t)->repaint();
   }

@@ -12,6 +12,7 @@ public:
   static Vct crossMulti3(Vct a, Vct b);
   static void unit(Vct v, int num);
   static void kMulti(Vct v, int num, double kMulti);
+  static Vct add(Vct a, Vct b, int num);
   static Vct sub(Vct a, Vct b, int num);
   static double angle(Vct a, Vct b, int num);
 };

@@ -6,8 +6,8 @@
 #include "mylight.h"
 #include <GL/glu.h>
 #include <QBasicTimer>
+#include <QVector>
 #include <QtOpenGL>
-#include <vector>
 
 class MainWindow : public QGLWidget {
 public:
@@ -38,8 +38,8 @@ protected:
 private:
   MyCamera *camera;
 
-  std::vector<MyLight> lights;
-  std::vector<Component *> components;
+  QVector<MyLight> lights;
+  QVector<Component *> components;
 
   int isMousePresseed;
   double mouse_x, mouse_y;
