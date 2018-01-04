@@ -153,11 +153,13 @@ void SpaceShip::spaceshipRotate() {
          T[3] = {towardX, towardY, towardZ}, U[3] = {upX, upY, upZ};
 
   Vct axis = MyVector::crossMulti3(orgT, T);
-  qDebug() << "cT" << T[0] << T[1] << T[2];
-  qDebug() << "oT" << orgT[0] << orgT[1] << orgT[2];
+  //  qDebug() << "cT" << T[0] << T[1] << T[2];
+  //  qDebug() << "oT" << orgT[0] << orgT[1] << orgT[2];
   qDebug() << "AX" << axis[0] << axis[1] << axis[2];
   qDebug() << "AG" << MyVector::angle(T, orgT, 3);
-  glRotated(MyVector::angle(T, orgT, 3) / M_PI * 180, axis[0], axis[1],
-            axis[2]);
+  GLdouble ang = MyVector::angle(T, orgT, 3);
+  if (ang < 0)
+    ang = ang + M_PI + M_PI;
+  glRotated(ang / M_PI * 180, axis[0], axis[1], axis[2]);
   delete[] axis;
 }

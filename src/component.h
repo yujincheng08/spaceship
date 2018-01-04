@@ -7,6 +7,7 @@
 
 using namespace std;
 
+// reference: https://www.cnblogs.com/zjutlitao/p/4187529.html
 struct POINT3 {
   double X;
   double Y;

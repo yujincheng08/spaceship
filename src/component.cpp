@@ -4,6 +4,7 @@
 #include <iostream>
 #include <sstream>
 
+// reference: https://www.cnblogs.com/zjutlitao/p/4187529.html
 Component::Component() {
   xPos = yPos = zPos = 0;
   xRot = yRot = zRot = 0;

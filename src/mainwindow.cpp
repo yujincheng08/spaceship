@@ -40,6 +40,10 @@ void MainWindow::initWidget() {
   qDebug() << "initWidget start!";
   setGeometry(0, 27, 960, 540);
   setWindowTitle(tr("War of Spaceship"));
+
+  // reference: tieba.baidu.com/p/3879195450
+  QTimer *t = new QTimer(this);
+
   qDebug() << "initWidget successfully!";
 }
 
@@ -107,6 +111,8 @@ void MainWindow::resizeGL(int width, int height) {
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *e) {
+  if (e->isAutoRepeat())
+    return;
   SpaceShip *a = (SpaceShip *)(components[0]);
   switch (e->key()) {
   case Qt::Key_A:
@@ -150,6 +156,8 @@ void MainWindow::keyPressEvent(QKeyEvent *e) {
 }
 
 void MainWindow::keyReleaseEvent(QKeyEvent *e) {
+  if (e->isAutoRepeat())
+    return;
   SpaceShip *a = (SpaceShip *)(components[0]);
   switch (e->key()) {
   case Qt::Key_A:
