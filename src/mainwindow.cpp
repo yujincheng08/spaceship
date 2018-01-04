@@ -1,9 +1,6 @@
 #include "mainwindow.h"
-<<<<<<< HEAD
-#include "planet.h"
-=======
 #include "infosurface.h"
->>>>>>> 2683b589c443ee595b26210d117c04f485081eae
+#include "planet.h"
 #include "spaceship.h"
 #include <QDebug>
 
@@ -51,14 +48,13 @@ void MainWindow::initWidget() {
 
   // reference: tieba.baidu.com/p/3879195450
   cursorTimer = new QTimer(this);
-  QPoint center(this->width() / 2, this->height() / 2);
   QCursor cur = this->cursor();
   cur.setShape(Qt::BlankCursor);
   this->setCursor(cur);
 
   connect(cursorTimer, &QTimer::timeout, [=]() {
     static bool isFirst = true;
-
+    QPoint center(this->width() / 2, this->height() / 2);
     QPoint offet = QPoint(QCursor::pos() - this->pos()) - center;
     camera->viewRound(offet.x(), offet.y());
     update();
@@ -140,6 +136,8 @@ void MainWindow::resizeGL(int width, int height) {
 
   if (camera != NULL)
     camera->setView();
+
+  is->resize(width, height);
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *e) {
