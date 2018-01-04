@@ -5,7 +5,7 @@
 MyVector::MyVector() {}
 
 double MyVector::dotMulti(Vct a, Vct b, int num) {
-  int ans = 0;
+  double ans = 0;
   for (int i = 0; i < num; i++) {
     ans += a[i] * b[i];
   }
@@ -37,6 +37,16 @@ void MyVector::unit(Vct v, int num) {
 void MyVector::kMulti(Vct v, int num, double length) {
   for (int i = 0; i < num; i++)
     v[i] *= length;
+}
+
+Vct MyVector::add(Vct a, Vct b, int num) {
+  Vct ans;
+  ans = new double[num];
+
+  for (int i = 0; i < num; i++)
+    ans[i] = a[i] + b[i];
+
+  return ans;
 }
 
 Vct MyVector::sub(Vct a, Vct b, int num) {

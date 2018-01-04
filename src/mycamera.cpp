@@ -168,7 +168,7 @@ void MyCamera::viewRound(GLdouble lr, GLdouble ud) {
   if (lr != 0) {
     Vct product = MyVector::crossMulti3(view, up);
     MyVector::unit(product, 3);
-    MyVector::kMulti(product, 3, rotate);
+    MyVector::kMulti(product, 3, rotate / 2);
 
     for (int i = 0; i < 3; i++)
       view[i] -= lr * product[i];

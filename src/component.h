@@ -4,7 +4,9 @@
 #define BITMAP_ID 0x4D42
 
 #include <QString>
+#include <QVector>
 #include <QtOpenGL>
+
 #include <gl/glaux.h>
 #include <gl/glut.h>
 #include <vector>
@@ -50,11 +52,11 @@ public:
   void setSpecular(GLfloat spe[]);
   void setShininess(GLfloat shi);
   void setPosition(GLdouble px, GLdouble py, GLdouble pz);
-  void repaint();
   void LoadTexture(char *filename);
   texture *LoadTexFile(char *filename);
   bool LoadAllTextures();
   unsigned char *LoadBmpFile(char *filename, BITMAPINFOHEADER *bmpInfoHeader);
+  virtual void repaint();
 
   enum Material {
     COPPER = 0,
@@ -71,12 +73,13 @@ protected:
   GLdouble xRot, yRot, zRot;
   GLint r, g, b, a;
   GLfloat ambient[4], diffuse[4], specular[4], shininess;
-  vector<POINT3> V;
-  vector<WenLi> VT;
-  vector<FaXiangLiang> VN;
-  vector<Mian> F;
 
   texture *spaceship;
+
+  QVector<POINT3> V;
+  QVector<WenLi> VT;
+  QVector<FaXiangLiang> VN;
+  QVector<Mian> F;
 };
 
 #endif // COMPONENT_H

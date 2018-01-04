@@ -9,6 +9,7 @@ Component::Component() {
   xRot = yRot = zRot = 0;
   LoadAllTextures();
   setMaterial(LIGHTSILVER);
+  qDebug() << "component constructed.";
 }
 
 void Component::getPostion(GLdouble &a, GLdouble &b, GLdouble &c) {

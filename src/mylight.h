@@ -5,6 +5,7 @@
 
 class MyLight {
 public:
+  MyLight();
   MyLight(GLint number);
   ~MyLight();
   void setAmbient(GLfloat a[]);
