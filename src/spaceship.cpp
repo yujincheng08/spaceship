@@ -1,7 +1,15 @@
 #include "spaceship.h"
+#include <QtDebug>
 #include <QtMath>
 
-SpaceShip::SpaceShip() {
+SpaceShip::SpaceShip(QNode *parent) : Component(parent) {
+  mesh->setSource(QUrl("qrc:/assets/fj.obj"));
+  textureImage->setSource(QUrl("qrc:/assets/img/earthmap2k.jpg"));
+  texture->addTextureImage(textureImage);
+  material->setTexture(texture);
+  addComponent(transform);
+  addComponent(mesh);
+  addComponent(material);
   isTurnDown = isTurnLeft = isTurnRight = isTurnUp = false;
   isMoveForward = isMoveBack = false;
   setMaxMoveSpeed(1);
@@ -41,137 +49,128 @@ void SpaceShip::endMoveForward() { isMoveForward = false; }
 
 void SpaceShip::endMoveBack() { isMoveBack = false; }
 
-void SpaceShip::setMaxTurnLRSpeed(GLdouble LR) { maxTurnLRSpeed = LR; }
+// void SpaceShip::setMaxTurnLRSpeed(GLdouble LR) { maxTurnLRSpeed = LR; }
 
-void SpaceShip::setMaxTurnUDSpeed(GLdouble UD) { maxTurnUDSpeed = UD; }
+// void SpaceShip::setMaxTurnUDSpeed(GLdouble UD) { maxTurnUDSpeed = UD; }
 
-void SpaceShip::setMaxMoveSpeed(GLdouble M) { maxMoveSpeed = M; }
+// void SpaceShip::setMaxMoveSpeed(GLdouble M) { maxMoveSpeed = M; }
 
-void SpaceShip::setTowardDirection(GLdouble tx, GLdouble ty, GLdouble tz) {
-  double twd[3] = {tx, ty, tz};
-  MyVector::unit(twd, 3);
-  originTX = towardX = twd[0];
-  originTY = towardY = twd[1];
-  originTZ = towardZ = twd[2];
-}
+// void SpaceShip::setTowardDirection(GLdouble tx, GLdouble ty, GLdouble tz) {
+//  QVector3D twd{tx, ty, tz};
+//  twd.normalize();
+//  originTX = towardX = twd.x();
+//  originTY = towardY = twd.y();
+//  originTZ = towardZ = twd.z();
+//}
 
-void SpaceShip::setUpDirection(GLdouble ux, GLdouble uy, GLdouble uz) {
-  double twd[3] = {towardX, towardY, towardZ}, up[3] = {ux, uy, uz};
+// void SpaceShip::setUpDirection(const QVector3D &up) {
+//  QVector3D twd{towardX, towardY, towardZ};
+//  QVector3D up{ux, uy, uz};
+//  twd *= twd * up;
+//  up = up - twd;
+//  up.normalize();
+//  originUX = upX = up.x();
+//  originUY = upY = up.y();
+//  originUZ = upZ = up.z();
+//}
 
-  double length = MyVector::dotMulti(twd, up, 3);
-  MyVector::kMulti(twd, 3, length);
-  Vct upVec = MyVector::sub(up, twd, 3);
-  MyVector::unit(upVec, 3);
+// void SpaceShip::refresh() {
+//  if (isTurnLeft && !isTurnRight)
+//    if (turnLRSpeed > -maxTurnLRSpeed)
+//      turnLRSpeed -= maxTurnLRSpeed / 25;
+//  if (isTurnRight && !isTurnLeft)
+//    if (turnLRSpeed < maxTurnLRSpeed)
+//      turnLRSpeed += maxTurnUDSpeed / 25;
+//  if (isTurnUp && !isTurnDown)
+//    if (turnUDSpeed < maxTurnUDSpeed)
+//      turnUDSpeed += maxTurnUDSpeed / 25;
+//  if (isTurnDown && !isTurnUp)
+//    if (turnUDSpeed > -maxTurnUDSpeed)
+//      turnUDSpeed -= maxTurnUDSpeed / 25;
+//  if (isMoveForward && !isMoveBack)
+//    if (moveSpeed < maxMoveSpeed)
+//      moveSpeed += maxMoveSpeed / 25;
+//  if (isMoveBack && !isMoveForward)
+//    if (moveSpeed > -maxMoveSpeed)
+//      moveSpeed -= maxMoveSpeed / 25;
 
-  originUX = upX = upVec[0];
-  originUY = upY = upVec[1];
-  originUZ = upZ = upVec[2];
+//  QVector3D T{towardX, towardY, towardZ};
+//  QVector3D U{upX, upY, upX};
+//  QVector3D LR = QVector3D::crossProduct(T, U);
+//  LR.normalize();
+//  LR *= turnLRSpeed;
+//  U *= turnUDSpeed;
+//  QVector3D unionChange = LR + U;
+//  unionChange /= 20;
+//  towardX += unionChange.x();
+//  towardY += unionChange.y();
+//  towardZ += unionChange.z();
 
-  delete[] upVec;
-}
+//  QVector3D twd{towardX, towardY, towardZ};
+//  QVector3D up{upX, upY, upZ};
+//  twd.normalize();
+//  towardX = twd.x();
+//  towardY = twd.y();
+//  towardZ = twd.z();
+//  twd *= twd * up;
+//  QVector3D upVec = up - twd;
+//  upVec.normalize();
+//  upX = upVec.x();
+//  upY = upVec.y();
+//  upZ = upVec.z();
+//  xPos += moveSpeed * towardX;
+//  yPos += moveSpeed * towardY;
+//  zPos += moveSpeed * towardZ;
+//}
 
-void SpaceShip::refresh() {
-  if (isTurnLeft && !isTurnRight)
-    if (turnLRSpeed > -maxTurnLRSpeed)
-      turnLRSpeed -= maxTurnLRSpeed / 25;
-  if (isTurnRight && !isTurnLeft)
-    if (turnLRSpeed < maxTurnLRSpeed)
-      turnLRSpeed += maxTurnUDSpeed / 25;
-  if (isTurnUp && !isTurnDown)
-    if (turnUDSpeed < maxTurnUDSpeed)
-      turnUDSpeed += maxTurnUDSpeed / 25;
-  if (isTurnDown && !isTurnUp)
-    if (turnUDSpeed > -maxTurnUDSpeed)
-      turnUDSpeed -= maxTurnUDSpeed / 25;
-  if (isMoveForward && !isMoveBack)
-    if (moveSpeed < maxMoveSpeed)
-      moveSpeed += maxMoveSpeed / 25;
-  if (isMoveBack && !isMoveForward)
-    if (moveSpeed > -maxMoveSpeed)
-      moveSpeed -= maxMoveSpeed / 25;
+// void SpaceShip::repaint() {
 
-  double T[3] = {towardX, towardY, towardZ}, U[3] = {upX, upY, upZ};
-  Vct LR = MyVector::crossMulti3(T, U);
-  MyVector::unit(LR, 3);
-  MyVector::kMulti(LR, 3, turnLRSpeed);
-  MyVector::kMulti(U, 3, turnUDSpeed);
-  Vct unionChange = MyVector::add(LR, U, 3);
-  delete[] LR;
-  towardX += unionChange[0] / 20;
-  towardY += unionChange[1] / 20;
-  towardZ += unionChange[2] / 20;
-  delete[] unionChange;
+//  /*glBindTexture(GL_TEXTURE_2D, spaceship->texID);
+//  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+//  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+//  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+//  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+//  gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, spaceship->width,
+//  spaceship->height,
+//                    GL_RGB, GL_UNSIGNED_BYTE, spaceship->data);*/
 
-  double twd[3] = {towardX, towardY, towardZ}, up[3] = {upX, upY, upZ};
-  MyVector::unit(twd, 3);
-  towardX = twd[0];
-  towardY = twd[1];
-  towardZ = twd[2];
-  double length = MyVector::dotMulti(twd, up, 3);
-  MyVector::kMulti(twd, 3, length);
-  Vct upVec = MyVector::sub(up, twd, 3);
-  MyVector::unit(upVec, 3);
-  upX = upVec[0];
-  upY = upVec[1];
-  upZ = upVec[2];
-  delete[] upVec;
+//  glPushMatrix();
+//  glTranslated(xPos, yPos, zPos);
 
-  xPos += moveSpeed * towardX;
-  yPos += moveSpeed * towardY;
-  zPos += moveSpeed * towardZ;
-}
+//  // glBindTexture(GL_TEXTURE_2D, earth->texID);
 
-void SpaceShip::repaint() {
+//  spaceshipRotate();
 
-  /*glBindTexture(GL_TEXTURE_2D, spaceship->texID);
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-  gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, spaceship->width, spaceship->height,
-                    GL_RGB, GL_UNSIGNED_BYTE, spaceship->data);*/
+//  glColor3f(r / 255.0, g / 255.0, b / 255.0);
+//  glMaterialfv(GL_FRONT, GL_AMBIENT, ambient);
+//  glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse);
+//  glMaterialfv(GL_FRONT, GL_SPECULAR, specular);
+//  glMaterialfv(GL_FRONT, GL_SHININESS, &shininess);
 
-  glPushMatrix();
-  glTranslated(xPos, yPos, zPos);
+//  for (int i = 0; i < F.size(); i++) {
+//    glBegin(GL_TRIANGLES);
+//    for (int j = 0; j < 3; j++) {
+//      if (VT.size() != 0)
+//        glTexCoord2f(VT[F[i].T[j]].TU, VT[F[i].T[j]].TV);
+//      if (VN.size() != 0)
+//        glNormal3f(VN[F[i].N[j]].NX, VN[F[i].N[j]].NY, VN[F[i].N[j]].NZ);
+//      glVertex3f(V[F[i].V[j]].X, V[F[i].V[j]].Y, V[F[i].V[j]].Z);
+//    }
+//    glEnd();
+//  }
 
-  // glBindTexture(GL_TEXTURE_2D, earth->texID);
+//  glPopMatrix();
+//}
 
-  spaceshipRotate();
+// void SpaceShip::spaceshipRotate() {
+//  QVector3D orgT{originTX, originTY, originTZ};
+//  QVector3D T{towardX, towardY, towardZ};
 
-  glColor3f(r / 255.0, g / 255.0, b / 255.0);
-  glMaterialfv(GL_FRONT, GL_AMBIENT, ambient);
-  glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse);
-  glMaterialfv(GL_FRONT, GL_SPECULAR, specular);
-  glMaterialfv(GL_FRONT, GL_SHININESS, &shininess);
-
-  for (int i = 0; i < F.size(); i++) {
-    glBegin(GL_TRIANGLES);
-    for (int j = 0; j < 3; j++) {
-      if (VT.size() != 0)
-        glTexCoord2f(VT[F[i].T[j]].TU, VT[F[i].T[j]].TV);
-      if (VN.size() != 0)
-        glNormal3f(VN[F[i].N[j]].NX, VN[F[i].N[j]].NY, VN[F[i].N[j]].NZ);
-      glVertex3f(V[F[i].V[j]].X, V[F[i].V[j]].Y, V[F[i].V[j]].Z);
-    }
-    glEnd();
-  }
-
-  glPopMatrix();
-}
-
-void SpaceShip::spaceshipRotate() {
-  double orgT[3] = {originTX, originTY, originTZ},
-         orgU[3] = {originUX, originUY, originUZ},
-         T[3] = {towardX, towardY, towardZ}, U[3] = {upX, upY, upZ};
-
-  Vct axis = MyVector::crossMulti3(orgT, T);
-  //  qDebug() << "cT" << T[0] << T[1] << T[2];
-  //  qDebug() << "oT" << orgT[0] << orgT[1] << orgT[2];
-  //  qDebug() << "AX" << axis[0] << axis[1] << axis[2];
-  //  qDebug() << "AG" << MyVector::angle(T, orgT, 3);
-  GLdouble ang = MyVector::angle(T, orgT, 3);
-  if (ang < 0)
-    ang = ang + M_PI + M_PI;
-  glRotated(ang / M_PI * 180, axis[0], axis[1], axis[2]);
-  delete[] axis;
-}
+//  QVector3D axis = QVector3D::crossProduct(orgT, T);
+//  T.normalize();
+//  orgT.normalize();
+//  GLdouble ang = qAcos(QVector3D::dotProduct(T, orgT));
+//  if (ang < 0)
+//    ang = ang + M_PI + M_PI;
+//  glRotated(ang / M_PI * 180, axis.x(), axis.y(), axis.z());
+//}

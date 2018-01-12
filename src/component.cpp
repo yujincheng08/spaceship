@@ -1,25 +1,23 @@
 #include "component.h"
+#include <QBitmap>
 #include <QDebug>
 #include <fstream>
 #include <iostream>
 #include <sstream>
 
+using namespace std;
 // reference: https://www.cnblogs.com/zjutlitao/p/4187529.html
-Component::Component() {
+Component::Component(QNode *parent) : QEntity(parent) {
   xPos = yPos = zPos = 0;
   xRot = yRot = zRot = 0;
-  LoadAllTextures();
-  setMaterial(LIGHTSILVER);
+  // LoadAllTextures();
+  // setMaterial(LIGHTSILVER);
   qDebug() << "component constructed.";
 }
 
-void Component::getPostion(GLdouble &a, GLdouble &b, GLdouble &c) {
-  a = xPos;
-  b = yPos;
-  c = zPos;
-}
+QVector3D Component::getPostion() const { return {xPos, yPos, zPos}; }
 
-void Component::setSource(string filename) {
+void Component::setSource(const string &filename) {
   QFile inputFile(QString::fromStdString(filename));
   inputFile.open(QIODevice::ReadOnly);
 
@@ -194,150 +192,8 @@ void Component::setSpecular(GLfloat spe[]) {
 
 void Component::setShininess(GLfloat shi) { shininess = shi; }
 
-unsigned char *Component::LoadBmpFile(const char *filename,
-                                      BITMAPINFOHEADER *bmpInfoHeader) {
-
-  FILE *file;
-  BITMAPFILEHEADER bmpFileHeader;
-  unsigned char *image;
-  unsigned int imageIdx = 0;
-  unsigned char tempRGB;
-
-  file = fopen(filename, "rb");
-  qDebug() << "filename=" << filename << endl;
-  if (file == NULL)
-    qDebug() << "Empty FILE" << endl;
-  if (file == NULL)
-    return 0;
-
-  fread(&bmpFileHeader, sizeof(BITMAPFILEHEADER), 1, file); // 读取 BMP 文件头
-
-  if (bmpFileHeader.bfType != BITMAP_ID) // 验证是否是一个 BMP 文件
-  {
-    qDebug() << "NOT BITMAP_ID" << endl;
-    fclose(file);
-    return 0;
-  }
-
-  fread(bmpInfoHeader, sizeof(BITMAPINFOHEADER), 1, file); // 读位图信息头
-  fseek(file, bmpFileHeader.bfOffBits,
-        SEEK_SET); // 将文件指针移到位图数据的开始处
-  image =
-      (unsigned char *)malloc(bmpInfoHeader->biSizeImage); // 分配内存给位图数据
-
-  if (!image) {
-    free(image);
-    fclose(file);
-    qDebug() << "?" << endl;
-    return 0;
-  }
-
-  fread(image, 1, bmpInfoHeader->biSizeImage, file); // 读取位图数据
-
-  if (image == NULL) {
-    qDebug() << "Empty IMAGE" << endl;
-    fclose(file);
-    return 0;
-  }
-
-  // 反转 R 和 B 值以得到 RGB，因为位图颜色格式是 BGR
-  for (imageIdx = 0; imageIdx < bmpInfoHeader->biSizeImage; imageIdx += 3) {
-    tempRGB = image[imageIdx];
-    image[imageIdx] = image[imageIdx + 2];
-    image[imageIdx + 2] = tempRGB;
-  }
-
-  fclose(file);
-  return image;
-}
-
-//---------- 调入纹理文件
-texture *Component::LoadTexFile(const char *filename) {
-
-  BITMAPINFOHEADER texInfo;
-  texture *thisTexture;
-
-  thisTexture = (texture *)malloc(sizeof(texture));
-  if (thisTexture == NULL)
-    return 0;
-  thisTexture->data =
-      LoadBmpFile(filename, &texInfo); // 调入纹理数据并检查有效性
-  if (thisTexture->data == NULL) {
-    free(thisTexture);
-    return 0;
-  }
-  thisTexture->width = texInfo.biWidth; // 设置纹理的宽和高
-  thisTexture->height = texInfo.biHeight;
-
-  glGenTextures(1, &thisTexture->texID); // 生成纹理对象名
-  return thisTexture;
-}
-
-bool Component::LoadAllTextures() {
-  QDir *dir;
-  qDebug() << dir->currentPath();
-  qDebug() << dir->current();
-  QString applicationDirPath = dir->currentPath();
-  string fileName_earth =
-      applicationDirPath.toStdString() + "/../spaceship/src/img/earth.bmp";
-
-  earth = LoadTexFile(fileName_earth.c_str());
-  if (earth == NULL)
-    return false;
-
-  string fileName_spaceship =
-      applicationDirPath.toStdString() + "/../spaceship/src/img/spaceship.bmp";
-  spaceship = LoadTexFile(fileName_spaceship.c_str());
-  if (spaceship == NULL)
-    return FALSE;
-
-  glBindTexture(GL_TEXTURE_2D, spaceship->texID);
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-  gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, spaceship->width, spaceship->height,
-                    GL_RGB, GL_UNSIGNED_BYTE, spaceship->data);
-
-  return true;
-}
-
-void Component::setPosition(GLdouble px, GLdouble py, GLdouble pz) {
+void Component::setPosition(qreal px, qreal py, qreal pz) {
   xPos = px;
   yPos = py;
   zPos = pz;
-}
-
-void Component::repaint() {
-  glPushMatrix();
-  glTranslated(xPos, yPos, zPos);
-  glRotated(xRot, 1, 0, 0);
-  glRotated(yRot, 0, 1, 0);
-  glRotated(zRot, 0, 0, 1);
-
-  glColor3f(r / 255.0, g / 255.0, b / 255.0);
-
-  glMaterialfv(GL_FRONT, GL_AMBIENT, ambient);
-  glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse);
-  glMaterialfv(GL_FRONT, GL_SPECULAR, specular);
-  glMaterialfv(GL_FRONT, GL_SHININESS, &shininess);
-
-  glEnable(GL_COLOR_MATERIAL);
-  // GLfloat gray[] = {0.75f, 0.75f, 0.75f, 1.0f};
-  // glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, gray);
-  // glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
-
-  for (int i = 0; i < F.size(); i++) {
-    glBegin(GL_TRIANGLES);
-    for (int j = 0; j < 3; j++) {
-      if (VT.size() != 0)
-        glTexCoord2f(VT[F[i].T[j]].TU, VT[F[i].T[j]].TV);
-      if (VN.size() != 0)
-        glNormal3f(VN[F[i].N[j]].NX, VN[F[i].N[j]].NY, VN[F[i].N[j]].NZ);
-      glVertex3f(V[F[i].V[j]].X, V[F[i].V[j]].Y, V[F[i].V[j]].Z);
-    }
-    glEnd();
-  }
-
-  glPopMatrix();
 }

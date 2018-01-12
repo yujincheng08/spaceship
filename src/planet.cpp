@@ -1,78 +1,81 @@
-#include "Planet.h"
+#include "planet.h"
 
-Planet::Planet() { setRotateSpeed(0); }
+Planet::Planet(QNode *parent) : Component(parent) {
+  setRotateSpeed(0);
+  textureImage->setSource(QUrl("qrc:/assets/img/earthmap2k.jpg"));
+  texture->addTextureImage(textureImage);
+  material->setTexture(texture);
+  addComponent(mesh);
+  addComponent(material);
+  addComponent(transform);
+}
 
 Planet::~Planet() {}
 
-void Planet::setRotateSpeed(GLfloat speed) { RotateSpeed = speed; }
+// void Planet::gltDrawSphere(GLfloat fRadius, GLint iSlices, GLint iStacks) {
+//  GLfloat drho = (GLfloat)(3.141592653589) / (GLfloat)iStacks;
+//  GLfloat dtheta = 2.0f * (GLfloat)(3.141592653589) / (GLfloat)iSlices;
+//  GLfloat ds = 1.0f / (GLfloat)iSlices;
+//  GLfloat dt = 1.0f / (GLfloat)iStacks;
+//  GLfloat t = 1.0f;
+//  GLfloat s = 0.0f;
+//  GLint i, j;
 
-void Planet::setRadius(GLfloat R) { radius = R; }
+//  for (i = 0; i < iStacks; i++) {
+//    GLfloat rho = (GLfloat)i * drho;
+//    GLfloat srho = (GLfloat)(sin(rho));
+//    GLfloat crho = (GLfloat)(cos(rho));
+//    GLfloat srhodrho = (GLfloat)(sin(rho + drho));
+//    GLfloat crhodrho = (GLfloat)(cos(rho + drho));
 
-void Planet::gltDrawSphere(GLfloat fRadius, GLint iSlices, GLint iStacks) {
-  GLfloat drho = (GLfloat)(3.141592653589) / (GLfloat)iStacks;
-  GLfloat dtheta = 2.0f * (GLfloat)(3.141592653589) / (GLfloat)iSlices;
-  GLfloat ds = 1.0f / (GLfloat)iSlices;
-  GLfloat dt = 1.0f / (GLfloat)iStacks;
-  GLfloat t = 1.0f;
-  GLfloat s = 0.0f;
-  GLint i, j;
+//    glBegin(GL_TRIANGLE_STRIP);
+//    s = 0.0f;
+//    for (j = 0; j <= iSlices; j++) {
+//      GLfloat theta = (j == iSlices) ? 0.0f : j * dtheta;
+//      GLfloat stheta = (GLfloat)(-sin(theta));
+//      GLfloat ctheta = (GLfloat)(cos(theta));
 
-  for (i = 0; i < iStacks; i++) {
-    GLfloat rho = (GLfloat)i * drho;
-    GLfloat srho = (GLfloat)(sin(rho));
-    GLfloat crho = (GLfloat)(cos(rho));
-    GLfloat srhodrho = (GLfloat)(sin(rho + drho));
-    GLfloat crhodrho = (GLfloat)(cos(rho + drho));
+//      GLfloat x = stheta * srho;
+//      GLfloat y = ctheta * srho;
+//      GLfloat z = crho;
 
-    glBegin(GL_TRIANGLE_STRIP);
-    s = 0.0f;
-    for (j = 0; j <= iSlices; j++) {
-      GLfloat theta = (j == iSlices) ? 0.0f : j * dtheta;
-      GLfloat stheta = (GLfloat)(-sin(theta));
-      GLfloat ctheta = (GLfloat)(cos(theta));
+//      glTexCoord2f(s, t);
+//      glNormal3f(x, y, z);
+//      glVertex3f(x * fRadius, y * fRadius, z * fRadius);
 
-      GLfloat x = stheta * srho;
-      GLfloat y = ctheta * srho;
-      GLfloat z = crho;
+//      x = stheta * srhodrho;
+//      y = ctheta * srhodrho;
+//      z = crhodrho;
+//      glTexCoord2f(s, t - dt);
+//      s += ds;
+//      glNormal3f(x, y, z);
+//      glVertex3f(x * fRadius, y * fRadius, z * fRadius);
+//    }
+//    glEnd();
 
-      glTexCoord2f(s, t);
-      glNormal3f(x, y, z);
-      glVertex3f(x * fRadius, y * fRadius, z * fRadius);
+//    t -= dt;
+//  }
+//}
 
-      x = stheta * srhodrho;
-      y = ctheta * srhodrho;
-      z = crhodrho;
-      glTexCoord2f(s, t - dt);
-      s += ds;
-      glNormal3f(x, y, z);
-      glVertex3f(x * fRadius, y * fRadius, z * fRadius);
-    }
-    glEnd();
+// void Planet::repaint() {
 
-    t -= dt;
-  }
-}
+//  glBindTexture(GL_TEXTURE_2D, earth->texID);
+//  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+//  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+//  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+//  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+//  gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, earth->width, earth->height,
+//  GL_RGB,
+//                    GL_UNSIGNED_BYTE, earth->data);
 
-void Planet::repaint() {
+//  qDebug() << "width=" << earth->width << " height=" << earth->height << endl;
+//  qDebug() << "ID=" << earth->texID << endl;
+//  qDebug() << "data=" << *(earth->data) << endl;
 
-  glBindTexture(GL_TEXTURE_2D, earth->texID);
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-  gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, earth->width, earth->height, GL_RGB,
-                    GL_UNSIGNED_BYTE, earth->data);
+//  glPushMatrix();
+//  glTranslated(xPos, yPos, zPos);
+//  glRotatef(RotateSpeed, 0.0, 1.0, 0.0); //自转
+//  glRotatef(90, -1, 0, 0);
 
-  qDebug() << "width=" << earth->width << " height=" << earth->height << endl;
-  qDebug() << "ID=" << earth->texID << endl;
-  qDebug() << "data=" << *(earth->data) << endl;
-
-  glPushMatrix();
-  glTranslated(xPos, yPos, zPos);
-  glRotatef(RotateSpeed, 0.0, 1.0, 0.0); //自转
-  glRotatef(90, -1, 0, 0);
-
-  gltDrawSphere(radius, 40, 40); //绘制
-
-  glPopMatrix();
-}
+//  glPopMatrix();
+//}

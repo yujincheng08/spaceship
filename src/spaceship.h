@@ -2,13 +2,18 @@
 #define SPACESHIP_H
 
 #include "component.h"
-#include "vector.h"
 #include <QtOpenGL>
 
 class SpaceShip : public Component {
 public:
+  QSceneLoader *sceneLoader = new QSceneLoader(this);
+  QTransform *transform = new QTransform;
+  QTextureMaterial *material = new QTextureMaterial;
+  QTextureImage *textureImage = new QTextureImage;
+  QTexture2D *texture = new QTexture2D;
+
   friend class InfoSurface;
-  SpaceShip();
+  SpaceShip(QNode *parent = nullptr);
   void startTurnLeft();
   void startTurnRight();
   void startTurnUp();
@@ -22,26 +27,31 @@ public:
   void endMoveForward();
   void endMoveBack();
 
-  void setMaxTurnLRSpeed(GLdouble LR);
-  void setMaxTurnUDSpeed(GLdouble UD);
-  void setMaxMoveSpeed(GLdouble M);
-  void setTowardDirection(GLdouble tx, GLdouble ty, GLdouble tz);
-  void setUpDirection(GLdouble ux, GLdouble uy, GLdouble uz);
+  void setMaxTurnLRSpeed(qreal speed) { maxTurnLRSpeed = speed; }
+  void setMaxTurnUDSpeed(qreal speed) { maxTurnUDSpeed = speed; }
+  void setMaxMoveSpeed(qreal speed) { maxMoveSpeed = speed; }
+  void setTowardDirection(const QVector3D &toward) {
+    this->toward = toward;
+    this->toward.normalize();
+  }
 
-  void refresh();
-  void repaint();
+  void setUpDirection(const QVector3D &up) {
+    this->up = up - toward * up * toward;
+    this->up.normalize();
+  }
 
 private:
-  void spaceshipRotate();
-
 private:
-  GLdouble turnLRSpeed, turnUDSpeed, moveSpeed;
-  GLdouble maxTurnLRSpeed, maxTurnUDSpeed, maxMoveSpeed;
-  GLdouble originTX, originTY, originTZ, originUX, originUY, originUZ;
-  GLdouble towardX, towardY, towardZ, upX, upY, upZ;
+  qreal turnLRSpeed, turnUDSpeed, moveSpeed;
+  qreal maxTurnLRSpeed, maxTurnUDSpeed, maxMoveSpeed;
+
+  QVector3D toward;
+  QVector3D up;
+  qreal towardX, towardY, towardZ, upX, upY, upZ;
 
   GLboolean isTurnLeft, isTurnRight, isTurnUp, isTurnDown, isMoveForward,
       isMoveBack;
+  virtual ~SpaceShip() {}
 };
 
 #endif // SPACESHIP_H

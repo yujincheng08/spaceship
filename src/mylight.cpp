@@ -71,4 +71,4 @@ void MyLight::lightOff() {
   isLightOn = false;
 }
 
-boolean MyLight::isOn() { return isLightOn; }
+bool MyLight::isOn() { return isLightOn; }

@@ -13,21 +13,19 @@ DEFINES -= UNICODE
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-LIBS += -lopengl32 \
-    -lglu32 \
-    -lglut \
-
+LIBS += -lglut -lGLU -lGL
 
 SOURCES += \
     src/main.cpp \
     src/mainwindow.cpp \
     src/mycamera.cpp \
-    src/vector.cpp \
     src/component.cpp \
     src/mylight.cpp \
     src/spaceship.cpp \
     src/planet.cpp \
-    src/infosurface.cpp
+    src/infosurface.cpp \
+    src/scene.cpp \
+    src/cameracontroller.cpp
 
 RESOURCES += \
     assets.qrc \
@@ -42,12 +40,13 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     src/mainwindow.h \
     src/mycamera.h \
-    src/vector.h \
     src/component.h \
     src/mylight.h \
     src/spaceship.h \
     src/planet.h \
-    src/infosurface.h
+    src/infosurface.h \
+    src/scene.h \
+    src/cameracontroller.h
 
 
 

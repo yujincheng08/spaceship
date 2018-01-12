@@ -15,12 +15,12 @@ public:
   void initLight();
   void lightOn();
   void lightOff();
-  boolean isOn();
+  bool isOn();
 
 private:
   GLfloat *ambient, *diffuse, *specular, *position;
 
-  boolean isLightOn;
+  bool isLightOn;
 
   GLint number;
 };

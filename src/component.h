@@ -7,11 +7,16 @@
 #include <QVector>
 #include <QtOpenGL>
 
-#include <gl/glaux.h>
-#include <gl/glut.h>
-#include <vector>
+#include <GL/glut.h>
 
-using namespace std;
+#include <Qt3DCore/QEntity>
+#include <Qt3DCore/QTransform>
+#include <Qt3DExtras/QTextureMaterial>
+#include <Qt3DRender/QMaterial>
+#include <Qt3DRender/QMesh>
+#include <Qt3DRender/QSceneLoader>
+#include <Qt3DRender/QTexture>
+#include <Qt3DRender/QTextureImage>
 
 // reference: https://www.cnblogs.com/zjutlitao/p/4187529.html
 struct POINT3 {
@@ -41,11 +46,20 @@ typedef struct {
   unsigned char *data; //实际纹理数据
 } texture;
 
-class Component {
+class Component : public Qt3DCore::QEntity {
 public:
-  Component();
-  void getPostion(GLdouble &a, GLdouble &b, GLdouble &c);
-  void setSource(string filename);
+  using QMesh = Qt3DRender::QMesh;
+  using QTransform = Qt3DCore::QTransform;
+  using QMaterial = Qt3DRender::QMaterial;
+  using QTextureMaterial = Qt3DExtras::QTextureMaterial;
+  using QTextureImage = Qt3DRender::QTextureImage;
+  using QTexture2D = Qt3DRender::QTexture2D;
+  using QSceneLoader = Qt3DRender::QSceneLoader;
+
+public:
+  Component(QNode *parent = nullptr);
+  QVector3D getPostion() const;
+  void setSource(const std::string &filename);
   void copySourceFrom(Component *src);
   void setColor(int r, int g, int b, int a = 255);
   void setMaterial(int material);
@@ -54,11 +68,6 @@ public:
   void setSpecular(GLfloat spe[]);
   void setShininess(GLfloat shi);
   void setPosition(GLdouble px, GLdouble py, GLdouble pz);
-  texture *LoadTexFile(const char *filename);
-  bool LoadAllTextures();
-  unsigned char *LoadBmpFile(const char *filename,
-                             BITMAPINFOHEADER *bmpInfoHeader);
-  virtual void repaint();
 
   enum Material {
     COPPER = 0,
@@ -69,6 +78,7 @@ public:
     RUBBER,
     LIGHTSILVER
   };
+  virtual ~Component() {}
 
 protected:
   GLdouble xPos, yPos, zPos;

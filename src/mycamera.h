@@ -1,7 +1,6 @@
 #ifndef MYCAMERA_H
 #define MYCAMERA_H
 
-#include "vector.h"
 #include <GL/glut.h>
 #include <QtOpenGL>
 
@@ -12,24 +11,24 @@ public:
   MyCamera();
   void setView();
   void resetView();
-  void setEye(GLdouble ex, GLdouble ey, GLdouble ez);
-  void setCenter(GLdouble cx, GLdouble cy, GLdouble cz);
-  void setUp(GLdouble ux, GLdouble uy, GLdouble uz);
-  void traceComponent(Component *cpnt, GLdouble off = 0);
+  void setEye(const QVector3D &eye);
+  void setCenter(const QVector3D &center);
+  void setUp(const QVector3D &up);
+  void traceComponent(const Component *cpnt, GLdouble off = 0);
   void keepTrace();
-  void posMove(GLdouble mx, GLdouble my, GLdouble mz);
-  void viewRotate(GLdouble lr, GLdouble ud);
-  void viewRound(GLdouble lr, GLdouble ud);
+  void posMove(const QVector3D &shift);
+  void viewRotate(qreal lr, qreal ud);
+  void viewRound(qreal lr, qreal ud);
 
 private:
-  GLdouble eyex, eyey, eyez;
-  GLdouble centerx, centery, centerz;
-  GLdouble upx, upy, upz;
-  GLdouble offset;
+  QVector3D eye;
+  QVector3D center;
+  QVector3D up;
+  qreal offset;
 
-  Component *trace;
+  const Component *trace;
 
-  GLdouble step, rotate;
+  qreal step, rotate;
 };
 
 #endif // MYCAMARA_H

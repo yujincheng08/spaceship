@@ -12,103 +12,70 @@ MyCamera::MyCamera() {
 void MyCamera::setView() {
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
-  gluLookAt(eyex, eyey, eyez, centerx, centery, centerz, upx, upy, upz);
+  gluLookAt(eye.x(), eye.y(), eye.z(), center.x(), center.y(), center.z(),
+            up.x(), up.y(), up.z());
 }
 
 void MyCamera::resetView() {
-  setEye(0, 10, 25);
-  setCenter(0, 0, 0);
-  setUp(0, 1, -1);
+  setEye({0, 10, 25});
+  setCenter({0, 0, 0});
+  setUp({0, 1, -1});
 }
 
-void MyCamera::setEye(GLdouble ex, GLdouble ey, GLdouble ez) {
-  if (ex == centerx && ey == centery && ez == centerz)
-    return;
-  eyex = ex;
-  eyey = ey;
-  eyez = ez;
-  setUp(upx, upy, upz);
+void MyCamera::setEye(const QVector3D &newEye) {
+  eye = newEye;
+  setUp(up);
 }
 
-void MyCamera::setCenter(GLdouble cx, GLdouble cy, GLdouble cz) {
-  if (cx == eyex && cy == eyey && cz == eyez)
-    return;
-  centerx = cx;
-  centery = cy;
-  centerz = cz;
-  setUp(upx, upy, upz);
+void MyCamera::setCenter(const QVector3D &newCenter) {
+  center = newCenter;
+  setUp(up);
 }
 
-void MyCamera::setUp(GLdouble ux, GLdouble uy, GLdouble uz) {
-  QVector3D view(centerx - eyex, centery - eyey, centerz - eyez),
-      up(ux, uy, uz);
+void MyCamera::setUp(const QVector3D &newUp) {
+  QVector3D view = center - eye;
 
-  float length = QVector3D::dotProduct(view, up) / view.lengthSquared();
+  float length = QVector3D::dotProduct(view, newUp) / view.lengthSquared();
   view *= length;
-  up -= view;
+  up = newUp - view;
   up.normalize();
-
-  upx = up.x();
-  upy = up.y();
-  upz = up.z();
 }
 
-void MyCamera::traceComponent(Component *cpnt, GLdouble off) {
+void MyCamera::traceComponent(const Component *cpnt, GLdouble off) {
   trace = cpnt;
-  GLdouble x, y, z;
-  trace->getPostion(x, y, z);
   offset = off;
 }
 
 void MyCamera::keepTrace() {
-  if (trace == NULL)
+  if (trace == nullptr)
     return;
-  GLdouble x, y, z;
-  trace->getPostion(x, y, z);
-  setEye(x - centerx + eyex, y - centery + eyey + offset, z - centerz + eyez);
-  setCenter(x, y + offset, z);
-  setUp(0, 1, 0);
+  QVector3D position = trace->getPostion();
+  setEye(position - center + eye);
+  setCenter({position.x(), position.y() + offset, position.z()});
+  setUp({0, 1, 0});
   setView();
 }
 
-void MyCamera::posMove(GLdouble mx, GLdouble my, GLdouble mz) {
-  QVector3D view(centerx - eyex, centery - eyey, centerz - eyez),
-      up(upx, upy, upz);
-
+void MyCamera::posMove(const QVector3D &shift) {
+  QVector3D view = center - eye;
   // move left & right
   QVector3D product = QVector3D::crossProduct(view, up);
   product.normalize();
   product *= step;
-  eyex += mx * product.x();
-  eyey += mx * product.y();
-  eyez += mx * product.z();
-  if (trace == NULL) {
-    centerx += mx * product.x();
-    centery += mx * product.y();
-    centerz += mx * product.z();
+  eye += shift.x() * product;
+  if (trace == nullptr) {
+    center += shift.x() * product;
   }
-
-  // move up & down
   up *= step;
-  eyex += my * up.x();
-  eyey += my * up.y();
-  eyez += my * up.z();
-  if (trace == NULL) {
-    centerx += my * up.x();
-    centery += my * up.y();
-    centerz += my * up.z();
+  eye += shift.y() * up;
+  if (trace == nullptr) {
+    center += shift.y() * up;
   }
-
-  // move front & back
   view.normalize();
   view *= step;
-  eyex += mz * view.x();
-  eyey += mz * view.y();
-  eyez += mz * view.z();
-  if (trace == NULL) {
-    centerx += mz * view.x();
-    centery += mz * view.y();
-    centerz += mz * view.z();
+  eye += shift.z() * view;
+  if (trace == nullptr) {
+    center += shift.z() * view;
   }
 }
 
@@ -152,23 +119,20 @@ void MyCamera::posMove(GLdouble mx, GLdouble my, GLdouble mz) {
 //  upz = up[2];
 //}
 
-void MyCamera::viewRound(GLdouble lr, GLdouble ud) {
-  QVector3D l(centerx - eyex, centery - eyey, centerz - eyez), u(upx, upy, upz);
-
+void MyCamera::viewRound(qreal lr, qreal ud) {
+  QVector3D l = center - eye;
   QVector3D c;
-  c = QVector3D::crossProduct(u, l);
+  c = QVector3D::crossProduct(up, l);
   c.normalize();
   c *= -lr;
 
   float len = l.length();
   l += c;
-  l -= u * ud / 3;
+  l -= up * ud / 3;
   l.normalize();
   l *= len;
 
-  eyex = centerx - l.x();
-  eyey = centery - l.y();
-  eyez = centerz - l.z();
+  eye = center - l;
 
-  setUp(0, 1, 0);
+  setUp({0, 1, 0});
 }

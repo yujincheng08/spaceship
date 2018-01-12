@@ -2,232 +2,240 @@
 #include "infosurface.h"
 #include "planet.h"
 #include "spaceship.h"
-#include <QDebug>
+#include <QtDebug>
 
-MainWindow::MainWindow(QWidget *parent) : QOpenGLWidget(parent) {
-  qDebug() << "construct for mw";
-  initParams();
-  initWidget();
-  initElement();
-  initTimer();
+MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
+  //  qDebug() << "construct for mw";
+  initScene();
+  //  initParams();
+  //  initWidget();
+  //  initElement();
+  //  initTimer();
+  setCentralWidget(container);
 }
 
 MainWindow::~MainWindow() {
-  makeCurrent();
-  for (int i = 0; i < components.length(); i++)
-    delete components.at(i);
-  delete cursorTimer;
-  doneCurrent();
+  //  makeCurrent();
+  //  for (int i = 0; i < components.length(); i++)
+  //    delete components.at(i);
+  //  delete cursorTimer;
+  //  doneCurrent();
 }
 
-void MainWindow::initializeGL() {
-  qDebug() << "initGL start";
-  glEnable(GL_TEXTURE_2D);
-  glEnable(GL_COLOR_MATERIAL);
-  glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
-  loadTextures();
-  glShadeModel(GL_SMOOTH);
-  glClearColor(18 / 255.0, 20 / 255.0, 20 / 255.0, 0.5);
-  glClearDepth(1.0);
-  glEnable(GL_DEPTH_TEST);
-  glDepthFunc(GL_LEQUAL);
-  glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-
-  initLight();
+void MainWindow::initScene(const QColor &clearColor) {
+  scene->defaultFrameGraph()->setClearColor(clearColor);
+  container->setMinimumSize(QSize(200, 100));
+  container->setMaximumSize(scene->screen()->size());
 }
 
-void MainWindow::initParams() {
-  isMousePresseed = 0;
-  mouse_x = mouse_y = 0;
-}
+// void MainWindow::initializeGL() {
+//  qDebug() << "initGL start";
+//  glEnable(GL_TEXTURE_2D);
+//  glEnable(GL_COLOR_MATERIAL);
+//  glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
+//  loadTextures();
+//  glShadeModel(GL_SMOOTH);
+//  glClearColor(18 / 255.0, 20 / 255.0, 20 / 255.0, 0.5);
+//  glClearDepth(1.0);
+//  glEnable(GL_DEPTH_TEST);
+//  glDepthFunc(GL_LEQUAL);
+//  glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
-void MainWindow::initWidget() {
-  qDebug() << "initWidget start!";
-  setGeometry(0, 27, 960, 540);
-  setWindowTitle(tr("War of Spaceship"));
+//  initLight();
+//}
 
-  // reference: tieba.baidu.com/p/3879195450
-  cursorTimer = new QTimer(this);
-  QCursor cur = this->cursor();
-  cur.setShape(Qt::BlankCursor);
-  this->setCursor(cur);
+// void MainWindow::initParams() {
+//  isMousePresseed = 0;
+//  mouse_x = mouse_y = 0;
+//}
 
-  connect(cursorTimer, &QTimer::timeout, [=]() {
-    static bool isFirst = true;
-    QPoint center(this->width() / 2, this->height() / 2);
-    QPoint offet = QPoint(QCursor::pos() - this->pos()) - center;
-    camera->viewRound(offet.x(), offet.y());
-    update();
-    if (isFirst) {
-      offet.setX(0);
-      offet.setY(0);
-      isFirst = false;
-    }
-    QCursor::setPos(this->x() + this->width() / 2,
-                    this->y() + this->height() / 2);
-  });
-  cursorTimer->start(10);
+// void MainWindow::initWidget() {
+//  qDebug() << "initWidget start!";
+//  setGeometry(0, 27, 960, 540);
+//  setWindowTitle(tr("War of Spaceship"));
 
-  is = new InfoSurface(this);
+//  // reference: tieba.baidu.com/p/3879195450
+//  cursorTimer = new QTimer(this);
+//  QCursor cur = this->cursor();
+//  cur.setShape(Qt::BlankCursor);
+//  this->setCursor(cur);
 
-  qDebug() << "initWidget successfully!";
-}
+//  connect(cursorTimer, &QTimer::timeout, [=]() {
+//    static bool isFirst = true;
+//    QPoint center(this->width() / 2, this->height() / 2);
+//    QPoint offet = QPoint(QCursor::pos() - this->pos()) - center;
+//    camera->viewRound(offet.x(), offet.y());
+//    update();
+//    if (isFirst) {
+//      offet.setX(0);
+//      offet.setY(0);
+//      isFirst = false;
+//    }
+//    QCursor::setPos(this->x() + this->width() / 2,
+//                    this->y() + this->height() / 2);
+//  });
+//  cursorTimer->start(10);
 
-void MainWindow::initElement() {
-  camera = new MyCamera();
-  qDebug() << "camera construct successfully!";
+//  is = new InfoSurface(this);
 
-  SpaceShip *spaceship = new SpaceShip();
-  qDebug() << "spaceship construct successfully!";
-  spaceship->setSource(":/assets/fj.obj");
-  spaceship->setColor(128, 128, 128);
-  spaceship->setTowardDirection(0, 0, -1);
-  spaceship->setUpDirection(0, 1, 0);
-  spaceship->setMaxMoveSpeed(1);
-  qDebug() << "spaceship set successfully!";
-  components.append(spaceship);
-  qDebug() << "spaceship add successfully!";
+//  qDebug() << "initWidget successfully!";
+//}
 
-  camera->traceComponent(spaceship, 3);
-  qDebug() << "camera trace successfully!";
+// void MainWindow::initElement() {
+//  camera = new MyCamera();
+//  qDebug() << "camera construct successfully!";
 
-  Component *compare = new Component();
-  compare->copySourceFrom(spaceship);
-  compare->setColor(128, 128, 128);
-  compare->setPosition(0, 10, 0);
-  components.append(compare);
-  qDebug() << "initElement successfully!";
+//  SpaceShip *spaceship = new SpaceShip();
+//  qDebug() << "spaceship construct successfully!";
+//  spaceship->setSource(":/assets/fj.obj");
+//  spaceship->setColor(128, 128, 128);
+//  spaceship->setTowardDirection(0, 0, -1);
+//  spaceship->setUpDirection(0, 1, 0);
+//  spaceship->setMaxMoveSpeed(1);
+//  qDebug() << "spaceship set successfully!";
+//  components.append(spaceship);
+//  qDebug() << "spaceship add successfully!";
 
-  Planet *earth = new Planet();
-  earth->setPosition(60, 60, 0);
-  earth->setRadius(40);
-  components.append(earth);
-  qDebug() << "earth load succefully!";
-}
+//  camera->traceComponent(spaceship, 3);
+//  qDebug() << "camera trace successfully!";
 
-void MainWindow::initTimer() { timer.start(20, this); }
+//  Component *compare = new Component();
+//  compare->copySourceFrom(spaceship);
+//  compare->setColor(128, 128, 128);
+//  compare->setPosition(0, 10, 0);
+//  components.append(compare);
+//  qDebug() << "initElement successfully!";
 
-void MainWindow::initLight() {
-  MyLight *a = new MyLight(GL_LIGHT0);
-  lights.insert(lights.begin(), *a);
-}
+//  Planet *earth = new Planet();
+//  earth->setPosition(60, 60, 0);
+//  earth->setRadius(40);
+//  components.append(earth);
+//  qDebug() << "earth load succefully!";
+//}
 
-void MainWindow::loadTextures() {}
+// void MainWindow::initTimer() { timer.start(20, this); }
 
-void MainWindow::paintGL() {
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+// void MainWindow::initLight() {
+//  MyLight *a = new MyLight(GL_LIGHT0);
+//  lights.insert(lights.begin(), *a);
+//}
 
-  if (camera != NULL)
-    camera->setView();
+// void MainWindow::loadTextures() {}
 
-  QList<Component *>::iterator t;
-  for (t = components.begin(); t != components.end(); t++) {
-    (*t)->repaint();
-  }
-}
+//// void MainWindow::paintGL() {
+////  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-void MainWindow::resizeGL(int width, int height) {
-  if (0 == height) {
-    height = 1;
-  }
+////  if (camera != NULL)
+////    camera->setView();
 
-  glViewport(0, 0, (GLint)width, (GLint)height);
+////  QList<Component *>::iterator t;
+////  for (t = components.begin(); t != components.end(); t++) {
+////    (*t)->repaint();
+////  }
+////}
 
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
-  gluPerspective(45.0, (GLfloat)width / (GLfloat)height, 0.1, 500);
+//// void MainWindow::resizeGL(int width, int height) {
+////  if (0 == height) {
+////    height = 1;
+////  }
 
-  if (camera != NULL)
-    camera->setView();
+////  glViewport(0, 0, (GLint)width, (GLint)height);
 
-  is->resize(width, height);
-}
+////  glMatrixMode(GL_PROJECTION);
+////  glLoadIdentity();
+////  gluPerspective(45.0, (GLfloat)width / (GLfloat)height, 0.1, 500);
 
-void MainWindow::keyPressEvent(QKeyEvent *e) {
-  if (e->isAutoRepeat())
-    return;
-  SpaceShip *a = (SpaceShip *)(components[0]);
-  switch (e->key()) {
-  case Qt::Key_A:
-    a->startTurnLeft();
-    camera->keepTrace();
-    update();
-    break;
-  case Qt::Key_D:
-    a->startTurnRight();
-    camera->keepTrace();
-    update();
-    break;
-  case Qt::Key_W:
-    a->startMoveForward();
-    camera->keepTrace();
-    update();
-    break;
-  case Qt::Key_S:
-    a->startMoveBack();
-    camera->keepTrace();
-    update();
-    break;
-  case Qt::Key_E:
-    a->startTurnUp();
-    camera->keepTrace();
-    update();
-    break;
-  case Qt::Key_C:
-    a->startTurnDown();
-    camera->keepTrace();
-    update();
-    break;
+////  if (camera != NULL)
+////    camera->setView();
 
-  case Qt::Key_P:
-    if (timer.isActive()) {
-      timer.stop();
-      cursorTimer->stop();
-    } else {
-      timer.start(20, this);
-      cursorTimer->start(10);
-    }
-    break;
-  }
-}
+////  is->resize(width, height);
+////}
 
-void MainWindow::keyReleaseEvent(QKeyEvent *e) {
-  if (e->isAutoRepeat())
-    return;
-  SpaceShip *a = (SpaceShip *)(components[0]);
-  switch (e->key()) {
-  case Qt::Key_A:
-    a->endTurnLeft();
-    camera->keepTrace();
-    update();
-    break;
-  case Qt::Key_D:
-    a->endTurnRight();
-    camera->keepTrace();
-    update();
-    break;
-  case Qt::Key_W:
-    a->endMoveForward();
-    camera->keepTrace();
-    update();
-    break;
-  case Qt::Key_S:
-    a->endMoveBack();
-    camera->keepTrace();
-    update();
-    break;
-  case Qt::Key_E:
-    a->endTurnUp();
-    camera->keepTrace();
-    update();
-    break;
-  case Qt::Key_C:
-    a->endTurnDown();
-    camera->keepTrace();
-    update();
-    break;
-  }
-}
+// void MainWindow::keyPressEvent(QKeyEvent *e) {
+//  if (e->isAutoRepeat())
+//    return;
+//  SpaceShip *a = (SpaceShip *)(components[0]);
+//  switch (e->key()) {
+//  case Qt::Key_A:
+//    a->startTurnLeft();
+//    camera->keepTrace();
+//    update();
+//    break;
+//  case Qt::Key_D:
+//    a->startTurnRight();
+//    camera->keepTrace();
+//    update();
+//    break;
+//  case Qt::Key_W:
+//    a->startMoveForward();
+//    camera->keepTrace();
+//    update();
+//    break;
+//  case Qt::Key_S:
+//    a->startMoveBack();
+//    camera->keepTrace();
+//    update();
+//    break;
+//  case Qt::Key_E:
+//    a->startTurnUp();
+//    camera->keepTrace();
+//    update();
+//    break;
+//  case Qt::Key_C:
+//    a->startTurnDown();
+//    camera->keepTrace();
+//    update();
+//    break;
+
+//  case Qt::Key_P:
+//    if (timer.isActive()) {
+//      timer.stop();
+//      cursorTimer->stop();
+//    } else {
+//      timer.start(20, this);
+//      cursorTimer->start(10);
+//    }
+//    break;
+//  }
+//}
+
+// void MainWindow::keyReleaseEvent(QKeyEvent *e) {
+//  if (e->isAutoRepeat())
+//    return;
+//  SpaceShip *a = (SpaceShip *)(components[0]);
+//  switch (e->key()) {
+//  case Qt::Key_A:
+//    a->endTurnLeft();
+//    camera->keepTrace();
+//    update();
+//    break;
+//  case Qt::Key_D:
+//    a->endTurnRight();
+//    camera->keepTrace();
+//    update();
+//    break;
+//  case Qt::Key_W:
+//    a->endMoveForward();
+//    camera->keepTrace();
+//    update();
+//    break;
+//  case Qt::Key_S:
+//    a->endMoveBack();
+//    camera->keepTrace();
+//    update();
+//    break;
+//  case Qt::Key_E:
+//    a->endTurnUp();
+//    camera->keepTrace();
+//    update();
+//    break;
+//  case Qt::Key_C:
+//    a->endTurnDown();
+//    camera->keepTrace();
+//    update();
+//    break;
+//  }
+//}
 
 // void MainWindow::mousePressEvent(QMouseEvent *e) {
 //  if (e->button() == Qt::LeftButton)
@@ -260,22 +268,22 @@ void MainWindow::keyReleaseEvent(QKeyEvent *e) {
 
 // void MainWindow::mouseReleaseEvent(QMouseEvent *e) { isMousePresseed = 0; }
 
-void MainWindow::wheelEvent(QWheelEvent *e) {
-  if (e->delta() > 0) {
-    camera->posMove(0, 0, 3);
-    update();
-  } else if (e->delta() < 0) {
-    camera->posMove(0, 0, -3);
-    update();
-  }
-}
+// void MainWindow::wheelEvent(QWheelEvent *e) {
+//  if (e->delta() > 0) {
+//    camera->posMove({0, 0, 3});
+//    update();
+//  } else if (e->delta() < 0) {
+//    camera->posMove({0, 0, -3});
+//    update();
+//  }
+//}
 
-void MainWindow::timerEvent(QTimerEvent *e) {
-  SpaceShip *a = (SpaceShip *)(components[0]);
-  a->refresh();
-  camera->keepTrace();
-  update();
-  is->update();
-}
+// void MainWindow::timerEvent(QTimerEvent *e) {
+//  SpaceShip *a = (SpaceShip *)(components[0]);
+//  a->refresh();
+//  camera->keepTrace();
+//  update();
+//  is->update();
+//}
 
-void MainWindow::closeEvent(QCloseEvent *e) {}
+// void MainWindow::closeEvent(QCloseEvent *e) {}
