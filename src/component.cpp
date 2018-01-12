@@ -8,14 +8,14 @@
 using namespace std;
 // reference: https://www.cnblogs.com/zjutlitao/p/4187529.html
 Component::Component(QNode *parent) : QEntity(parent) {
-  xPos = yPos = zPos = 0;
   xRot = yRot = zRot = 0;
+  addComponent(transform);
   // LoadAllTextures();
   // setMaterial(LIGHTSILVER);
   qDebug() << "component constructed.";
 }
 
-QVector3D Component::getPostion() const { return {xPos, yPos, zPos}; }
+QVector3D Component::getPostion() const { return transform->translation(); }
 
 void Component::setSource(const string &filename) {
   QFile inputFile(QString::fromStdString(filename));
@@ -192,8 +192,6 @@ void Component::setSpecular(GLfloat spe[]) {
 
 void Component::setShininess(GLfloat shi) { shininess = shi; }
 
-void Component::setPosition(qreal px, qreal py, qreal pz) {
-  xPos = px;
-  yPos = py;
-  zPos = pz;
+void Component::setPosition(QVector3D translation) {
+  transform->setTranslation(translation);
 }

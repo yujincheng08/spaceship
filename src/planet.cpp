@@ -7,10 +7,11 @@ Planet::Planet(QNode *parent) : Component(parent) {
   material->setTexture(texture);
   addComponent(mesh);
   addComponent(material);
-  addComponent(transform);
 }
 
 Planet::~Planet() {}
+
+void Planet::frameAction(float dt) {}
 
 // void Planet::gltDrawSphere(GLfloat fRadius, GLint iSlices, GLint iStacks) {
 //  GLfloat drho = (GLfloat)(3.141592653589) / (GLfloat)iStacks;

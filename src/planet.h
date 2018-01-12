@@ -2,7 +2,6 @@
 #define PLANET_H
 
 #include "component.h"
-#include <GL/glut.h>
 #include <QPropertyAnimation>
 #include <Qt3DExtras/QSphereMesh>
 #include <QtOpenGL>
@@ -13,7 +12,6 @@ public:
 
 private:
   QSphereMesh *mesh = new QSphereMesh(this);
-  QTransform *transform = new QTransform;
   QTextureImage *textureImage = new QTextureImage;
   QTexture2D *texture = new QTexture2D;
   QTextureMaterial *material = new QTextureMaterial;
@@ -31,6 +29,9 @@ public:
     if (slices > 0)
       mesh->setSlices(slices);
   }
+
+protected slots:
+  void frameAction(float dt) override;
 
 protected:
   float rotateSpeed;

@@ -1,28 +1,28 @@
-#ifndef MYLIGHT_H
-#define MYLIGHT_H
+//#ifndef MYLIGHT_H
+//#define MYLIGHT_H
 
-#include <QtOpenGL>
+//#include <QtOpenGL>
 
-class MyLight {
-public:
-  MyLight();
-  MyLight(GLint number);
-  ~MyLight();
-  void setAmbient(GLfloat a[]);
-  void setDiffuse(GLfloat a[]);
-  void setSpecular(GLfloat a[]);
-  void setPosition(GLfloat a[]);
-  void initLight();
-  void lightOn();
-  void lightOff();
-  bool isOn();
+// class MyLight {
+// public:
+//  MyLight();
+//  MyLight(GLint number);
+//  ~MyLight();
+//  void setAmbient(GLfloat a[]);
+//  void setDiffuse(GLfloat a[]);
+//  void setSpecular(GLfloat a[]);
+//  void setPosition(GLfloat a[]);
+//  void initLight();
+//  void lightOn();
+//  void lightOff();
+//  bool isOn();
 
-private:
-  GLfloat *ambient, *diffuse, *specular, *position;
+// private:
+//  GLfloat *ambient, *diffuse, *specular, *position;
 
-  bool isLightOn;
+//  bool isLightOn;
 
-  GLint number;
-};
+//  GLint number;
+//};
 
-#endif // MYLIGHT_H
+//#endif // MYLIGHT_H

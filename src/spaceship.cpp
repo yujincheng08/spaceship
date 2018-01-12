@@ -7,7 +7,6 @@ SpaceShip::SpaceShip(QNode *parent) : Component(parent) {
   textureImage->setSource(QUrl("qrc:/assets/img/earthmap2k.jpg"));
   texture->addTextureImage(textureImage);
   material->setTexture(texture);
-  addComponent(transform);
   addComponent(mesh);
   addComponent(material);
   isTurnDown = isTurnLeft = isTurnRight = isTurnUp = false;
@@ -16,12 +15,6 @@ SpaceShip::SpaceShip(QNode *parent) : Component(parent) {
   setMaxTurnLRSpeed(1);
   setMaxTurnUDSpeed(1);
   turnLRSpeed = turnUDSpeed = moveSpeed = 0;
-  towardX = 0;
-  towardY = 0;
-  towardZ = -1;
-  upX = 0;
-  upY = 1;
-  upZ = 0;
   //  qDebug() << "spaceship constructed.";
 }
 
@@ -49,118 +42,62 @@ void SpaceShip::endMoveForward() { isMoveForward = false; }
 
 void SpaceShip::endMoveBack() { isMoveBack = false; }
 
-// void SpaceShip::setMaxTurnLRSpeed(GLdouble LR) { maxTurnLRSpeed = LR; }
+QVector3D SpaceShip::getToward() {
+  return (transform->rotation() * initDir.conjugated())
+      .rotatedVector({0, 0, 1})
+      .normalized();
+}
 
-// void SpaceShip::setMaxTurnUDSpeed(GLdouble UD) { maxTurnUDSpeed = UD; }
+QVector3D SpaceShip::getUp() {
+  return (transform->rotation() * initDir.conjugated())
+      .rotatedVector({0, 1, 0})
+      .normalized();
+}
 
-// void SpaceShip::setMaxMoveSpeed(GLdouble M) { maxMoveSpeed = M; }
+void SpaceShip::frameAction(float dt) {
+  if (isTurnLeft && !isTurnRight)
+    if (turnLRSpeed > -maxTurnLRSpeed)
+      turnLRSpeed -= maxTurnLRSpeed / 25;
+  if (isTurnRight && !isTurnLeft)
+    if (turnLRSpeed < maxTurnLRSpeed)
+      turnLRSpeed += maxTurnUDSpeed / 25;
+  if (isTurnUp && !isTurnDown)
+    if (turnUDSpeed < maxTurnUDSpeed)
+      turnUDSpeed += maxTurnUDSpeed / 50;
+  if (isTurnDown && !isTurnUp)
+    if (turnUDSpeed > -maxTurnUDSpeed)
+      turnUDSpeed -= maxTurnUDSpeed / 50;
+  if (isMoveForward && !isMoveBack)
+    if (moveSpeed < maxMoveSpeed)
+      moveSpeed += maxMoveSpeed / 25;
+  if (isMoveBack && !isMoveForward)
+    if (moveSpeed > -maxMoveSpeed)
+      moveSpeed -= maxMoveSpeed / 25;
 
-// void SpaceShip::setTowardDirection(GLdouble tx, GLdouble ty, GLdouble tz) {
-//  QVector3D twd{tx, ty, tz};
-//  twd.normalize();
-//  originTX = towardX = twd.x();
-//  originTY = towardY = twd.y();
-//  originTZ = towardZ = twd.z();
-//}
+  QVector3D twd = getToward();
+  QVector3D up = getUp();
+  QVector3D left = QVector3D::crossProduct(up, twd).normalized();
 
-// void SpaceShip::setUpDirection(const QVector3D &up) {
-//  QVector3D twd{towardX, towardY, towardZ};
-//  QVector3D up{ux, uy, uz};
-//  twd *= twd * up;
-//  up = up - twd;
-//  up.normalize();
-//  originUX = upX = up.x();
-//  originUY = upY = up.y();
-//  originUZ = upZ = up.z();
-//}
+  //  qDebug() << "td" << twd.x() << twd.y() << twd.z();
+  //  qDebug() << "up" << up.x() << up.y() << up.z();
+  //  qDebug() << "lf" << left.x() << left.y() << left.z();
 
-// void SpaceShip::refresh() {
-//  if (isTurnLeft && !isTurnRight)
-//    if (turnLRSpeed > -maxTurnLRSpeed)
-//      turnLRSpeed -= maxTurnLRSpeed / 25;
-//  if (isTurnRight && !isTurnLeft)
-//    if (turnLRSpeed < maxTurnLRSpeed)
-//      turnLRSpeed += maxTurnUDSpeed / 25;
-//  if (isTurnUp && !isTurnDown)
-//    if (turnUDSpeed < maxTurnUDSpeed)
-//      turnUDSpeed += maxTurnUDSpeed / 25;
-//  if (isTurnDown && !isTurnUp)
-//    if (turnUDSpeed > -maxTurnUDSpeed)
-//      turnUDSpeed -= maxTurnUDSpeed / 25;
-//  if (isMoveForward && !isMoveBack)
-//    if (moveSpeed < maxMoveSpeed)
-//      moveSpeed += maxMoveSpeed / 25;
-//  if (isMoveBack && !isMoveForward)
-//    if (moveSpeed > -maxMoveSpeed)
-//      moveSpeed -= maxMoveSpeed / 25;
+  QVector3D chgTwd = twd - up * turnUDSpeed * dt - left * turnLRSpeed * dt;
 
-//  QVector3D T{towardX, towardY, towardZ};
-//  QVector3D U{upX, upY, upX};
-//  QVector3D LR = QVector3D::crossProduct(T, U);
-//  LR.normalize();
-//  LR *= turnLRSpeed;
-//  U *= turnUDSpeed;
-//  QVector3D unionChange = LR + U;
-//  unionChange /= 20;
-//  towardX += unionChange.x();
-//  towardY += unionChange.y();
-//  towardZ += unionChange.z();
+  QQuaternion orgQQtn = transform->rotation(),
+              chgQQtn = QQuaternion::rotationTo(twd, chgTwd);
 
-//  QVector3D twd{towardX, towardY, towardZ};
-//  QVector3D up{upX, upY, upZ};
-//  twd.normalize();
-//  towardX = twd.x();
-//  towardY = twd.y();
-//  towardZ = twd.z();
-//  twd *= twd * up;
-//  QVector3D upVec = up - twd;
-//  upVec.normalize();
-//  upX = upVec.x();
-//  upY = upVec.y();
-//  upZ = upVec.z();
-//  xPos += moveSpeed * towardX;
-//  yPos += moveSpeed * towardY;
-//  zPos += moveSpeed * towardZ;
-//}
+  //  qDebug() << "org" << orgQQtn.x() << orgQQtn.y() << orgQQtn.z();
+  //  qDebug() << "chg" << chgQQtn.x() << chgQQtn.y() << chgQQtn.z();
 
-// void SpaceShip::repaint() {
+  //  qDebug() << "cup" << chgUp.x() << chgUp.y() << chgUp.z();
+  //  qDebug() << "clf" << chgLeft.x() << chgLeft.y() << chgLeft.z();
 
-//  /*glBindTexture(GL_TEXTURE_2D, spaceship->texID);
-//  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-//  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-//  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-//  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-//  gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, spaceship->width,
-//  spaceship->height,
-//                    GL_RGB, GL_UNSIGNED_BYTE, spaceship->data);*/
+  //  qDebug() << "org" << twd.x() << twd.y() << twd.z();
+  //  qDebug() << "chg" << chgTwd.x() << chgTwd.y() << chgTwd.z();
 
-//  glPushMatrix();
-//  glTranslated(xPos, yPos, zPos);
-
-//  // glBindTexture(GL_TEXTURE_2D, earth->texID);
-
-//  spaceshipRotate();
-
-//  glColor3f(r / 255.0, g / 255.0, b / 255.0);
-//  glMaterialfv(GL_FRONT, GL_AMBIENT, ambient);
-//  glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse);
-//  glMaterialfv(GL_FRONT, GL_SPECULAR, specular);
-//  glMaterialfv(GL_FRONT, GL_SHININESS, &shininess);
-
-//  for (int i = 0; i < F.size(); i++) {
-//    glBegin(GL_TRIANGLES);
-//    for (int j = 0; j < 3; j++) {
-//      if (VT.size() != 0)
-//        glTexCoord2f(VT[F[i].T[j]].TU, VT[F[i].T[j]].TV);
-//      if (VN.size() != 0)
-//        glNormal3f(VN[F[i].N[j]].NX, VN[F[i].N[j]].NY, VN[F[i].N[j]].NZ);
-//      glVertex3f(V[F[i].V[j]].X, V[F[i].V[j]].Y, V[F[i].V[j]].Z);
-//    }
-//    glEnd();
-//  }
-
-//  glPopMatrix();
-//}
+  transform->setRotation((orgQQtn * chgQQtn).normalized());
+}
 
 // void SpaceShip::spaceshipRotate() {
 //  QVector3D orgT{originTX, originTY, originTZ};

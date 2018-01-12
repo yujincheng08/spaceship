@@ -7,8 +7,6 @@
 #include <QVector>
 #include <QtOpenGL>
 
-#include <GL/glut.h>
-
 #include <Qt3DCore/QEntity>
 #include <Qt3DCore/QTransform>
 #include <Qt3DExtras/QTextureMaterial>
@@ -56,6 +54,9 @@ public:
   using QTexture2D = Qt3DRender::QTexture2D;
   using QSceneLoader = Qt3DRender::QSceneLoader;
 
+public slots:
+  virtual void frameAction(float dt) = 0;
+
 public:
   Component(QNode *parent = nullptr);
   QVector3D getPostion() const;
@@ -67,7 +68,7 @@ public:
   void setDiffuse(GLfloat dif[]);
   void setSpecular(GLfloat spe[]);
   void setShininess(GLfloat shi);
-  void setPosition(GLdouble px, GLdouble py, GLdouble pz);
+  void setPosition(QVector3D translation);
 
   enum Material {
     COPPER = 0,
@@ -81,7 +82,7 @@ public:
   virtual ~Component() {}
 
 protected:
-  GLdouble xPos, yPos, zPos;
+  QTransform *transform = new QTransform;
   GLdouble xRot, yRot, zRot;
   GLint r, g, b, a;
   GLfloat ambient[4], diffuse[4], specular[4], shininess;

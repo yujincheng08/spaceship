@@ -24,7 +24,7 @@ MainWindow::~MainWindow() {
 
 void MainWindow::initScene(const QColor &clearColor) {
   scene->defaultFrameGraph()->setClearColor(clearColor);
-  container->setMinimumSize(QSize(200, 100));
+  container->setMinimumSize(QSize(1360, 768));
   container->setMaximumSize(scene->screen()->size());
 }
 
@@ -150,92 +150,6 @@ void MainWindow::initScene(const QColor &clearColor) {
 
 ////  is->resize(width, height);
 ////}
-
-// void MainWindow::keyPressEvent(QKeyEvent *e) {
-//  if (e->isAutoRepeat())
-//    return;
-//  SpaceShip *a = (SpaceShip *)(components[0]);
-//  switch (e->key()) {
-//  case Qt::Key_A:
-//    a->startTurnLeft();
-//    camera->keepTrace();
-//    update();
-//    break;
-//  case Qt::Key_D:
-//    a->startTurnRight();
-//    camera->keepTrace();
-//    update();
-//    break;
-//  case Qt::Key_W:
-//    a->startMoveForward();
-//    camera->keepTrace();
-//    update();
-//    break;
-//  case Qt::Key_S:
-//    a->startMoveBack();
-//    camera->keepTrace();
-//    update();
-//    break;
-//  case Qt::Key_E:
-//    a->startTurnUp();
-//    camera->keepTrace();
-//    update();
-//    break;
-//  case Qt::Key_C:
-//    a->startTurnDown();
-//    camera->keepTrace();
-//    update();
-//    break;
-
-//  case Qt::Key_P:
-//    if (timer.isActive()) {
-//      timer.stop();
-//      cursorTimer->stop();
-//    } else {
-//      timer.start(20, this);
-//      cursorTimer->start(10);
-//    }
-//    break;
-//  }
-//}
-
-// void MainWindow::keyReleaseEvent(QKeyEvent *e) {
-//  if (e->isAutoRepeat())
-//    return;
-//  SpaceShip *a = (SpaceShip *)(components[0]);
-//  switch (e->key()) {
-//  case Qt::Key_A:
-//    a->endTurnLeft();
-//    camera->keepTrace();
-//    update();
-//    break;
-//  case Qt::Key_D:
-//    a->endTurnRight();
-//    camera->keepTrace();
-//    update();
-//    break;
-//  case Qt::Key_W:
-//    a->endMoveForward();
-//    camera->keepTrace();
-//    update();
-//    break;
-//  case Qt::Key_S:
-//    a->endMoveBack();
-//    camera->keepTrace();
-//    update();
-//    break;
-//  case Qt::Key_E:
-//    a->endTurnUp();
-//    camera->keepTrace();
-//    update();
-//    break;
-//  case Qt::Key_C:
-//    a->endTurnDown();
-//    camera->keepTrace();
-//    update();
-//    break;
-//  }
-//}
 
 // void MainWindow::mousePressEvent(QMouseEvent *e) {
 //  if (e->button() == Qt::LeftButton)

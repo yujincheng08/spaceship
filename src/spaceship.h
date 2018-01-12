@@ -2,12 +2,12 @@
 #define SPACESHIP_H
 
 #include "component.h"
+#include <QSceneChange>
 #include <QtOpenGL>
 
 class SpaceShip : public Component {
 public:
-  QSceneLoader *sceneLoader = new QSceneLoader(this);
-  QTransform *transform = new QTransform;
+  QMesh *mesh = new QMesh(this);
   QTextureMaterial *material = new QTextureMaterial;
   QTextureImage *textureImage = new QTextureImage;
   QTexture2D *texture = new QTexture2D;
@@ -30,24 +30,22 @@ public:
   void setMaxTurnLRSpeed(qreal speed) { maxTurnLRSpeed = speed; }
   void setMaxTurnUDSpeed(qreal speed) { maxTurnUDSpeed = speed; }
   void setMaxMoveSpeed(qreal speed) { maxMoveSpeed = speed; }
-  void setTowardDirection(const QVector3D &toward) {
-    this->toward = toward;
-    this->toward.normalize();
+  void setInitialDirection(const QVector3D &toward, const QVector3D &up) {
+    initDir = QQuaternion::fromDirection(toward, up);
+    transform->setRotation(initDir);
   }
 
-  void setUpDirection(const QVector3D &up) {
-    this->up = up - toward * up * toward;
-    this->up.normalize();
-  }
+  QVector3D getToward();
+  QVector3D getUp();
 
-private:
+protected slots:
+  virtual void frameAction(float dt) override;
+
 private:
   qreal turnLRSpeed, turnUDSpeed, moveSpeed;
   qreal maxTurnLRSpeed, maxTurnUDSpeed, maxMoveSpeed;
 
-  QVector3D toward;
-  QVector3D up;
-  qreal towardX, towardY, towardZ, upX, upY, upZ;
+  QQuaternion initDir;
 
   GLboolean isTurnLeft, isTurnRight, isTurnUp, isTurnDown, isMoveForward,
       isMoveBack;

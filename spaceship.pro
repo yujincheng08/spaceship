@@ -13,8 +13,6 @@ DEFINES -= UNICODE
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-LIBS += -lglut -lGLU -lGL
-
 SOURCES += \
     src/main.cpp \
     src/mainwindow.cpp \
@@ -25,7 +23,10 @@ SOURCES += \
     src/planet.cpp \
     src/infosurface.cpp \
     src/scene.cpp \
-    src/cameracontroller.cpp
+    src/cameracontroller.cpp \
+    src/light.cpp \
+    src/directionallight.cpp \
+    src/pointlight.cpp
 
 RESOURCES += \
     assets.qrc \
@@ -46,7 +47,10 @@ HEADERS += \
     src/planet.h \
     src/infosurface.h \
     src/scene.h \
-    src/cameracontroller.h
+    src/cameracontroller.h \
+    src/light.h \
+    src/directionallight.h \
+    src/pointlight.h
 
 
 

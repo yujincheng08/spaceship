@@ -4,7 +4,6 @@
 #include "component.h"
 #include "mycamera.h"
 #include "mylight.h"
-#include <GL/glut.h>
 #include <QBasicTimer>
 #include <QVector>
 #include <Qt3DExtras>
@@ -40,8 +39,6 @@ protected:
 
   //  void paintEvent(QPaintEvent *e);
 
-  //  void keyPressEvent(QKeyEvent *e) override;
-  //  void keyReleaseEvent(QKeyEvent *e) override;
   //  //  void mousePressEvent(QMouseEvent *e) override;
   //  //  void mouseMoveEvent(QMouseEvent *e) override;
   //  //  void mouseReleaseEvent(QMouseEvent *e) override;
@@ -52,10 +49,6 @@ protected:
 
 private:
   void initScene(const QColor &clearColor = QColor(QRgb(0x4d4d4f)));
-  MyCamera *camera;
-
-  QList<MyLight> lights;
-  QList<Component *> components;
 
   int isMousePresseed;
   double mouse_x, mouse_y;
