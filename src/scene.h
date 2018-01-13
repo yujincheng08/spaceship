@@ -22,7 +22,7 @@ private:
   SpaceShip *spaceship = new SpaceShip(root);
   Planet *earth = new Planet(root);
   Planet *sun = new Planet(root);
-  CameraController *controller = new CameraController(root);
+  CameraController *controller = new CameraController(root, this);
   PointLight *light = new PointLight(root);
   QFrameAction *frame = new QFrameAction(root);
 

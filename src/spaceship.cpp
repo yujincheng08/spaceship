@@ -99,4 +99,6 @@ void SpaceShip::frameAction(float dt) {
 
   setDirection({chgTwd.x(), -chgTwd.y(), chgTwd.z()},
                {-chgUp.x(), chgUp.y(), -chgUp.z()});
+
+  setPosition(transform->translation() + chgTwd * moveSpeed * dt);
 }

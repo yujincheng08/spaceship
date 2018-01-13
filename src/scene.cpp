@@ -21,6 +21,7 @@ void Scene::initCamera() {
   controller->setLinearSpeed(50.0f);
   controller->setLookSpeed(180.0f);
   controller->setCamera(camera());
+  controller->setTraceTarget(spaceship);
 }
 
 void Scene::initPlanets() {
@@ -37,6 +38,8 @@ void Scene::initLight() { light->setPosition({0, 20, 20}); }
 void Scene::initFrame() {
   connect(frame, QFrameAction::triggered, this, Scene::frameAction);
   connect(frame, QFrameAction::triggered, spaceship, Component::frameAction);
+  connect(frame, QFrameAction::triggered, controller,
+          CameraController::frameAction);
 }
 
 void Scene::frameAction(float dt) {}
@@ -103,4 +106,7 @@ void Scene::keyReleaseEvent(QKeyEvent *e) {
     a->endTurnDown();
     break;
   }
+
+case Qt::Key_Escape:
+  controller->setCursorLock(!(controller->getCursorLock()));
 }
