@@ -30,10 +30,8 @@ public:
   void setMaxTurnLRSpeed(qreal speed) { maxTurnLRSpeed = speed; }
   void setMaxTurnUDSpeed(qreal speed) { maxTurnUDSpeed = speed; }
   void setMaxMoveSpeed(qreal speed) { maxMoveSpeed = speed; }
-  void setInitialDirection(const QVector3D &toward, const QVector3D &up) {
-    initDir = QQuaternion::fromDirection(toward, up);
-    transform->setRotation(initDir);
-  }
+  void setInitialDirection(const QVector3D &toward, const QVector3D &up);
+  void setDirection(const QVector3D &toward, const QVector3D &up);
 
   QVector3D getToward();
   QVector3D getUp();

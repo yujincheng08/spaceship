@@ -12,7 +12,6 @@ Component::Component(QNode *parent) : QEntity(parent) {
   addComponent(transform);
   // LoadAllTextures();
   // setMaterial(LIGHTSILVER);
-  qDebug() << "component constructed.";
 }
 
 QVector3D Component::getPostion() const { return transform->translation(); }

@@ -42,6 +42,19 @@ void SpaceShip::endMoveForward() { isMoveForward = false; }
 
 void SpaceShip::endMoveBack() { isMoveBack = false; }
 
+void SpaceShip::setInitialDirection(const QVector3D &toward,
+                                    const QVector3D &up) {
+  initDir = QQuaternion::fromDirection(toward, up).normalized();
+  transform->setRotation(initDir);
+}
+
+void SpaceShip::setDirection(const QVector3D &toward, const QVector3D &up) {
+  QQuaternion crtDir = (initDir * /*QQuaternion::rotationTo({0, 0, 1}, toward)*/
+                        QQuaternion::fromDirection(toward, up).normalized())
+                           .normalized();
+  transform->setRotation(crtDir);
+}
+
 QVector3D SpaceShip::getToward() {
   return (transform->rotation() * initDir.conjugated())
       .rotatedVector({0, 0, 1})
@@ -78,36 +91,12 @@ void SpaceShip::frameAction(float dt) {
   QVector3D up = getUp();
   QVector3D left = QVector3D::crossProduct(up, twd).normalized();
 
-  //  qDebug() << "td" << twd.x() << twd.y() << twd.z();
-  //  qDebug() << "up" << up.x() << up.y() << up.z();
-  //  qDebug() << "lf" << left.x() << left.y() << left.z();
+  QVector3D chgTwd =
+      (twd + up * turnUDSpeed * dt - left * turnLRSpeed * dt).normalized();
+  QVector3D chgUp =
+      (up - QVector3D::dotProduct(chgTwd, up) / chgTwd.length() * chgTwd)
+          .normalized();
 
-  QVector3D chgTwd = twd - up * turnUDSpeed * dt - left * turnLRSpeed * dt;
-
-  QQuaternion orgQQtn = transform->rotation(),
-              chgQQtn = QQuaternion::rotationTo(twd, chgTwd);
-
-  //  qDebug() << "org" << orgQQtn.x() << orgQQtn.y() << orgQQtn.z();
-  //  qDebug() << "chg" << chgQQtn.x() << chgQQtn.y() << chgQQtn.z();
-
-  //  qDebug() << "cup" << chgUp.x() << chgUp.y() << chgUp.z();
-  //  qDebug() << "clf" << chgLeft.x() << chgLeft.y() << chgLeft.z();
-
-  //  qDebug() << "org" << twd.x() << twd.y() << twd.z();
-  //  qDebug() << "chg" << chgTwd.x() << chgTwd.y() << chgTwd.z();
-
-  transform->setRotation((orgQQtn * chgQQtn).normalized());
+  setDirection({chgTwd.x(), -chgTwd.y(), chgTwd.z()},
+               {-chgUp.x(), chgUp.y(), -chgUp.z()});
 }
-
-// void SpaceShip::spaceshipRotate() {
-//  QVector3D orgT{originTX, originTY, originTZ};
-//  QVector3D T{towardX, towardY, towardZ};
-
-//  QVector3D axis = QVector3D::crossProduct(orgT, T);
-//  T.normalize();
-//  orgT.normalize();
-//  GLdouble ang = qAcos(QVector3D::dotProduct(T, orgT));
-//  if (ang < 0)
-//    ang = ang + M_PI + M_PI;
-//  glRotated(ang / M_PI * 180, axis.x(), axis.y(), axis.z());
-//}
