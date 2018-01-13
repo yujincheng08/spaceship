@@ -6,35 +6,39 @@
 #include <QtOpenGL>
 
 class SpaceShip : public Component {
+  using QPhongAlphaMaterial = Qt3DExtras::QPhongAlphaMaterial;
+
 public:
-  QMesh *mesh = new QMesh(this);
+  QSceneLoader *sceneLoader = new QSceneLoader;
+
   QTextureMaterial *material = new QTextureMaterial;
   QTextureImage *textureImage = new QTextureImage;
   QTexture2D *texture = new QTexture2D;
 
   friend class InfoSurface;
   SpaceShip(QNode *parent = nullptr);
-  void startTurnLeft();
-  void startTurnRight();
-  void startTurnUp();
-  void startTurnDown();
-  void startMoveForward();
-  void startMoveBack();
-  void endTurnLeft();
-  void endTurnRight();
-  void endTurnUp();
-  void endTurnDown();
-  void endMoveForward();
-  void endMoveBack();
 
+  void startTurnLeft() { isTurnLeft = true; }
+  void startTurnRight() { isTurnRight = true; }
+  void startTurnUp() { isTurnUp = true; }
+  void startTurnDown() { isTurnDown = true; }
+  void startMoveForward() { isMoveForward = true; }
+  void startMoveBack() { isMoveBack = true; }
+  void endTurnLeft() { isTurnLeft = false; }
+  void endTurnRight() { isTurnRight = false; }
+  void endTurnUp() { isTurnUp = false; }
+  void endTurnDown() { isTurnDown = false; }
+  void endMoveForward() { isMoveForward = false; }
+  void endMoveBack() { isMoveBack = false; }
   void setMaxTurnLRSpeed(qreal speed) { maxTurnLRSpeed = speed; }
   void setMaxTurnUDSpeed(qreal speed) { maxTurnUDSpeed = speed; }
   void setMaxMoveSpeed(qreal speed) { maxMoveSpeed = speed; }
   void setInitialDirection(const QVector3D &toward, const QVector3D &up);
   void setDirection(const QVector3D &toward, const QVector3D &up);
 
-  QVector3D getToward();
-  QVector3D getUp();
+  QVector3D getToward() const;
+  QVector3D getUp() const;
+  virtual ~SpaceShip() {}
 
 protected slots:
   virtual void frameAction(float dt) override;
@@ -42,12 +46,25 @@ protected slots:
 private:
   qreal turnLRSpeed, turnUDSpeed, moveSpeed;
   qreal maxTurnLRSpeed, maxTurnUDSpeed, maxMoveSpeed;
-
+  QMap<QString, QMaterial *> materials;
   QQuaternion initDir;
 
-  GLboolean isTurnLeft, isTurnRight, isTurnUp, isTurnDown, isMoveForward,
-      isMoveBack;
-  virtual ~SpaceShip() {}
+  bool isTurnLeft, isTurnRight, isTurnUp, isTurnDown, isMoveForward, isMoveBack;
+  QPhongMaterial *bodyMaterial = new QPhongMaterial;
+  /*
+  QPhongMaterial *feetMaterial = new QPhongMaterial;
+  QPhongMaterial *gamaMaterial = new QPhongMaterial;
+  QPhongMaterial *reactorMaterial = new QPhongMaterial;
+  QPhongMaterial *wingMaterial = new QPhongMaterial;
+  */
+  QPhongAlphaMaterial *glassMaterial = new QPhongAlphaMaterial;
+  QPhongAlphaMaterial *gasMaterial = new QPhongAlphaMaterial;
+
+private:
+  void removeDefaultMaterial(const QString &entityName);
+  void initMaterials();
+private slots:
+  void loadingStatusChanged(QSceneLoader::Status status);
 };
 
 #endif // SPACESHIP_H

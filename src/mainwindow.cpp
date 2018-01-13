@@ -1,7 +1,4 @@
 #include "mainwindow.h"
-#include "infosurface.h"
-#include "planet.h"
-#include "spaceship.h"
 #include <QtDebug>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {

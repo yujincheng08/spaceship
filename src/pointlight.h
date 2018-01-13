@@ -9,6 +9,7 @@ public:
   using QPointLight = Qt3DRender::QPointLight;
 
 public:
+  void frameAction(float) {}
   PointLight(QNode *parent = nullptr);
 
 private:

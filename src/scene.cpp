@@ -2,6 +2,7 @@
 #include <Qt3DRender/QCamera>
 Scene::Scene(QScreen *parent) : Qt3DExtras::Qt3DWindow(parent) {
   setRootEntity(root);
+
   initCamera();
 
   initPlanets();
@@ -15,18 +16,19 @@ Scene::Scene(QScreen *parent) : Qt3DExtras::Qt3DWindow(parent) {
 
 void Scene::initCamera() {
   camera()->lens()->setPerspectiveProjection(45.0f, 16.0f / 9.0f, 0.1f,
-                                             1000.0f);
+                                             20000000.0f);
   camera()->setPosition(QVector3D(0, 0, -20.0f));
   camera()->setViewCenter(QVector3D(0, 0, 0));
   controller->setLinearSpeed(50.0f);
   controller->setLookSpeed(180.0f);
   controller->setCamera(camera());
   controller->setTraceTarget(spaceship);
+  controller->setCursorLock(true);
 }
 
 void Scene::initPlanets() {
-  earth->setPosition({0, 0, 0});
-  sun->setPosition({0, 20, 0});
+  earth->setPosition({0, 2, 0});
+  // sun->setPosition({0, 20, 0});
 }
 
 void Scene::initSpaceship() {
@@ -36,10 +38,10 @@ void Scene::initSpaceship() {
 void Scene::initLight() { light->setPosition({0, 20, 20}); }
 
 void Scene::initFrame() {
-  connect(frame, QFrameAction::triggered, this, Scene::frameAction);
-  connect(frame, QFrameAction::triggered, spaceship, Component::frameAction);
-  connect(frame, QFrameAction::triggered, controller,
-          CameraController::frameAction);
+  connect(frame, &QFrameAction::triggered, this, &Scene::frameAction);
+  connect(frame, &QFrameAction::triggered, spaceship, &Component::frameAction);
+  connect(frame, &QFrameAction::triggered, controller,
+          &CameraController::frameAction);
 }
 
 void Scene::frameAction(float dt) {}
@@ -69,6 +71,9 @@ void Scene::keyPressEvent(QKeyEvent *e) {
     a->startTurnDown();
     break;
 
+  case Qt::Key_Escape:
+    controller->setCursorLock(!(controller->getCursorLock()));
+    break;
   case Qt::Key_P:
     //    if (timer.isActive()) {
     //      timer.stop();
@@ -106,7 +111,4 @@ void Scene::keyReleaseEvent(QKeyEvent *e) {
     a->endTurnDown();
     break;
   }
-
-case Qt::Key_Escape:
-  controller->setCursorLock(!(controller->getCursorLock()));
 }
