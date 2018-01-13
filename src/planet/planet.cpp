@@ -1,15 +1,19 @@
 #include "planet.h"
 
 Planet::Planet(QNode *parent) : Component(parent) {
-  setRotateSpeed(0);
-  textureImage->setSource(QUrl("qrc:/assets/img/earthmap2k.jpg"));
-  texture->addTextureImage(textureImage);
-  material->setTexture(texture);
+  setRings(64);
+  setSlices(64);
+  diffuseTexture->addTextureImage(diffuseImage);
+  normalTexture->addTextureImage(normalImage);
+  specularTexture->addTextureImage(specularImage);
+  material->setDiffuse(diffuseTexture);
+  material->setNormal(normalTexture);
+  material->setSpecular(specularTexture);
+  material->setAmbient(QColor::fromRgb(22, 22, 22));
+  material->setShininess(50.0f);
   addComponent(mesh);
   addComponent(material);
 }
-
-Planet::~Planet() {}
 
 void Planet::frameAction(float dt) {}
 

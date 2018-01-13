@@ -1,8 +1,10 @@
 <RCC>
     <qresource prefix="/">
-        <file>assets/img/texture.png</file>
-        <file>assets/img/texture.bmp</file>
         <file>assets/img/earthmap2k.jpg</file>
         <file>assets/spaceship.obj</file>
+        <file>assets/img/galaxy_starfield.jpg</file>
+        <file>assets/starfield.obj</file>
+        <file>assets/img/earthnormal2k.jpg</file>
+        <file>assets/img/earthspec2k.jpg</file>
     </qresource>
 </RCC>

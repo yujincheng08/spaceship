@@ -8,8 +8,9 @@
 #include <Qt3DInput/QInputAspect>
 #include <Qt3DLogic/QFrameAction>
 #include <cameracontroller.h>
-#include <planet.h>
+#include <planet/earth.h>
 #include <spaceship.h>
+#include <starfield.h>
 
 class Scene : public Qt3DExtras::Qt3DWindow {
 public:
@@ -20,11 +21,11 @@ public:
 private:
   QEntity *root = new QEntity();
   SpaceShip *spaceship = new SpaceShip(root);
-  Planet *earth = new Planet(root);
-  Planet *sun = new Planet(root);
+  Earth *earth = new Earth(root);
   CameraController *controller = new CameraController(root);
   PointLight *light = new PointLight(root);
   QFrameAction *frame = new QFrameAction(root);
+  Starfield *starfield = new Starfield(root);
 
   void keyPressEvent(QKeyEvent *e) override;
   void keyReleaseEvent(QKeyEvent *e) override;

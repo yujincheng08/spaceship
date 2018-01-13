@@ -2,8 +2,6 @@
 #define MAINWINDOW_H
 
 #include "component.h"
-#include "mycamera.h"
-#include "mylight.h"
 #include <QBasicTimer>
 #include <QVector>
 #include <Qt3DExtras>

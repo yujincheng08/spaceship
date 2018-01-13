@@ -16,17 +16,16 @@ DEFINES -= UNICODE
 SOURCES += \
     src/main.cpp \
     src/mainwindow.cpp \
-    src/mycamera.cpp \
     src/component.cpp \
-    src/mylight.cpp \
     src/spaceship.cpp \
-    src/planet.cpp \
-    src/infosurface.cpp \
     src/scene.cpp \
-    src/cameracontroller.cpp \
     src/light.cpp \
     src/directionallight.cpp \
-    src/pointlight.cpp
+    src/pointlight.cpp \
+    src/starfield.cpp \
+    src/cameracontroller.cpp \
+    src/planet/earth.cpp \
+    src/planet/planet.cpp
 
 RESOURCES += \
     assets.qrc \
@@ -40,17 +39,16 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     src/mainwindow.h \
-    src/mycamera.h \
     src/component.h \
-    src/mylight.h \
     src/spaceship.h \
-    src/planet.h \
-    src/infosurface.h \
     src/scene.h \
     src/cameracontroller.h \
     src/light.h \
     src/directionallight.h \
-    src/pointlight.h
+    src/pointlight.h \
+    src/starfield.h \
+    src/planet/earth.h \
+    src/planet/planet.h
 
 
 
