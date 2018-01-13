@@ -11,6 +11,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
   //  initWidget();
   //  initElement();
   //  initTimer();
+  setGeometry(8, 30, 1360, 768);
   setCentralWidget(container);
 }
 
