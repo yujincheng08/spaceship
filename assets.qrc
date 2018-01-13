@@ -1,10 +1,8 @@
 <RCC>
     <qresource prefix="/">
-        <file>assets/SpaceShip.dae</file>
-        <file>assets/SpaceShipModeling2.fbx</file>
         <file>assets/img/texture.png</file>
         <file>assets/img/texture.bmp</file>
-        <file>assets/fj.obj</file>
         <file>assets/img/earthmap2k.jpg</file>
+        <file>assets/spaceship.obj</file>
     </qresource>
 </RCC>

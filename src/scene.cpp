@@ -35,8 +35,8 @@ void Scene::initSpaceship() {
 void Scene::initLight() { light->setPosition({0, 20, 20}); }
 
 void Scene::initFrame() {
-  connect(frame, QFrameAction::triggered, this, Scene::frameAction);
-  connect(frame, QFrameAction::triggered, spaceship, Component::frameAction);
+  connect(frame, &QFrameAction::triggered, this, &Scene::frameAction);
+  connect(frame, &QFrameAction::triggered, spaceship, &Component::frameAction);
 }
 
 void Scene::frameAction(float dt) {}

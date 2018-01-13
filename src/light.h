@@ -5,7 +5,7 @@
 
 class Light : public Component {
 protected slots:
-  void frameAction(float dt) override {}
+  void frameAction(float) override {}
 
 public:
   Light(QNode *parent = nullptr);

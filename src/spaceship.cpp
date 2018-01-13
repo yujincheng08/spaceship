@@ -3,12 +3,15 @@
 #include <QtMath>
 
 SpaceShip::SpaceShip(QNode *parent) : Component(parent) {
-  mesh->setSource(QUrl("qrc:/assets/fj.obj"));
+  initMaterials();
   textureImage->setSource(QUrl("qrc:/assets/img/earthmap2k.jpg"));
   texture->addTextureImage(textureImage);
   material->setTexture(texture);
-  addComponent(mesh);
-  addComponent(material);
+  addComponent(sceneLoader);
+  connect(sceneLoader, &QSceneLoader::statusChanged, this,
+          &SpaceShip::loadingStatusChanged);
+  sceneLoader->setSource(QUrl("qrc:/assets/spaceship.obj"));
+  // addComponent(material);
   isTurnDown = isTurnLeft = isTurnRight = isTurnUp = false;
   isMoveForward = isMoveBack = false;
   setMaxMoveSpeed(1);
@@ -17,30 +20,6 @@ SpaceShip::SpaceShip(QNode *parent) : Component(parent) {
   turnLRSpeed = turnUDSpeed = moveSpeed = 0;
   //  qDebug() << "spaceship constructed.";
 }
-
-void SpaceShip::startTurnLeft() { isTurnLeft = true; }
-
-void SpaceShip::startTurnRight() { isTurnRight = true; }
-
-void SpaceShip::startTurnUp() { isTurnUp = true; }
-
-void SpaceShip::startTurnDown() { isTurnDown = true; }
-
-void SpaceShip::startMoveForward() { isMoveForward = true; }
-
-void SpaceShip::startMoveBack() { isMoveBack = true; }
-
-void SpaceShip::endTurnLeft() { isTurnLeft = false; }
-
-void SpaceShip::endTurnRight() { isTurnRight = false; }
-
-void SpaceShip::endTurnUp() { isTurnUp = false; }
-
-void SpaceShip::endTurnDown() { isTurnDown = false; }
-
-void SpaceShip::endMoveForward() { isMoveForward = false; }
-
-void SpaceShip::endMoveBack() { isMoveBack = false; }
 
 void SpaceShip::setInitialDirection(const QVector3D &toward,
                                     const QVector3D &up) {
@@ -55,13 +34,13 @@ void SpaceShip::setDirection(const QVector3D &toward, const QVector3D &up) {
   transform->setRotation(crtDir);
 }
 
-QVector3D SpaceShip::getToward() {
+QVector3D SpaceShip::getToward() const {
   return (transform->rotation() * initDir.conjugated())
       .rotatedVector({0, 0, 1})
       .normalized();
 }
 
-QVector3D SpaceShip::getUp() {
+QVector3D SpaceShip::getUp() const {
   return (transform->rotation() * initDir.conjugated())
       .rotatedVector({0, 1, 0})
       .normalized();
@@ -99,4 +78,45 @@ void SpaceShip::frameAction(float dt) {
 
   setDirection({chgTwd.x(), -chgTwd.y(), chgTwd.z()},
                {-chgUp.x(), chgUp.y(), -chgUp.z()});
+}
+
+void SpaceShip::removeDefaultMaterial(const QString &entityName) {
+  auto entity = sceneLoader->entity(entityName);
+  auto material =
+      sceneLoader->component(entityName, QSceneLoader::MaterialComponent);
+  entity->removeComponent(material);
+}
+
+void SpaceShip::initMaterials() {
+  materials["Body"] = bodyMaterial;
+  materials["Wings"] = bodyMaterial;
+  materials["Feet"] = bodyMaterial;
+  materials["Gama"] = bodyMaterial;
+  materials["Reactor"] = bodyMaterial;
+  materials["Glass"] = glassMaterial;
+  materials["Gas"] = gasMaterial;
+  bodyMaterial->setAmbient(QColor::fromRgbF(1.0f, 1.0f, 1.0f));
+  bodyMaterial->setDiffuse(QColor::fromRgbF(0.8f, 0.8f, 0.8f));
+  bodyMaterial->setSpecular(QColor::fromRgbF(0.5f, 0.5f, 0.5f));
+  gasMaterial->setAmbient(QColor::fromRgbF(1.0f, 1.0f, 1.0f));
+  gasMaterial->setDiffuse(QColor::fromRgbF(0.8f, 0.8f, 0.8f));
+  gasMaterial->setSpecular(QColor::fromRgbF(0.5f, 0.5f, 0.5f));
+  gasMaterial->setAlpha(0.0f);
+  glassMaterial->setAmbient(QColor::fromRgbF(1.0f, 1.0f, 1.0f));
+  glassMaterial->setDiffuse(QColor::fromRgbF(0.8f, 0.8f, 0.8f));
+  glassMaterial->setSpecular(QColor::fromRgbF(0.5f, 0.5f, 0.5f));
+  glassMaterial->setAlpha(0.3f);
+}
+
+void SpaceShip::loadingStatusChanged(Qt3DRender::QSceneLoader::Status status) {
+  switch (status) {
+  case QSceneLoader::Ready:
+    for (const auto &entity : sceneLoader->entityNames()) {
+      removeDefaultMaterial(entity);
+      sceneLoader->entity(entity)->addComponent(materials[entity]);
+    }
+    break;
+  case QSceneLoader::Error:
+    qDebug() << "Error";
+  }
 }
