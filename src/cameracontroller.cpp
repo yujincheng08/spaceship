@@ -80,22 +80,28 @@ void CameraController::frameAction(float dt) {
   camera->setUpVector(targetUp);
 
   // player rotate the camera
-  if (!cursorLock || (root && !root->isActive()))
+  if (!cursorLock)
     return;
-  if (root == nullptr)
+  if (root && !root->isActive()) {
+    isActived = false;
     return;
-  QPoint cursor = root->cursor().pos();
+  }
   QRect geometry = root->geometry();
   int cx = geometry.x() + geometry.width() / 2,
       cy = geometry.y() + geometry.height() / 2;
+  if (!isActived) {
+    QCursor::setPos(cx, cy);
+  }
+  isActived = true;
+  QPoint cursor = root->cursor().pos();
   int rx = cursor.x() - cx, ry = cursor.y() - cy;
   QCursor::setPos(cx, cy);
 
-  camera->panAboutViewCenter((-rx * 1) * dt / 10, targetUp);
+  camera->panAboutViewCenter(-rx * dt * 2, targetUp);
 
   if (!(posTrans.y() < 0 && ry < 0) &&
       !(posTrans.y() > posTrans.length() / 1.414 && ry > 0))
-    camera->tiltAboutViewCenter(ry * 1 * dt / 10);
+    camera->tiltAboutViewCenter(ry * dt * 2);
   posTrans =
       getTransPosition(targetUp, targetTwd, targetPos, camera->position());
 }

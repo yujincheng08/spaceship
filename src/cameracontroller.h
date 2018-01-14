@@ -38,6 +38,7 @@ protected:
   Component *target = nullptr;
   QCamera *camera = nullptr;
   bool cursorLock = true;
+  bool isActived = true;
 
   QVector3D posTrans, ctrTrans;
 };

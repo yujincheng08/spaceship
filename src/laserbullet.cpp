@@ -13,7 +13,7 @@ LaserBullet::LaserBullet(const QVector3D &startPos, const QVector3D &velocity,
   color = QColor(225, 75, 42);
   existTime = 0;
 
-  mesh->setBottomRadius(0.2);
+  mesh->setBottomRadius(0.14);
   mesh->setTopRadius(0.1);
   mesh->setLength(length);
   material->setShininess(1000000.0f);
