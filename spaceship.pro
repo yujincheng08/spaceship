@@ -25,7 +25,8 @@ SOURCES += \
     src/starfield.cpp \
     src/cameracontroller.cpp \
     src/planet/earth.cpp \
-    src/planet/planet.cpp
+    src/planet/planet.cpp \
+    src/laserbullet.cpp
 
 RESOURCES += \
     assets.qrc \
@@ -48,7 +49,8 @@ HEADERS += \
     src/pointlight.h \
     src/starfield.h \
     src/planet/earth.h \
-    src/planet/planet.h
+    src/planet/planet.h \
+    src/laserbullet.h
 
 
 

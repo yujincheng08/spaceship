@@ -2,6 +2,7 @@
 #define SCENE_H
 
 #include "directionallight.h"
+#include "laserbullet.h"
 #include "pointlight.h"
 #include <Qt3DCore/QEntity>
 #include <Qt3DExtras/Qt3DWindow>
@@ -20,9 +21,10 @@ public:
 
 private:
   QEntity *root = new QEntity();
-  SpaceShip *spaceship = new SpaceShip(root);
+
+  SpaceShip *spaceship = new SpaceShip(root, this);
   Earth *earth = new Earth(root);
-  Planet *sun = new Planet(root);
+  QList<LaserBullet *> bulletList;
 
   CameraController *controller = new CameraController(root, this);
   PointLight *light = new PointLight(root);
@@ -31,12 +33,18 @@ private:
 
   void keyPressEvent(QKeyEvent *e) override;
   void keyReleaseEvent(QKeyEvent *e) override;
+  void mousePressEvent(QMouseEvent *) override;
+  void mouseReleaseEvent(QMouseEvent *) override;
 
 public:
   Scene(QScreen *parent = nullptr);
   virtual ~Scene() final { delete root; }
 
   SpaceShip *getSpaceship() { return spaceship; }
+  void addLaserBullet(const QVector3D &pos, const QVector3D &velocity);
+  void addLaserBullet(const QVector3D &pos, const float &speed);
+
+  void removeLaserBullet(LaserBullet *bullet);
 
 private:
   void initCamera();

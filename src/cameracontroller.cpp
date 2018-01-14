@@ -29,6 +29,14 @@ void CameraController::setCursorLock(bool lock) {
 
 bool CameraController::getCursorLock() { return cursorLock; }
 
+QVector3D CameraController::getToward() {
+  Qt3DRender::QCamera *theCamera = camera();
+  if (theCamera == nullptr)
+    return {0, 0, 0};
+  else
+    return (theCamera->viewCenter() - theCamera->position()).normalized();
+}
+
 QVector3D CameraController::TransPosition(const QVector3D &up,
                                           const QVector3D &twd,
                                           const QVector3D &pos,
@@ -89,8 +97,14 @@ void CameraController::frameAction(float dt) {
   int rx = cursor.x() - cx, ry = cursor.y() - cy;
   QCursor::setPos(cx, cy);
 
-  theCamera->panAboutViewCenter((-rx * lookSpeed()) * dt, targetUp);
-  theCamera->tiltAboutViewCenter((ry * lookSpeed()) * dt);
+  theCamera->panAboutViewCenter((-rx * lookSpeed()) * dt / 10, targetUp);
+
+  if (posTrans.y() < 0 && ry < 0)
+    ;
+  else if (posTrans.y() > posTrans.length() / 1.414 && ry > 0)
+    ;
+  else
+    theCamera->tiltAboutViewCenter((ry * lookSpeed()) * dt / 10);
   posTrans =
       getTransPosition(targetUp, targetTwd, targetPos, theCamera->position());
 }

@@ -14,6 +14,20 @@ Scene::Scene(QScreen *parent) : Qt3DExtras::Qt3DWindow(parent) {
   initFrame();
 }
 
+void Scene::addLaserBullet(const QVector3D &pos, const QVector3D &velocity) {
+  LaserBullet *bullet = new LaserBullet(pos, velocity, root, this);
+  connect(frame, &QFrameAction::triggered, bullet, &Component::frameAction);
+}
+
+void Scene::addLaserBullet(const QVector3D &pos, const float &speed) {
+  addLaserBullet(pos, speed * controller->getToward());
+}
+
+void Scene::removeLaserBullet(LaserBullet *bullet) {
+  disconnect(frame, &QFrameAction::triggered, bullet, &Component::frameAction);
+  delete bullet;
+}
+
 void Scene::initCamera() {
   camera()->lens()->setPerspectiveProjection(45.0f, 16.0f / 9.0f, 0.1f,
                                              20000000.0f);
@@ -44,7 +58,7 @@ void Scene::initFrame() {
           &CameraController::frameAction);
 }
 
-void Scene::frameAction(float dt) {}
+void Scene::frameAction(float) {}
 
 void Scene::keyPressEvent(QKeyEvent *e) {
   Qt3DExtras::Qt3DWindow::keyPressEvent(e);
@@ -111,4 +125,14 @@ void Scene::keyReleaseEvent(QKeyEvent *e) {
     a->endTurnDown();
     break;
   }
+}
+
+void Scene::mousePressEvent(QMouseEvent *) {
+  if (controller->getCursorLock())
+    spaceship->startShoot();
+}
+
+void Scene::mouseReleaseEvent(QMouseEvent *) {
+  if (controller->getCursorLock())
+    spaceship->endShoot();
 }

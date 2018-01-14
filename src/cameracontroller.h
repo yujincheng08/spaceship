@@ -13,17 +13,18 @@ public:
     this->root = root;
     cursorLock = true;
     posTrans = QVector3D(0, 4, -20);
-    ctrTrans = QVector3D(0, 2, 0);
+    ctrTrans = QVector3D(0, 4, 0);
   }
 
   virtual ~CameraController() final {}
   void setTraceTarget(SpaceShip *target);
   void setCursorLock(bool lock);
   bool getCursorLock();
+  QVector3D getToward();
 
 private:
-  void moveCamera(const QAbstractCameraController::InputState &state,
-                  float dt) override {}
+  void moveCamera(const QAbstractCameraController::InputState &,
+                  float) override {}
   QVector3D TransPosition(const QVector3D &up, const QVector3D &twd,
                           const QVector3D &pos, const QVector3D &trans);
   QVector3D getTransPosition(const QVector3D &up, const QVector3D &twd,

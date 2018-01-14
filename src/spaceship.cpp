@@ -1,8 +1,10 @@
 #include "spaceship.h"
+#include "scene.h"
 #include <QtDebug>
 #include <QtMath>
 
-SpaceShip::SpaceShip(QNode *parent) : Component(parent) {
+SpaceShip::SpaceShip(QNode *parent, Scene *root) : Component(parent) {
+  this->root = root;
   initMaterials();
   textureImage->setSource(QUrl("qrc:/assets/img/earthmap2k.jpg"));
   texture->addTextureImage(textureImage);
@@ -18,6 +20,9 @@ SpaceShip::SpaceShip(QNode *parent) : Component(parent) {
   setMaxTurnLRSpeed(1);
   setMaxTurnUDSpeed(1);
   turnLRSpeed = turnUDSpeed = moveSpeed = 0;
+
+  shootWait = 0;
+  shootInterval = 0.5;
   //  qDebug() << "spaceship constructed.";
 }
 
@@ -47,6 +52,7 @@ QVector3D SpaceShip::getUp() const {
 }
 
 void SpaceShip::frameAction(float dt) {
+  // move
   if (isTurnLeft && !isTurnRight)
     if (turnLRSpeed > -maxTurnLRSpeed)
       turnLRSpeed -= maxTurnLRSpeed / 25;
@@ -80,6 +86,15 @@ void SpaceShip::frameAction(float dt) {
                {-chgUp.x(), chgUp.y(), -chgUp.z()});
 
   setPosition(transform->translation() + chgTwd * moveSpeed * dt);
+
+  // shoot
+  if (!isShooting)
+    return;
+  shootWait += dt;
+  if (shootWait < shootInterval)
+    return;
+  shootWait -= shootInterval;
+  root->addLaserBullet(this->getPostion(), 100);
 }
 
 void SpaceShip::removeDefaultMaterial(const QString &entityName) {

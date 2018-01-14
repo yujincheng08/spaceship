@@ -5,6 +5,8 @@
 #include <QSceneChange>
 #include <QtOpenGL>
 
+class Scene;
+
 class SpaceShip : public Component {
   using QPhongAlphaMaterial = Qt3DExtras::QPhongAlphaMaterial;
 
@@ -16,7 +18,7 @@ public:
   QTexture2D *texture = new QTexture2D;
 
   friend class InfoSurface;
-  SpaceShip(QNode *parent = nullptr);
+  SpaceShip(QNode *parent = nullptr, Scene *root = nullptr);
 
   void startTurnLeft() { isTurnLeft = true; }
   void startTurnRight() { isTurnRight = true; }
@@ -24,12 +26,17 @@ public:
   void startTurnDown() { isTurnDown = true; }
   void startMoveForward() { isMoveForward = true; }
   void startMoveBack() { isMoveBack = true; }
+  void startShoot() { isShooting = true; }
   void endTurnLeft() { isTurnLeft = false; }
   void endTurnRight() { isTurnRight = false; }
   void endTurnUp() { isTurnUp = false; }
   void endTurnDown() { isTurnDown = false; }
   void endMoveForward() { isMoveForward = false; }
   void endMoveBack() { isMoveBack = false; }
+  void endShoot() {
+    isShooting = false;
+    shootWait = 0;
+  }
   void setMaxTurnLRSpeed(qreal speed) { maxTurnLRSpeed = speed; }
   void setMaxTurnUDSpeed(qreal speed) { maxTurnUDSpeed = speed; }
   void setMaxMoveSpeed(qreal speed) { maxMoveSpeed = speed; }
@@ -44,12 +51,13 @@ protected slots:
   virtual void frameAction(float dt) override;
 
 private:
-  qreal turnLRSpeed, turnUDSpeed, moveSpeed;
-  qreal maxTurnLRSpeed, maxTurnUDSpeed, maxMoveSpeed;
+  qreal turnLRSpeed, turnUDSpeed, moveSpeed, shootWait;
+  qreal maxTurnLRSpeed, maxTurnUDSpeed, maxMoveSpeed, shootInterval;
   QMap<QString, QMaterial *> materials;
   QQuaternion initDir;
 
-  bool isTurnLeft, isTurnRight, isTurnUp, isTurnDown, isMoveForward, isMoveBack;
+  bool isTurnLeft, isTurnRight, isTurnUp, isTurnDown, isMoveForward, isMoveBack,
+      isShooting;
   QPhongMaterial *bodyMaterial = new QPhongMaterial;
   /*
   QPhongMaterial *feetMaterial = new QPhongMaterial;
@@ -59,6 +67,8 @@ private:
   */
   QPhongAlphaMaterial *glassMaterial = new QPhongAlphaMaterial;
   QPhongAlphaMaterial *gasMaterial = new QPhongAlphaMaterial;
+
+  Scene *root;
 
 private:
   void removeDefaultMaterial(const QString &entityName);
