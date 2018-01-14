@@ -26,7 +26,8 @@ SOURCES += \
     src/cameracontroller.cpp \
     src/planet/earth.cpp \
     src/planet/planet.cpp \
-    src/laserbullet.cpp
+    src/laserbullet.cpp \
+    src/controller.cpp
 
 RESOURCES += \
     assets.qrc \
@@ -50,7 +51,9 @@ HEADERS += \
     src/starfield.h \
     src/planet/earth.h \
     src/planet/planet.h \
-    src/laserbullet.h
+    src/laserbullet.h \
+    src/controller.h \
+    src/boundingbox.h
 
 
 
