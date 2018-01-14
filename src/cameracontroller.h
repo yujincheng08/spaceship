@@ -1,15 +1,16 @@
 #ifndef CAMERACONTROLLER_H
 #define CAMERACONTROLLER_H
+#include "component.h"
 #include <QVector3D>
-#include <Qt3DExtras/QAbstractCameraController>
-
+#include <Qt3DRender/QCamera>
 class Scene;
 class SpaceShip;
 
-class CameraController : public Qt3DExtras::QAbstractCameraController {
+class CameraController : public Component {
 public:
+  using QCamera = Qt3DRender::QCamera;
   explicit CameraController(QNode *parent = nullptr, Scene *root = nullptr)
-      : QAbstractCameraController(parent) {
+      : Component(parent) {
     this->root = root;
     cursorLock = true;
     posTrans = QVector3D(0, 4, -20);
@@ -17,14 +18,13 @@ public:
   }
 
   virtual ~CameraController() final {}
-  void setTraceTarget(SpaceShip *target);
+  void setTraceTarget(Component *target) { this->target = target; }
   void setCursorLock(bool lock);
-  bool getCursorLock();
+  bool getCursorLock() { return cursorLock; }
+  void setCamera(QCamera *camera) { this->camera = camera; }
   QVector3D getToward();
 
 private:
-  void moveCamera(const QAbstractCameraController::InputState &,
-                  float) override {}
   QVector3D TransPosition(const QVector3D &up, const QVector3D &twd,
                           const QVector3D &pos, const QVector3D &trans);
   QVector3D getTransPosition(const QVector3D &up, const QVector3D &twd,
@@ -34,12 +34,10 @@ public slots:
   void frameAction(float dt);
 
 protected:
-  CameraController(Qt3DExtras::QAbstractCameraControllerPrivate &dd,
-                   QNode *parent = nullptr)
-      : QAbstractCameraController(dd, parent) {}
-  Scene *root;
-  SpaceShip *target;
-  bool cursorLock;
+  Scene *root = nullptr;
+  Component *target = nullptr;
+  QCamera *camera = nullptr;
+  bool cursorLock = true;
 
   QVector3D posTrans, ctrTrans;
 };

@@ -33,11 +33,9 @@ void Scene::initCamera() {
                                              20000000.0f);
   camera()->setPosition(QVector3D(0, 0, -20.0f));
   camera()->setViewCenter(QVector3D(0, 0, 0));
-  controller->setLinearSpeed(50.0f);
-  controller->setLookSpeed(180.0f);
-  controller->setCamera(camera());
   controller->setTraceTarget(spaceship);
   controller->setCursorLock(true);
+  controller->setCamera(camera());
 }
 
 void Scene::initPlanets() {
@@ -49,7 +47,8 @@ void Scene::initSpaceship() {
   spaceship->setInitialDirection({0, 0, -1}, {0, 1, 0});
 }
 
-void Scene::initLight() { light->setPosition({0, 20, 20}); }
+void Scene::initLight() { /*light->setPosition({0, 20, 20});*/
+}
 
 void Scene::initFrame() {
   connect(frame, &QFrameAction::triggered, this, &Scene::frameAction);

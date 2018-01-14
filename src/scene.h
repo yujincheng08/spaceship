@@ -24,10 +24,9 @@ private:
 
   SpaceShip *spaceship = new SpaceShip(root, this);
   Earth *earth = new Earth(root);
-  QList<LaserBullet *> bulletList;
 
   CameraController *controller = new CameraController(root, this);
-  PointLight *light = new PointLight(root);
+  // PointLight *light = new PointLight(root);
   QFrameAction *frame = new QFrameAction(root);
   Starfield *starfield = new Starfield(root);
 

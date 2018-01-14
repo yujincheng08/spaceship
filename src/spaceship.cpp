@@ -25,32 +25,6 @@ SpaceShip::SpaceShip(QNode *parent, Scene *root) : Component(parent) {
   shootInterval = 0.5;
   //  qDebug() << "spaceship constructed.";
 }
-
-void SpaceShip::setInitialDirection(const QVector3D &toward,
-                                    const QVector3D &up) {
-  initDir = QQuaternion::fromDirection(toward, up).normalized();
-  transform->setRotation(initDir);
-}
-
-void SpaceShip::setDirection(const QVector3D &toward, const QVector3D &up) {
-  QQuaternion crtDir = (initDir * /*QQuaternion::rotationTo({0, 0, 1}, toward)*/
-                        QQuaternion::fromDirection(toward, up).normalized())
-                           .normalized();
-  transform->setRotation(crtDir);
-}
-
-QVector3D SpaceShip::getToward() const {
-  return (transform->rotation() * initDir.conjugated())
-      .rotatedVector({0, 0, 1})
-      .normalized();
-}
-
-QVector3D SpaceShip::getUp() const {
-  return (transform->rotation() * initDir.conjugated())
-      .rotatedVector({0, 1, 0})
-      .normalized();
-}
-
 void SpaceShip::frameAction(float dt) {
   // move
   if (isTurnLeft && !isTurnRight)
@@ -112,17 +86,17 @@ void SpaceShip::initMaterials() {
   materials["Reactor"] = bodyMaterial;
   materials["Glass"] = glassMaterial;
   materials["Gas"] = gasMaterial;
-  bodyMaterial->setAmbient(QColor::fromRgbF(1.0f, 1.0f, 1.0f));
+  // bodyMaterial->setAmbient(QColor::fromRgbF(1.0f, 1.0f, 1.0f));
+  bodyMaterial->setAmbient(QColor::fromRgbF(0.2f, 0.2f, 0.2f));
   bodyMaterial->setDiffuse(QColor::fromRgbF(0.8f, 0.8f, 0.8f));
   bodyMaterial->setSpecular(QColor::fromRgbF(0.5f, 0.5f, 0.5f));
   gasMaterial->setAmbient(QColor::fromRgbF(1.0f, 1.0f, 1.0f));
-  gasMaterial->setDiffuse(QColor::fromRgbF(0.8f, 0.8f, 0.8f));
-  gasMaterial->setSpecular(QColor::fromRgbF(0.5f, 0.5f, 0.5f));
-  gasMaterial->setAlpha(0.0f);
-  glassMaterial->setAmbient(QColor::fromRgbF(1.0f, 1.0f, 1.0f));
-  glassMaterial->setDiffuse(QColor::fromRgbF(0.8f, 0.8f, 0.8f));
-  glassMaterial->setSpecular(QColor::fromRgbF(0.5f, 0.5f, 0.5f));
-  glassMaterial->setAlpha(0.3f);
+  gasMaterial->setDiffuse(QColor::fromRgbF(0.0f, 0.0f, 0.8f));
+  gasMaterial->setSpecular(QColor::fromRgbF(0.0f, 0.0, 0.0f));
+  gasMaterial->setAlpha(.1f);
+  glassMaterial->setAmbient(QColor::fromRgbF(0.0f, 0.0f, 0.0f));
+  glassMaterial->setDiffuse(QColor::fromRgbF(0.0f, 0.0f, 0.0f));
+  glassMaterial->setSpecular(QColor::fromRgbF(0.8f, 0.8f, 0.8f));
 }
 
 void SpaceShip::loadingStatusChanged(Qt3DRender::QSceneLoader::Status status) {
@@ -135,5 +109,10 @@ void SpaceShip::loadingStatusChanged(Qt3DRender::QSceneLoader::Status status) {
     break;
   case QSceneLoader::Error:
     qDebug() << "Error";
+  case QSceneLoader::Loading:
+    qDebug() << "Still loading...";
+    break;
+  default:
+    break;
   }
 }

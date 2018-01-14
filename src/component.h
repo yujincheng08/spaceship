@@ -33,6 +33,7 @@ public:
 
 protected:
   QTransform *transform = new QTransform;
+  QQuaternion initDir;
 
 public slots:
   virtual void frameAction(float dt) = 0;
@@ -40,6 +41,10 @@ public slots:
 public:
   Component(QNode *parent = nullptr);
   QVector3D getPostion() const;
+  QVector3D getToward() const;
+  QVector3D getUp() const;
+  void setInitialDirection(const QVector3D &toward, const QVector3D &up);
+  void setDirection(const QVector3D &toward, const QVector3D &up);
 };
 
 #endif // COMPONENT_H

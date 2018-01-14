@@ -40,11 +40,7 @@ public:
   void setMaxTurnLRSpeed(qreal speed) { maxTurnLRSpeed = speed; }
   void setMaxTurnUDSpeed(qreal speed) { maxTurnUDSpeed = speed; }
   void setMaxMoveSpeed(qreal speed) { maxMoveSpeed = speed; }
-  void setInitialDirection(const QVector3D &toward, const QVector3D &up);
-  void setDirection(const QVector3D &toward, const QVector3D &up);
 
-  QVector3D getToward() const;
-  QVector3D getUp() const;
   virtual ~SpaceShip() {}
 
 protected slots:
@@ -54,7 +50,6 @@ private:
   qreal turnLRSpeed, turnUDSpeed, moveSpeed, shootWait;
   qreal maxTurnLRSpeed, maxTurnUDSpeed, maxMoveSpeed, shootInterval;
   QMap<QString, QMaterial *> materials;
-  QQuaternion initDir;
 
   bool isTurnLeft, isTurnRight, isTurnUp, isTurnDown, isMoveForward, isMoveBack,
       isShooting;
@@ -65,7 +60,7 @@ private:
   QPhongMaterial *reactorMaterial = new QPhongMaterial;
   QPhongMaterial *wingMaterial = new QPhongMaterial;
   */
-  QPhongAlphaMaterial *glassMaterial = new QPhongAlphaMaterial;
+  QPhongMaterial *glassMaterial = new QPhongMaterial;
   QPhongAlphaMaterial *gasMaterial = new QPhongAlphaMaterial;
 
   Scene *root;
