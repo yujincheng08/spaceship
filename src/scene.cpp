@@ -1,5 +1,6 @@
 #include "scene.h"
 #include <Qt3DRender/QCamera>
+
 Scene::Scene(QScreen *parent) : Qt3DExtras::Qt3DWindow(parent) {
   setRootEntity(root);
 
@@ -21,6 +22,15 @@ void Scene::addLaserBullet(const QVector3D &pos, const QVector3D &velocity) {
 
 void Scene::addLaserBullet(const QVector3D &pos, const float &speed) {
   addLaserBullet(pos, speed * controller->getToward());
+}
+
+void Scene::spaceshipExplode(SpaceShip *spaceship) {
+  disconnect(frame, &QFrameAction::triggered, spaceship,
+             &Component::frameAction);
+  if (spaceship == this->spaceship)
+    gameOver();
+
+  delete spaceship;
 }
 
 void Scene::removeLaserBullet(LaserBullet *bullet) {
@@ -57,7 +67,12 @@ void Scene::initFrame() {
           &CameraController::frameAction);
 }
 
-void Scene::frameAction(float) {}
+void Scene::gameOver() { qDebug() << "Game Over"; }
+
+void Scene::frameAction(float) {
+  if (spaceship->isExplode())
+    controller->release();
+}
 
 void Scene::keyPressEvent(QKeyEvent *e) {
   Qt3DExtras::Qt3DWindow::keyPressEvent(e);
@@ -82,6 +97,10 @@ void Scene::keyPressEvent(QKeyEvent *e) {
     break;
   case Qt::Key_C:
     a->startTurnDown();
+    break;
+
+  case Qt::Key_B:
+    spaceship->explode();
     break;
 
   case Qt::Key_Escape:

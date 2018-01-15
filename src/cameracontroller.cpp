@@ -74,6 +74,13 @@ QVector3D CameraController::getTransPosition(const QVector3D &up,
 }
 
 void CameraController::frameAction(float dt) {
+  if (isRelease) {
+    camera->setPosition(
+        (camera->position() - camera->viewCenter()).normalized() *
+            ((camera->position() - camera->viewCenter()).length() + dt) +
+        camera->viewCenter());
+  }
+
   if (camera == nullptr)
     return;
 

@@ -41,10 +41,10 @@ public:
   void setMaxTurnLRSpeed(qreal speed) { maxTurnLRSpeed = speed; }
   void setMaxTurnUDSpeed(qreal speed) { maxTurnUDSpeed = speed; }
   void setMaxMoveSpeed(qreal speed) { maxMoveSpeed = speed; }
-
+  bool isExplode() { return isExploded; }
   void explode() override;
 
-  virtual ~SpaceShip() {}
+  virtual ~SpaceShip() { removeComponent(sceneLoader); }
 
 protected slots:
   virtual void frameAction(float dt) override;
@@ -78,6 +78,8 @@ private:
   QTransform *gasTransDR = new QTransform;
 
   Scene *root;
+  QList<QTransform *> *explodeList;
+  float explodeTime;
 
 private:
   void removeDefaultMaterial(const QString &entityName);

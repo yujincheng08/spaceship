@@ -24,6 +24,10 @@ public:
   void setCamera(QCamera *camera) { this->camera = camera; }
   QVector3D getToward();
   void zoom(const bool &direction);
+  void release() {
+    isRelease = true;
+    target = nullptr;
+  }
 
 private:
   QVector3D TransPosition(const QVector3D &up, const QVector3D &twd,
@@ -40,6 +44,7 @@ protected:
   QCamera *camera = nullptr;
   bool cursorLock = true;
   bool isActived = true;
+  bool isRelease = false;
 
   QVector3D posTrans, ctrTrans;
 };

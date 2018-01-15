@@ -4,6 +4,7 @@
 #include "directionallight.h"
 #include "laserbullet.h"
 #include "pointlight.h"
+#include <QNode>
 #include <Qt3DCore/QEntity>
 #include <Qt3DExtras/Qt3DWindow>
 #include <Qt3DInput/QInputAspect>
@@ -15,6 +16,7 @@
 
 class Scene : public Qt3DExtras::Qt3DWindow {
 public:
+  using QNode = Qt3DCore::QNode;
   using QEntity = Qt3DCore::QEntity;
   using QDirectionalLight = Qt3DRender::QDirectionalLight;
   using QFrameAction = Qt3DLogic::QFrameAction;
@@ -44,6 +46,8 @@ public:
   void addLaserBullet(const QVector3D &pos, const QVector3D &velocity);
   void addLaserBullet(const QVector3D &pos, const float &speed);
 
+  void spaceshipExplode(SpaceShip *spaceship);
+
   void removeLaserBullet(LaserBullet *bullet);
 
 private:
@@ -53,6 +57,7 @@ private:
   void initLight();
   void initFrame();
 
+  void gameOver();
 private slots:
   void frameAction(float dt);
 };

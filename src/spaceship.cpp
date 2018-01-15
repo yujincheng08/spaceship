@@ -25,9 +25,45 @@ SpaceShip::SpaceShip(QNode *parent, Scene *root) : Component(parent) {
   shootInterval = 0.5;
 }
 
-void SpaceShip::explode() {}
+void SpaceShip::explode() {
+  explodeList = new QList<QTransform *>;
+  for (const auto &entity : sceneLoader->entityNames())
+    if (((QString)entity)[2] != 's') {
+      QTransform *transform = new QTransform[2];
+      explodeList->append(transform);
+      transform[0].setTranslation(
+          QVector3D(noise(-1, 1), noise(-1, 1), noise(-1, 1)).normalized() *
+          noise(1, 3));
+      transform[0].setRotationX(noise(0, 1));
+      transform[0].setRotationY(noise(0, 1));
+      transform[0].setRotationZ(noise(0, 1));
+      transform[1].setTranslation(transform[0].translation());
+      transform[1].setRotation(transform[0].rotation());
+      sceneLoader->entity(entity)->addComponent(transform);
+    }
+  gasTransUL->setScale(0);
+  gasTransUM->setScale(0);
+  gasTransUR->setScale(0);
+  gasTransDL->setScale(0);
+  gasTransDR->setScale(0);
+  isExploded = true;
+  explodeTime = 0;
+}
+
 void SpaceShip::frameAction(float dt) {
   if (isExploded) {
+    if (explodeList == nullptr)
+      return;
+    for (QTransform *trans : *explodeList) {
+      trans[0].setTranslation(trans[0].translation() +
+                              trans[1].translation() * dt);
+      trans[0].setRotationX(trans[0].rotationX() + trans[1].rotationX());
+      trans[0].setRotationY(trans[0].rotationY() + trans[1].rotationY());
+      trans[0].setRotationZ(trans[0].rotationZ() + trans[1].rotationZ());
+    }
+    explodeTime += dt;
+    if (explodeTime > 10)
+      root->spaceshipExplode(this);
   } else {
     int direct;
     // move
@@ -375,11 +411,11 @@ void SpaceShip::checkTailFire(const int &direct) {
       noise(dlc ? 0.8f : 0.1f), noise(0.1f), noise(dlc ? 0.1f : 0.8f)));
   gasMaterialDR->setDiffuse(QColor::fromRgbF(
       noise(drc ? 0.8f : 0.1f), noise(0.1f), noise(drc ? 0.1f : 0.8f)));
-  gasMaterialUL->setAlpha(noise(0.2f));
-  gasMaterialUM->setAlpha(noise(0.2f));
-  gasMaterialUR->setAlpha(noise(0.2f));
-  gasMaterialDL->setAlpha(noise(0.2f));
-  gasMaterialDR->setAlpha(noise(0.2f));
+  gasMaterialUL->setAlpha(noise(0.3f));
+  gasMaterialUM->setAlpha(noise(0.4f));
+  gasMaterialUR->setAlpha(noise(0.3f));
+  gasMaterialDL->setAlpha(noise(0.3f));
+  gasMaterialDR->setAlpha(noise(0.3f));
 }
 
 float SpaceShip::noise(const float &orgFLT) {
