@@ -42,6 +42,8 @@ public:
   void setMaxTurnUDSpeed(qreal speed) { maxTurnUDSpeed = speed; }
   void setMaxMoveSpeed(qreal speed) { maxMoveSpeed = speed; }
 
+  void explode() override;
+
   virtual ~SpaceShip() {}
 
 protected slots:
@@ -54,6 +56,7 @@ private:
 
   bool isTurnLeft, isTurnRight, isTurnUp, isTurnDown, isMoveForward, isMoveBack,
       isShooting;
+  bool isExploded;
   QPhongMaterial *bodyMaterial = new QPhongMaterial;
   /*
   QPhongMaterial *feetMaterial = new QPhongMaterial;
@@ -81,6 +84,7 @@ private:
   void initMaterials();
   void checkTailFire(const int &direct);
   float noise(const float &orgFLT);
+  float noise(const float &low, const float &high);
 private slots:
   void loadingStatusChanged(QSceneLoader::Status status);
 };

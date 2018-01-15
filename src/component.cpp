@@ -6,7 +6,7 @@
 #include <sstream>
 
 using namespace std;
-// reference: https://www.cnblogs.com/zjutlitao/p/4187529.html
+
 Component::Component(QNode *parent) : QEntity(parent) {
   addComponent(transform);
 }
