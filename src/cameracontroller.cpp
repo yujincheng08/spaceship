@@ -33,6 +33,16 @@ QVector3D CameraController::getToward() {
     return (camera->viewCenter() - camera->position()).normalized();
 }
 
+void CameraController::zoom(const bool &direction) {
+  QVector3D dis = posTrans - ctrTrans;
+  float dist = dis.length();
+  if (!direction && dist > 9)
+    dist -= 0.5;
+  if (direction && dist < 40)
+    dist += 0.5;
+  posTrans = ctrTrans + dis.normalized() * dist;
+}
+
 QVector3D CameraController::TransPosition(const QVector3D &up,
                                           const QVector3D &twd,
                                           const QVector3D &pos,

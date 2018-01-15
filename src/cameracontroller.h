@@ -23,6 +23,7 @@ public:
   bool getCursorLock() { return cursorLock; }
   void setCamera(QCamera *camera) { this->camera = camera; }
   QVector3D getToward();
+  void zoom(const bool &direction);
 
 private:
   QVector3D TransPosition(const QVector3D &up, const QVector3D &twd,

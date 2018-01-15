@@ -180,16 +180,6 @@ void MainWindow::initScene(const QColor &clearColor) {
 
 // void MainWindow::mouseReleaseEvent(QMouseEvent *e) { isMousePresseed = 0; }
 
-// void MainWindow::wheelEvent(QWheelEvent *e) {
-//  if (e->delta() > 0) {
-//    camera->posMove({0, 0, 3});
-//    update();
-//  } else if (e->delta() < 0) {
-//    camera->posMove({0, 0, -3});
-//    update();
-//  }
-//}
-
 // void MainWindow::timerEvent(QTimerEvent *e) {
 //  SpaceShip *a = (SpaceShip *)(components[0]);
 //  a->refresh();

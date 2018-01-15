@@ -34,6 +34,7 @@ private:
   void keyReleaseEvent(QKeyEvent *e) override;
   void mousePressEvent(QMouseEvent *) override;
   void mouseReleaseEvent(QMouseEvent *) override;
+  void wheelEvent(QWheelEvent *e) override;
 
 public:
   Scene(QScreen *parent = nullptr);

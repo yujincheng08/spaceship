@@ -135,3 +135,5 @@ void Scene::mouseReleaseEvent(QMouseEvent *) {
   if (controller->getCursorLock())
     spaceship->endShoot();
 }
+
+void Scene::wheelEvent(QWheelEvent *e) { controller->zoom(e->delta() < 0); }
