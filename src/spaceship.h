@@ -3,6 +3,7 @@
 
 #include "component.h"
 #include <QSceneChange>
+#include <QTime>
 #include <QtOpenGL>
 
 class Scene;
@@ -61,13 +62,25 @@ private:
   QPhongMaterial *wingMaterial = new QPhongMaterial;
   */
   QPhongMaterial *glassMaterial = new QPhongMaterial;
-  QPhongAlphaMaterial *gasMaterial = new QPhongAlphaMaterial;
+  QPhongAlphaMaterial *gasMaterialUL = new QPhongAlphaMaterial;
+  QPhongAlphaMaterial *gasMaterialUM = new QPhongAlphaMaterial;
+  QPhongAlphaMaterial *gasMaterialUR = new QPhongAlphaMaterial;
+  QPhongAlphaMaterial *gasMaterialDL = new QPhongAlphaMaterial;
+  QPhongAlphaMaterial *gasMaterialDR = new QPhongAlphaMaterial;
+
+  QTransform *gasTransUL = new QTransform;
+  QTransform *gasTransUM = new QTransform;
+  QTransform *gasTransUR = new QTransform;
+  QTransform *gasTransDL = new QTransform;
+  QTransform *gasTransDR = new QTransform;
 
   Scene *root;
 
 private:
   void removeDefaultMaterial(const QString &entityName);
   void initMaterials();
+  void checkTailFire(const int &direct);
+  float noise(const float &orgFLT);
 private slots:
   void loadingStatusChanged(QSceneLoader::Status status);
 };

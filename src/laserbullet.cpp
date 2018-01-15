@@ -20,7 +20,7 @@ LaserBullet::LaserBullet(const QVector3D &startPos, const QVector3D &velocity,
   material->setAmbient(color);
   material->setDiffuse(color);
   material->setSpecular(color);
-  material->setAlpha(0.5);
+  material->setAlpha(0.2);
 
   transform->setRotation(QQuaternion::rotationTo({0, -1, 0}, velocity));
 
