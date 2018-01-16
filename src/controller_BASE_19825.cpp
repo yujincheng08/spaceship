@@ -4,7 +4,6 @@ OverlayWidget *Controller::getInfoSurface() const { return infoSurface; }
 
 bool Controller::isCollision(const QList<BoundingBox> &a,
                              const QList<BoundingBox> &b) {
-  auto P = spaceship->getPostion();
   for (BoundingBox boxa : a)
     for (BoundingBox boxb : b)
       if (boxCollision(boxa, boxb))
@@ -24,33 +23,35 @@ bool Controller::isCollision(const QList<BoundingBox> &a,
 }
 
 bool Controller::isCollision(const QList<BoundingBox> &a,
-                             const QList<BoundingSphere> &b) {
+                             const QVector3D &center, const float &r) {
   for (BoundingBox box : a)
-    for (BoundingSphere sphere : b)
-      if (boxCollision(box, sphere))
-        return true;
+    if (boxCollision(box, center, r))
+      return true;
   return false;
-}
-bool Controller::isCollision(const QVector3D &point, const BoundingSphere &b) {
-  return (b.center - point).length() < b.radius;
 }
 
-bool Controller::detectCollision() {
-  auto boundingBox = spaceship->getBoundingBox();
-  for (auto &planet : planets)
-    if (isCollision(boundingBox, planet->getBoundingSphere()))
-      return true;
-  auto AIBox = spaceshipAI->getBoundingBox();
-  if (isCollision(AIBox, boundingBox)) {
-    spaceshipAI->explode();
-    return true;
-  }
-  return false;
+bool Controller::isCollision(const QVector3D &point, const QVector3D &center,
+                             const float &r) {
+  return (center - point).length() < r;
 }
 
 void Controller::frameAction(float) {
-  if (detectCollision())
-    spaceship->explode();
+  // orbit
+  earth->orbit(sun);
+  moon->orbit(earth);
+  mercury->orbit(sun);
+  venus->orbit(sun);
+  mars->orbit(sun);
+  neptune->orbit(sun);
+  jupiter->orbit(sun);
+  saturn->orbit(sun);
+  uranus->orbit(sun);
+
+  // state control
+
+  // bullet
+
+  // collison test
 }
 
 bool Controller::boxCollision(const BoundingBox &a, const BoundingBox &b) {
@@ -60,20 +61,23 @@ bool Controller::boxCollision(const BoundingBox &a, const BoundingBox &b) {
   return xCollision && yCollision && zCollision;
 }
 
-bool Controller::boxCollision(const BoundingBox &a, const BoundingSphere &b) {
-  if (pointCollision(a.point, a.x, b.center) == 0 &&
-      pointCollision(a.point, a.y, b.center) == 0 &&
-      pointCollision(a.point, a.z, b.center) == 0)
+bool Controller::boxCollision(const BoundingBox &a, const QVector3D &center,
+                              const float &r) {
+  Q_UNUSED(r)
+  if (pointCollision(a.point, a.x, center) == 0 &&
+      pointCollision(a.point, a.y, center) == 0 &&
+      pointCollision(a.point, a.z, center) == 0)
     return true;
+  QVector3D checkpoint;
   for (int i = 0; i < 8; i++) {
-    auto checkPoint = a.point;
+    checkPoint = a.point;
     if ((i & 1) != 0)
       checkPoint += a.x;
     if ((i & 2) != 0)
       checkPoint += a.y;
     if ((i & 4) != 0)
       checkPoint += a.z;
-    if ((b.center - checkPoint).length() < b.radius)
+    if ((center - checkpoint).length() < r)
       return true;
   }
   return false;
@@ -250,50 +254,20 @@ void Controller::initCamera() {
 }
 
 void Controller::initPlanets() {
-  Sun *sun = new Sun(scene);
-  planets << sun;
-  Earth *earth = new Earth(scene);
-  earth->setOrbitPlanet(sun);
-  connect(frame, &QFrameAction::triggered, earth, &Planet::frameAction);
-  planets << earth;
-  Moon *moon = new Moon(scene);
-  moon->setOrbitPlanet(earth);
-  connect(frame, &QFrameAction::triggered, moon, &Planet::frameAction);
-  planets << moon;
-  Mercury *mercury = new Mercury(scene);
-  mercury->setOrbitPlanet(sun);
-  connect(frame, &QFrameAction::triggered, mercury, &Planet::frameAction);
-  planets << mercury;
-  Venus *venus = new Venus(scene);
-  venus->setOrbitPlanet(sun);
-  connect(frame, &QFrameAction::triggered, venus, &Planet::frameAction);
-  planets << venus;
-  Mars *mars = new Mars(scene);
-  mars->setOrbitPlanet(sun);
-  connect(frame, &QFrameAction::triggered, mars, &Planet::frameAction);
-  planets << mars;
-  Jupiter *jupiter = new Jupiter(scene);
-  jupiter->setOrbitPlanet(sun);
-  connect(frame, &QFrameAction::triggered, jupiter, &Planet::frameAction);
-  planets << jupiter;
-  Saturn *saturn = new Saturn(scene);
-  saturn->setOrbitPlanet(sun);
-  connect(frame, &QFrameAction::triggered, saturn, &Planet::frameAction);
-  planets << saturn;
-  Neptune *neptune = new Neptune(scene);
-  neptune->setOrbitPlanet(sun);
-  connect(frame, &QFrameAction::triggered, neptune, &Planet::frameAction);
-  planets << neptune;
-  Uranus *uranus = new Uranus(scene);
-  uranus->setOrbitPlanet(sun);
-  connect(frame, &QFrameAction::triggered, uranus, &Planet::frameAction);
-  planets << uranus;
+  earth->setPosition(earth->getOriginPosition());
+  sun->setPosition(sun->getOriginPosition());
+  mercury->setPosition(mercury->getOriginPosition());
+  venus->setPosition(venus->getOriginPosition());
+  moon->setPosition(moon->getOriginPosition());
+  mars->setPosition(mars->getOriginPosition());
+  jupiter->setPosition(jupiter->getOriginPosition());
+  saturn->setPosition(saturn->getOriginPosition());
+  uranus->setPosition(uranus->getOriginPosition());
+  neptune->setPosition(neptune->getOriginPosition());
 }
 
 void Controller::initSpaceship() {
   spaceship->setInitialDirection({0, 0, -1}, {0, 1, 0});
-  spaceshipAI->setInitialDirection({0, 0, 1}, {0, 1, 0});
-  spaceshipAI->setPosition({0, 0, 100});
 }
 
 void Controller::initLight() {
@@ -303,8 +277,6 @@ void Controller::initLight() {
 void Controller::initFrameAction() {
   connect(frame, &QFrameAction::triggered, scene, &Scene::frameAction);
   connect(frame, &QFrameAction::triggered, spaceship, &Component::frameAction);
-  connect(frame, &QFrameAction::triggered, spaceshipAI,
-          &Component::frameAction);
   connect(frame, &QFrameAction::triggered, cameraController,
           &CameraController::frameAction);
   connect(frame, &QFrameAction::triggered, this, &Controller::frameAction);

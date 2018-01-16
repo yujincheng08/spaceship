@@ -15,18 +15,16 @@ Planet::Planet(Scene *parent) : Component(parent) {
   addComponent(material);
 }
 
-void Planet::frameAction(float dt) { Q_UNUSED(dt) }
-
-void Planet::orbit(Planet *planet) {
+void Planet::frameAction(float dt) {
   const qreal pi = M_PI;
-  qreal alpha = getAngle();
-  alpha = alpha + getRotateSpeed();
+  qreal alpha = currentAngle;
+  alpha = alpha + getRotateSpeed() * dt;
   if (alpha >= 360)
     alpha = alpha - 360;
   setAngle(alpha);
   QVector3D pos = getOriginPosition();
-  QVector3D pos_planetNew = planet->getPostion();
-  QVector3D pos_planet = planet->getOriginPosition();
+  QVector3D pos_planetNew = orbitPlanet->getPostion();
+  QVector3D pos_planet = orbitPlanet->getOriginPosition();
   QVector3D pos_change;
   pos_change.setX(pos_planetNew.x() +
                   (pos.x() - pos_planet.x()) * cos(alpha / 360.0 * 2 * pi));
@@ -35,12 +33,8 @@ void Planet::orbit(Planet *planet) {
                   (pos.x() - pos_planet.x()) * sin(alpha / 360.0 * 2 * pi));
 
   setPosition(pos_change);
-}
-
-void Planet::spin() {
-  spinAngle = spinAngle + spinSpeed;
+  spinAngle = spinAngle + spinSpeed * dt;
   transform->setRotationY(spinAngle);
-  // transform->rotation(spinAngle);
 }
 
 // void Planet::gltDrawSphere(GLfloat fRadius, GLint iSlices, GLint iStacks) {

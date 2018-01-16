@@ -4,7 +4,6 @@ OverlayWidget *Controller::getInfoSurface() const { return infoSurface; }
 
 bool Controller::isCollision(const QList<BoundingBox> &a,
                              const QList<BoundingBox> &b) {
-  auto P = spaceship->getPostion();
   for (BoundingBox boxa : a)
     for (BoundingBox boxb : b)
       if (boxCollision(boxa, boxb))
@@ -31,7 +30,39 @@ bool Controller::isCollision(const QList<BoundingBox> &a,
         return true;
   return false;
 }
+
+<<<<<<< Updated upstream
+bool Controller::isCollision(const QVector3D &point, const QVector3D &center,
+                             const float &r) {
+  return (center - point).length() < r;
+}
+
+void Controller::frameAction(float) {
+  // orbit
+  earth->orbit(sun);
+  moon->orbit(earth);
+  mercury->orbit(sun);
+  venus->orbit(sun);
+  mars->orbit(sun);
+  neptune->orbit(sun);
+  jupiter->orbit(sun);
+  saturn->orbit(sun);
+  uranus->orbit(sun);
+  earth->spin();
+  moon->spin();
+  mercury->spin();
+  venus->spin();
+  mars->spin();
+  neptune->spin();
+  jupiter->spin();
+  saturn->spin();
+  uranus->spin();
+
+  // state control
+=======
 bool Controller::isCollision(const QVector3D &point, const BoundingSphere &b) {
+>>>>>>> Stashed changes
+
   return (b.center - point).length() < b.radius;
 }
 
@@ -40,18 +71,10 @@ bool Controller::detectCollision() {
   for (auto &planet : planets)
     if (isCollision(boundingBox, planet->getBoundingSphere()))
       return true;
-  auto AIBox = spaceshipAI->getBoundingBox();
-  if (isCollision(AIBox, boundingBox)) {
-    spaceshipAI->explode();
-    return true;
-  }
   return false;
 }
 
-void Controller::frameAction(float) {
-  if (detectCollision())
-    spaceship->explode();
-}
+void Controller::frameAction(float) { detectCollision(); }
 
 bool Controller::boxCollision(const BoundingBox &a, const BoundingBox &b) {
   bool xCollision = lineCollision(a.point, a.x, b),
@@ -65,6 +88,7 @@ bool Controller::boxCollision(const BoundingBox &a, const BoundingSphere &b) {
       pointCollision(a.point, a.y, b.center) == 0 &&
       pointCollision(a.point, a.z, b.center) == 0)
     return true;
+  QVector3D checkPoint;
   for (int i = 0; i < 8; i++) {
     auto checkPoint = a.point;
     if ((i & 1) != 0)
@@ -73,7 +97,11 @@ bool Controller::boxCollision(const BoundingBox &a, const BoundingSphere &b) {
       checkPoint += a.y;
     if ((i & 4) != 0)
       checkPoint += a.z;
-    if ((b.center - checkPoint).length() < b.radius)
+<<<<<<< Updated upstream
+    if ((center - checkPoint).length() < r)
+=======
+    if ((b.center - checkpoint).length() < b.radius)
+>>>>>>> Stashed changes
       return true;
   }
   return false;
@@ -187,8 +215,8 @@ void Controller::initInput() {
     else
       spaceship->endTurnUp();
   });
-  backwardActionInput->setButtons(QVector<int>() << Qt::Key_C
-                                                 << Qt::Key_PageDown);
+  backwardActionInput->setButtons(QVector<int>()
+                                  << Qt::Key_C << Qt::Key_PageDown);
   backwardActionInput->setSourceDevice(keyboardDevice);
   backwardAction->addInput(backwardActionInput);
   connect(backwardAction, &QAction::activeChanged, this, [&](bool active) {
@@ -210,8 +238,8 @@ void Controller::initInput() {
         callOutMenu();
     }
   });
-  enterActionInput->setButtons(QVector<int>() << Qt::Key_Enter
-                                              << Qt::Key_Return);
+  enterActionInput->setButtons(QVector<int>()
+                               << Qt::Key_Enter << Qt::Key_Return);
   enterActionInput->setSourceDevice(keyboardDevice);
   enterAction->addInput(enterActionInput);
   connect(enterAction, &QAction::activeChanged, this, [&](bool active) {

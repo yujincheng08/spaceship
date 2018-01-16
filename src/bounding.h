@@ -8,17 +8,19 @@ struct BoundingBox {
   using QTransform = Qt3DCore::QTransform;
   QVector3D point, x, y, z;
   const BoundingBox applyTransform(const QTransform &transform) const {
-    return {transform.matrix().map(point), transform.matrix().map(x),
-            transform.matrix().map(y), transform.matrix().map(z)};
+    auto mappedPoint = transform.matrix().map(point);
+    return {mappedPoint, transform.matrix().map(x) - mappedPoint,
+            transform.matrix().map(y) - mappedPoint,
+            transform.matrix().map(z) - mappedPoint};
   }
 };
 
 struct BoundingSphere {
   using QTransform = Qt3DCore::QTransform;
-  QVector3D point;
+  QVector3D center;
   float radius;
   const BoundingSphere applyTransform(const QTransform &transform) const {
-    return {transform.matrix().map(point), radius};
+    return {transform.matrix().map(center), radius};
   }
 };
 

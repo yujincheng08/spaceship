@@ -5,9 +5,10 @@ Venus::Venus(Scene *parent) : Planet(parent) {
   setNormal("qrc:/assets/img/2k_venus_surface.jpg");
   setSpecular("qrc:/assets/img/2k_venus_surface.jpg");
   setDiffuse("qrc:/assets/img/2k_venus_surface.jpg");
-  setOriginPosition(QVector3D(400, 100, 0));
+  setOriginPosition({400, 100, 0});
+  setPosition(getOriginPosition());
   setRadius(60);
-  setRotateSpeed(0.07);
+  setRotateSpeed(7);
   setAngle(210);
-  setSpinSpeed(0.5);
+  setSpinSpeed(50);
 }

@@ -5,9 +5,10 @@ Jupiter::Jupiter(Scene *parent) : Planet(parent) {
   setNormal("qrc:/assets/img/2k_jupiter.jpg");
   setSpecular("qrc:/assets/img/2k_jupiter.jpg");
   setDiffuse("qrc:/assets/img/2k_jupiter.jpg");
-  setOriginPosition(QVector3D(-500, 100, 0));
+  setOriginPosition({-500, 100, 0});
+  setPosition(getOriginPosition());
   setRadius(200);
-  setRotateSpeed(0.06);
+  setRotateSpeed(6);
   setAngle(0);
-  setSpinSpeed(0.2);
+  setSpinSpeed(20);
 }
