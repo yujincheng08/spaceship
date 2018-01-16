@@ -9,4 +9,5 @@ Earth::Earth(Scene *parent) : Planet(parent) {
   setRadius(60);
   setRotateSpeed(0.02);
   setAngle(0);
+  setSpinSpeed(0.6);
 }

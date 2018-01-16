@@ -8,5 +8,6 @@ Mars::Mars(Scene *parent) : Planet(parent) {
   setOriginPosition(QVector3D(-100, 100, 0));
   setRadius(30);
   setRotateSpeed(0.05);
-  setAngle(30);
+  setAngle(240);
+  setSpinSpeed(0.6);
 }

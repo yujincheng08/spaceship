@@ -9,4 +9,5 @@ Venus::Venus(Scene *parent) : Planet(parent) {
   setRadius(60);
   setRotateSpeed(0.07);
   setAngle(210);
+  setSpinSpeed(0.5);
 }

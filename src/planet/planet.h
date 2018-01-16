@@ -39,6 +39,7 @@ public:
   void setRings(int rings) { mesh->setRings(rings); }
   QVector3D getOriginPosition() { return this->originPosition; }
   void orbit(Planet *planet);
+  void spin();
 
 protected:
   void setDiffuse(const QString &path) { diffuseImage->setSource(QUrl(path)); }
@@ -49,6 +50,7 @@ protected:
   void addMaterial() { addComponent(material); }
   void setOriginPosition(QVector3D pos) { originPosition = pos; }
   void setAngle(qreal angle) { currentAngle = angle; }
+  void setSpinSpeed(qreal speed) { spinSpeed = speed; }
   qreal getAngle() { return this->currentAngle; }
   qreal getRotateSpeed() { return rotateSpeed; }
 
@@ -58,6 +60,8 @@ protected slots:
 protected:
   qreal rotateSpeed = 0.0;
   qreal currentAngle = 0.0;
+  qreal spinAngle = 0.0;
+  qreal spinSpeed = 0.0;
   QVector3D originPosition;
 };
 

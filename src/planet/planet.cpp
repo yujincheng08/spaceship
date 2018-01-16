@@ -37,6 +37,12 @@ void Planet::orbit(Planet *planet) {
   setPosition(pos_change);
 }
 
+void Planet::spin() {
+  spinAngle = spinAngle + spinSpeed;
+  transform->setRotationY(spinAngle);
+  // transform->rotation(spinAngle);
+}
+
 // void Planet::gltDrawSphere(GLfloat fRadius, GLint iSlices, GLint iStacks) {
 //  GLfloat drho = (GLfloat)(3.141592653589) / (GLfloat)iStacks;
 //  GLfloat dtheta = 2.0f * (GLfloat)(3.141592653589) / (GLfloat)iSlices;

@@ -9,4 +9,5 @@ Saturn::Saturn(Scene *parent) : Planet(parent) {
   setRadius(180);
   setRotateSpeed(0.015);
   setAngle(180);
+  setSpinSpeed(0.1);
 }

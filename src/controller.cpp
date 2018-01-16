@@ -46,6 +46,15 @@ void Controller::frameAction(float) {
   jupiter->orbit(sun);
   saturn->orbit(sun);
   uranus->orbit(sun);
+  earth->spin();
+  moon->spin();
+  mercury->spin();
+  venus->spin();
+  mars->spin();
+  neptune->spin();
+  jupiter->spin();
+  saturn->spin();
+  uranus->spin();
 
   // state control
 
