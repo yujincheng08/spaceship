@@ -68,6 +68,18 @@ bool Controller::boxCollision(const BoundingBox &a, const QVector3D &center,
       pointCollision(a.point, a.y, center) == 0 &&
       pointCollision(a.point, a.z, center) == 0)
     return true;
+  QVector3D checkpoint;
+  for (int i = 0; i < 8; i++) {
+    checkPoint = a.point;
+    if ((i & 1) != 0)
+      checkPoint += a.x;
+    if ((i & 2) != 0)
+      checkPoint += a.y;
+    if ((i & 4) != 0)
+      checkPoint += a.z;
+    if ((center - checkpoint).length() < r)
+      return true;
+  }
   return false;
 }
 
