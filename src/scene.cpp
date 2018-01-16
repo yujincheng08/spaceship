@@ -1,5 +1,9 @@
 #include "scene.h"
+#include "math.h"
 #include <Qt3DRender/QCamera>
+
+#define pi 3.14159265358
+
 Scene::Scene(QScreen *parent) : Qt3DExtras::Qt3DWindow(parent) {
   setRootEntity(root);
 
@@ -27,15 +31,26 @@ void Scene::initCamera() {
 }
 
 void Scene::initPlanets() {
-  earth->setPosition({0, 2, 0});
-  // sun->setPosition({0, 20, 0});
+  earth->setPosition(earth->getOriginPosition());
+  sun->setPosition(sun->getOriginPosition());
+  mercury->setPosition(mercury->getOriginPosition());
+  venus->setPosition(venus->getOriginPosition());
+  moon->setPosition(moon->getOriginPosition());
+  mars->setPosition(mars->getOriginPosition());
+  jupiter->setPosition(jupiter->getOriginPosition());
+  saturn->setPosition(saturn->getOriginPosition());
+  uranus->setPosition(uranus->getOriginPosition());
+  neptune->setPosition(neptune->getOriginPosition());
 }
 
 void Scene::initSpaceship() {
   spaceship->setInitialDirection({0, 0, -1}, {0, 1, 0});
 }
 
-void Scene::initLight() { light->setPosition({0, 20, 20}); }
+void Scene::initLight() {
+  light->setPosition({100, 100, 0});
+  // light_sun->setPosition({100, 100, 0});
+}
 
 void Scene::initFrame() {
   connect(frame, &QFrameAction::triggered, this, &Scene::frameAction);
@@ -44,7 +59,17 @@ void Scene::initFrame() {
           &CameraController::frameAction);
 }
 
-void Scene::frameAction(float dt) {}
+void Scene::frameAction(float dt) {
+  earth->orbit(sun);
+  moon->orbit(earth);
+  mercury->orbit(sun);
+  venus->orbit(sun);
+  mars->orbit(sun);
+  neptune->orbit(sun);
+  jupiter->orbit(sun);
+  saturn->orbit(sun);
+  uranus->orbit(sun);
+}
 
 void Scene::keyPressEvent(QKeyEvent *e) {
   Qt3DExtras::Qt3DWindow::keyPressEvent(e);

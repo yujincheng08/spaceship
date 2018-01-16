@@ -17,6 +17,26 @@ Planet::Planet(QNode *parent) : Component(parent) {
 
 void Planet::frameAction(float dt) {}
 
+void Planet::orbit(Planet *planet) {
+  const qreal pi = 3.1415926;
+  qreal alpha = getAngle();
+  alpha = alpha + getRotateSpeed();
+  if (alpha >= 360)
+    alpha = alpha - 360;
+  setAngle(alpha);
+  QVector3D pos = getOriginPosition();
+  QVector3D pos_planetNew = planet->getPostion();
+  QVector3D pos_planet = planet->getOriginPosition();
+  QVector3D pos_change;
+  pos_change.setX(pos_planetNew.x() +
+                  (pos.x() - pos_planet.x()) * cos(alpha / 360.0 * 2 * pi));
+  pos_change.setY(pos_planetNew.y());
+  pos_change.setZ(pos_planetNew.z() +
+                  (pos.x() - pos_planet.x()) * sin(alpha / 360.0 * 2 * pi));
+
+  setPosition(pos_change);
+}
+
 // void Planet::gltDrawSphere(GLfloat fRadius, GLint iSlices, GLint iStacks) {
 //  GLfloat drho = (GLfloat)(3.141592653589) / (GLfloat)iStacks;
 //  GLfloat dtheta = 2.0f * (GLfloat)(3.141592653589) / (GLfloat)iSlices;
