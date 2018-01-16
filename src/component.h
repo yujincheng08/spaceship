@@ -30,6 +30,7 @@ public:
 
 public:
   void setPosition(QVector3D translation);
+  virtual void explode() {}
 
 protected:
   QTransform *transform = new QTransform;

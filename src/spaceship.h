@@ -41,8 +41,10 @@ public:
   void setMaxTurnLRSpeed(qreal speed) { maxTurnLRSpeed = speed; }
   void setMaxTurnUDSpeed(qreal speed) { maxTurnUDSpeed = speed; }
   void setMaxMoveSpeed(qreal speed) { maxMoveSpeed = speed; }
+  bool isExplode() { return isExploded; }
+  void explode() override;
 
-  virtual ~SpaceShip() {}
+  virtual ~SpaceShip() { removeComponent(sceneLoader); }
 
 protected slots:
   virtual void frameAction(float dt) override;
@@ -54,6 +56,7 @@ private:
 
   bool isTurnLeft, isTurnRight, isTurnUp, isTurnDown, isMoveForward, isMoveBack,
       isShooting;
+  bool isExploded;
   QPhongMaterial *bodyMaterial = new QPhongMaterial;
   /*
   QPhongMaterial *feetMaterial = new QPhongMaterial;
@@ -75,6 +78,8 @@ private:
   QTransform *gasTransDR = new QTransform;
 
   Scene *root;
+  QList<QTransform *> *explodeList;
+  float explodeTime;
 
 private:
   void removeDefaultMaterial(const QString &entityName);
@@ -82,6 +87,7 @@ private:
   void checkTailFire(const int &direct);
   float noise(const float &orgFLT);
   void boundingBox(const QString &entityName);
+  float noise(const float &low, const float &high);
 private slots:
   void loadingStatusChanged(QSceneLoader::Status status);
 };

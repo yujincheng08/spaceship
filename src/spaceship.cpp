@@ -16,9 +16,9 @@ SpaceShip::SpaceShip(QNode *parent, Scene *root) : Component(parent) {
   connect(sceneLoader, &QSceneLoader::statusChanged, this,
           &SpaceShip::loadingStatusChanged);
   sceneLoader->setSource(QUrl("qrc:/assets/spaceship.obj"));
-  // addComponent(material);
   isTurnDown = isTurnLeft = isTurnRight = isTurnUp = false;
   isMoveForward = isMoveBack = false;
+  isExploded = false;
   setMaxMoveSpeed(5);
   setMaxTurnLRSpeed(1);
   setMaxTurnUDSpeed(1);
@@ -26,68 +26,108 @@ SpaceShip::SpaceShip(QNode *parent, Scene *root) : Component(parent) {
 
   shootWait = 0;
   shootInterval = 0.5;
-  //  qDebug() << "spaceship constructed.";
 }
+
+void SpaceShip::explode() {
+  explodeList = new QList<QTransform *>;
+  for (const auto &entity : sceneLoader->entityNames())
+    if (((QString)entity)[2] != 's') {
+      QTransform *transform = new QTransform[2];
+      explodeList->append(transform);
+      transform[0].setTranslation(
+          QVector3D(noise(-1, 1), noise(-1, 1), noise(-1, 1)).normalized() *
+          noise(1, 3));
+      transform[0].setRotationX(noise(0, 1));
+      transform[0].setRotationY(noise(0, 1));
+      transform[0].setRotationZ(noise(0, 1));
+      transform[1].setTranslation(transform[0].translation());
+      transform[1].setRotation(transform[0].rotation());
+      sceneLoader->entity(entity)->addComponent(transform);
+    }
+  gasTransUL->setScale(0);
+  gasTransUM->setScale(0);
+  gasTransUR->setScale(0);
+  gasTransDL->setScale(0);
+  gasTransDR->setScale(0);
+  isExploded = true;
+  explodeTime = 0;
+}
+
 void SpaceShip::frameAction(float dt) {
-  int direct;
-  // move
-  if (isMoveForward && !isMoveBack) {
-    direct = 1;
-    if (moveSpeed < maxMoveSpeed)
-      moveSpeed += maxMoveSpeed / 25;
-  } else if (isMoveBack && !isMoveForward) {
-    direct = -1;
-    if (moveSpeed > -maxMoveSpeed)
-      moveSpeed -= maxMoveSpeed / 25;
-  } else
-    direct = 0;
-  direct *= 3;
-  if (isTurnLeft && !isTurnRight) {
-    direct += 1;
-    if (turnLRSpeed > -maxTurnLRSpeed)
-      turnLRSpeed -= maxTurnLRSpeed / 25;
-  } else if (isTurnRight && !isTurnLeft) {
-    direct -= 1;
-    if (turnLRSpeed < maxTurnLRSpeed)
-      turnLRSpeed += maxTurnUDSpeed / 25;
+  if (isExploded) {
+    if (explodeList == nullptr)
+      return;
+    for (QTransform *trans : *explodeList) {
+      trans[0].setTranslation(trans[0].translation() +
+                              trans[1].translation() * dt);
+      trans[0].setRotationX(trans[0].rotationX() + trans[1].rotationX());
+      trans[0].setRotationY(trans[0].rotationY() + trans[1].rotationY());
+      trans[0].setRotationZ(trans[0].rotationZ() + trans[1].rotationZ());
+    }
+    explodeTime += dt;
+    if (explodeTime > 10)
+      root->spaceshipExplode(this);
+  } else {
+    int direct;
+    // move
+    if (isMoveForward && !isMoveBack) {
+      direct = 1;
+      if (moveSpeed < maxMoveSpeed)
+        moveSpeed += maxMoveSpeed / 25;
+    } else if (isMoveBack && !isMoveForward) {
+      direct = -1;
+      if (moveSpeed > -maxMoveSpeed)
+        moveSpeed -= maxMoveSpeed / 25;
+    } else
+      direct = 0;
+    direct *= 3;
+    if (isTurnLeft && !isTurnRight) {
+      direct += 1;
+      if (turnLRSpeed > -maxTurnLRSpeed)
+        turnLRSpeed -= maxTurnLRSpeed / 25;
+    } else if (isTurnRight && !isTurnLeft) {
+      direct -= 1;
+      if (turnLRSpeed < maxTurnLRSpeed)
+        turnLRSpeed += maxTurnUDSpeed / 25;
+    }
+    direct *= 3;
+    if (isTurnUp && !isTurnDown) {
+      direct += 1;
+      if (turnUDSpeed < maxTurnUDSpeed)
+        turnUDSpeed += maxTurnUDSpeed / 50;
+    } else if (isTurnDown && !isTurnUp) {
+      direct -= 1;
+      if (turnUDSpeed > -maxTurnUDSpeed)
+        turnUDSpeed -= maxTurnUDSpeed / 50;
+    }
+
+    QVector3D twd = getToward();
+    QVector3D up = getUp();
+    QVector3D left = QVector3D::crossProduct(up, twd).normalized();
+
+    QVector3D chgTwd =
+        (twd + up * turnUDSpeed * dt - left * turnLRSpeed * dt).normalized();
+    QVector3D chgUp =
+        (up - QVector3D::dotProduct(chgTwd, up) / chgTwd.length() * chgTwd)
+            .normalized();
+
+    setDirection({chgTwd.x(), -chgTwd.y(), chgTwd.z()},
+                 {-chgUp.x(), chgUp.y(), -chgUp.z()});
+
+    setPosition(transform->translation() + chgTwd * moveSpeed * dt);
+
+    // tail fire
+    checkTailFire(direct);
+
+    // shoot
+    if (!isShooting)
+      return;
+    shootWait += dt;
+    if (shootWait < shootInterval)
+      return;
+    shootWait -= shootInterval;
+    root->addLaserBullet(this->getPostion(), 100);
   }
-  direct *= 3;
-  if (isTurnUp && !isTurnDown) {
-    direct += 1;
-    if (turnUDSpeed < maxTurnUDSpeed)
-      turnUDSpeed += maxTurnUDSpeed / 50;
-  } else if (isTurnDown && !isTurnUp) {
-    direct -= 1;
-    if (turnUDSpeed > -maxTurnUDSpeed)
-      turnUDSpeed -= maxTurnUDSpeed / 50;
-  }
-
-  QVector3D twd = getToward();
-  QVector3D up = getUp();
-  QVector3D left = QVector3D::crossProduct(up, twd).normalized();
-
-  QVector3D chgTwd =
-      (twd + up * turnUDSpeed * dt - left * turnLRSpeed * dt).normalized();
-  QVector3D chgUp =
-      (up - QVector3D::dotProduct(chgTwd, up) / chgTwd.length() * chgTwd)
-          .normalized();
-
-  setDirection({chgTwd.x(), -chgTwd.y(), chgTwd.z()},
-               {-chgUp.x(), chgUp.y(), -chgUp.z()});
-
-  setPosition(transform->translation() + chgTwd * moveSpeed * dt);
-
-  // tail fire
-  checkTailFire(direct);
-
-  // shoot
-  if (!isShooting)
-    return;
-  shootWait += dt;
-  if (shootWait < shootInterval)
-    return;
-  shootWait -= shootInterval;
-  root->addLaserBullet(this->getPostion(), 100);
 }
 
 void SpaceShip::removeDefaultMaterial(const QString &entityName) {
@@ -102,7 +142,6 @@ void SpaceShip::initMaterials() {
   materials["Wings"] = bodyMaterial;
   materials["Feet"] = bodyMaterial;
   materials["Gama"] = bodyMaterial;
-  materials["Reactor"] = bodyMaterial;
   materials["Glass"] = glassMaterial;
   materials["GasUL"] = gasMaterialUL;
   materials["GasUM"] = gasMaterialUM;
@@ -210,7 +249,7 @@ void SpaceShip::loadingStatusChanged(Qt3DRender::QSceneLoader::Status status) {
 void SpaceShip::checkTailFire(const int &direct) {
   float ull, uml, url, dll, drl;
   bool ulc, umc, urc, dlc, drc;
-  float l1 = 0.55, l2 = 0.7, l3 = 0.8, l4 = 0.9;
+  float l1 = 0.6, l2 = 0.8, l3 = 0.9, l4 = 1;
   if (direct < -4)
     ulc = umc = urc = dlc = drc = false;
   else if (direct > 4)
@@ -416,20 +455,24 @@ void SpaceShip::checkTailFire(const int &direct) {
       noise(dlc ? 0.8f : 0.1f), noise(0.1f), noise(dlc ? 0.1f : 0.8f)));
   gasMaterialDR->setDiffuse(QColor::fromRgbF(
       noise(drc ? 0.8f : 0.1f), noise(0.1f), noise(drc ? 0.1f : 0.8f)));
-  gasMaterialUL->setAlpha(noise(0.2f));
-  gasMaterialUM->setAlpha(noise(0.2f));
-  gasMaterialUR->setAlpha(noise(0.2f));
-  gasMaterialDL->setAlpha(noise(0.2f));
-  gasMaterialDR->setAlpha(noise(0.2f));
+  gasMaterialUL->setAlpha(noise(0.3f));
+  gasMaterialUM->setAlpha(noise(0.4f));
+  gasMaterialUR->setAlpha(noise(0.3f));
+  gasMaterialDL->setAlpha(noise(0.3f));
+  gasMaterialDR->setAlpha(noise(0.3f));
 }
 
 float SpaceShip::noise(const float &orgFLT) {
   float noi = (qrand() % 1001) / 10000.0 - 0.05;
   noi += orgFLT;
-  // qDebug() << orgFLT << noi;
   if (noi < 0)
     return 0;
   if (noi > 1)
     return 1;
   return noi;
+}
+
+float SpaceShip::noise(const float &low, const float &high) {
+  float noi = (qrand() % 1001) / 1000.0;
+  return low + noi * (high - low);
 }
