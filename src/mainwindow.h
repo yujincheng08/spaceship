@@ -6,7 +6,7 @@
 #include "overlaywidget.h"
 #include <QBasicTimer>
 #include <QVector>
-#include <Qt3DExtras>
+#include <Qt3DExtras\Qt3DExtras>
 #include <QtOpenGL>
 
 class MainWindow : public QMainWindow {

@@ -2,6 +2,7 @@
 #define PLANET_H
 
 #include "component.h"
+#include "math.h"
 #include <QPropertyAnimation>
 #include <Qt3DExtras/QDiffuseMapMaterial>
 #include <Qt3DExtras/QDiffuseSpecularMapMaterial>
@@ -36,6 +37,8 @@ public:
   void setRadius(float radius) { mesh->setRadius(radius); }
   void setSlices(int slices) { mesh->setSlices(slices); }
   void setRings(int rings) { mesh->setRings(rings); }
+  QVector3D getOriginPosition() { return this->originPosition; }
+  void orbit(Planet *planet);
 
 protected:
   void setDiffuse(const QString &path) { diffuseImage->setSource(QUrl(path)); }
@@ -44,12 +47,18 @@ protected:
   }
   void setNormal(const QString &path) { normalImage->setSource(QUrl(path)); }
   void addMaterial() { addComponent(material); }
+  void setOriginPosition(QVector3D pos) { originPosition = pos; }
+  void setAngle(qreal angle) { currentAngle = angle; }
+  qreal getAngle() { return this->currentAngle; }
+  qreal getRotateSpeed() { return rotateSpeed; }
 
 protected slots:
   void frameAction(float dt) override;
 
 protected:
   qreal rotateSpeed = 0.0;
+  qreal currentAngle = 0.0;
+  QVector3D originPosition;
 };
 
 #endif // PLANET_H

@@ -11,6 +11,15 @@
 #include <Qt3DLogic/QFrameAction>
 #include <cameracontroller.h>
 #include <planet/earth.h>
+#include <planet/jupiter.h>
+#include <planet/mars.h>
+#include <planet/mercury.h>
+#include <planet/moon.h>
+#include <planet/neptune.h>
+#include <planet/saturn.h>
+#include <planet/sun.h>
+#include <planet/uranus.h>
+#include <planet/venus.h>
 #include <spaceship.h>
 #include <starfield.h>
 
@@ -31,6 +40,16 @@ private:
   Scene *scene = new Scene();
   SpaceShip *spaceship = new SpaceShip(scene, this);
   Earth *earth = new Earth(scene);
+  Sun *sun = new Sun(scene);
+  Moon *moon = new Moon(scene);
+  Mercury *mercury = new Mercury(scene);
+  Venus *venus = new Venus(scene);
+  Mars *mars = new Mars(scene);
+  Jupiter *jupiter = new Jupiter(scene);
+  Saturn *saturn = new Saturn(scene);
+  Neptune *neptune = new Neptune(scene);
+  Uranus *uranus = new Uranus(scene);
+
   CameraController *cameraController = new CameraController(scene);
   QFrameAction *frame = new QFrameAction(scene->getRoot());
   Starfield *starfield = new Starfield(scene);

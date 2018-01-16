@@ -36,6 +36,17 @@ bool Controller::isCollision(const QVector3D &point, const QVector3D &center,
 }
 
 void Controller::frameAction(float) {
+  // orbit
+  earth->orbit(sun);
+  moon->orbit(earth);
+  mercury->orbit(sun);
+  venus->orbit(sun);
+  mars->orbit(sun);
+  neptune->orbit(sun);
+  jupiter->orbit(sun);
+  saturn->orbit(sun);
+  uranus->orbit(sun);
+
   // state control
 
   // bullet
@@ -230,7 +241,18 @@ void Controller::initCamera() {
   cameraController->setCamera(scene->camera());
 }
 
-void Controller::initPlanets() { earth->setPosition({0, 2, 0}); }
+void Controller::initPlanets() {
+  earth->setPosition(earth->getOriginPosition());
+  sun->setPosition(sun->getOriginPosition());
+  mercury->setPosition(mercury->getOriginPosition());
+  venus->setPosition(venus->getOriginPosition());
+  moon->setPosition(moon->getOriginPosition());
+  mars->setPosition(mars->getOriginPosition());
+  jupiter->setPosition(jupiter->getOriginPosition());
+  saturn->setPosition(saturn->getOriginPosition());
+  uranus->setPosition(uranus->getOriginPosition());
+  neptune->setPosition(neptune->getOriginPosition());
+}
 
 void Controller::initSpaceship() {
   spaceship->setInitialDirection({0, 0, -1}, {0, 1, 0});

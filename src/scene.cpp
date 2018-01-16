@@ -1,4 +1,5 @@
 #include "scene.h"
+#include "math.h"
 #include <Qt3DRender/QCamera>
 
 Scene::Scene(QScreen *parent) : Qt3DExtras::Qt3DWindow(parent) {
@@ -25,11 +26,6 @@ Scene::Scene(QScreen *parent) : Qt3DExtras::Qt3DWindow(parent) {
 
 // void Scene::gameOver() { qDebug() << "Game Over"; }
 
-// void Scene::frameAction(float) {
-//  if (spaceship->isExplode())
-//    controller->release();
-//}
-
 // void Scene::keyPressEvent(QKeyEvent *e) {
 //  Qt3DExtras::Qt3DWindow::keyPressEvent(e);
 //  if (e->isAutoRepeat())
@@ -55,10 +51,6 @@ Scene::Scene(QScreen *parent) : Qt3DExtras::Qt3DWindow(parent) {
 //    a->startTurnDown();
 //    break;
 
-//  case Qt::Key_B:
-//    spaceship->explode();
-//    break;
-
 //  case Qt::Key_Escape:
 //    controller->setCursorLock(!(controller->getCursorLock()));
 //    break;
@@ -70,33 +62,6 @@ Scene::Scene(QScreen *parent) : Qt3DExtras::Qt3DWindow(parent) {
 //    //      timer.start(20, this);
 //    //      cursorTimer->start(10);
 //    //    }
-//    break;
-//  }
-//}
-
-// void Scene::keyReleaseEvent(QKeyEvent *e) {
-//  Qt3DExtras::Qt3DWindow::keyReleaseEvent(e);
-//  if (e->isAutoRepeat())
-//    return;
-//  SpaceShip *a = spaceship;
-//  switch (e->key()) {
-//  case Qt::Key_A:
-//    a->endTurnLeft();
-//    break;
-//  case Qt::Key_D:
-//    a->endTurnRight();
-//    break;
-//  case Qt::Key_W:
-//    a->endMoveForward();
-//    break;
-//  case Qt::Key_S:
-//    a->endMoveBack();
-//    break;
-//  case Qt::Key_E:
-//    a->endTurnUp();
-//    break;
-//  case Qt::Key_C:
-//    a->endTurnDown();
 //    break;
 //  }
 //}
