@@ -39,6 +39,7 @@ private:
   OverlayWidget *infoSurface = new OverlayWidget(this);
   Scene *scene = new Scene();
   SpaceShip *spaceship = new SpaceShip(scene, this);
+  SpaceShip *spaceshipAI = new SpaceShip(scene, this);
   Earth *earth = new Earth(scene);
   Sun *sun = new Sun(scene);
   Moon *moon = new Moon(scene);

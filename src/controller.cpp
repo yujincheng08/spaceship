@@ -277,6 +277,8 @@ void Controller::initPlanets() {
 
 void Controller::initSpaceship() {
   spaceship->setInitialDirection({0, 0, -1}, {0, 1, 0});
+  spaceshipAI->setInitialDirection({0, 0, 1}, {0, 1, 0});
+  spaceshipAI->setPosition({0, 0, 100});
 }
 
 void Controller::initLight() {
