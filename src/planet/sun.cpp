@@ -14,8 +14,11 @@ Sun::Sun(Scene *parent) : Planet(parent) {
 
   QFilterKey *k1 = new QFilterKey, *k2 = new QFilterKey, *k3 = new QFilterKey;
   k1->setValue(QVariant("Desktop"));
+  k1->setName("name");
   k2->setValue("forward");
+  k2->setName("pass");
   k3->setValue("ES2");
+  k3->setName("name");
 
   QRenderPass *p1 = new QRenderPass, *p2 = new QRenderPass;
   p1->addFilterKey(k2);
@@ -45,7 +48,7 @@ Sun::Sun(Scene *parent) : Planet(parent) {
   effect->addTechnique(t2);
   effect->addTechnique(t3);
 
-  // material->setEffect(effect);
+  material->setEffect(effect);
 
   setNormal("qrc:/assets/img/2k_sun.jpg");
   setSpecular("qrc:/assets/img/2k_sun.jpg");

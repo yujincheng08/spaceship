@@ -288,6 +288,8 @@ void Controller::initLight() {
 void Controller::initFrameAction() {
   connect(frame, &QFrameAction::triggered, scene, &Scene::frameAction);
   connect(frame, &QFrameAction::triggered, spaceship, &Component::frameAction);
+  connect(frame, &QFrameAction::triggered, spaceshipAI,
+          &Component::frameAction);
   connect(frame, &QFrameAction::triggered, cameraController,
           &CameraController::frameAction);
   connect(frame, &QFrameAction::triggered, this, &Controller::frameAction);
