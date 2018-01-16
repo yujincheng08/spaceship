@@ -18,6 +18,12 @@ public:
   LaserBullet(const QVector3D &startPos, const QVector3D &velocity,
               Scene *parent = nullptr, Controller *root = nullptr);
   virtual ~LaserBullet() override {}
+  virtual QList<BoundingBox> getBoundingBox() const override {
+    return QList<BoundingBox>()
+           << (BoundingBox{QVector3D{0, 0, 0}, QVector3D{0, 0, 0},
+                           QVector3D{0, 0, 0}, QVector3D{0, 0, 0}})
+                  .applyTransform(*transform);
+  }
 
 protected:
   QConeMesh *mesh = new QConeMesh;

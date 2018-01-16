@@ -1,10 +1,9 @@
 #ifndef COMPONENT_H
 #define COMPONENT_H
 
+#include "bounding.h"
 #include <QString>
 #include <QVector>
-#include <QtOpenGL>
-
 #include <Qt3DCore/QEntity>
 #include <Qt3DCore/QTransform>
 #include <Qt3DExtras/QPhongAlphaMaterial>
@@ -52,6 +51,12 @@ public:
   QVector3D getUp() const;
   void setInitialDirection(const QVector3D &toward, const QVector3D &up);
   void setDirection(const QVector3D &toward, const QVector3D &up);
+  virtual QList<BoundingBox> getBoundingBox() const {
+    return QList<BoundingBox>();
+  }
+  virtual QList<BoundingSphere> getBoundingSphere() const {
+    return QList<BoundingSphere>();
+  }
 };
 
 #endif // COMPONENT_H

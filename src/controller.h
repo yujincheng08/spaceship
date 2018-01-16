@@ -1,7 +1,7 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 
-#include "boundingbox.h"
+#include "bounding.h"
 #include "overlaywidget.h"
 #include "scene.h"
 #include <QObject>
@@ -106,6 +106,7 @@ public:
 
   void removeLaserBullet(LaserBullet *bullet);
 
+  void spaceshipExplode(SpaceShip *spaceship);
 public slots:
   void frameAction(float);
 
@@ -128,6 +129,7 @@ private:
   void continueGame();
   void callOutMenu();
   void startGame();
+  void gameOver();
 };
 
 #endif // CONTROLLER_H

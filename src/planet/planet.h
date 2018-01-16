@@ -40,6 +40,10 @@ public:
   QVector3D getOriginPosition() { return this->originPosition; }
   void orbit(Planet *planet);
   void spin();
+  virtual QList<BoundingSphere> getBoundingSphere() const override {
+    return QList<BoundingSphere>() << BoundingSphere{
+               transform->matrix().map(QVector3D{0, 0, 0}), mesh->radius()};
+  }
 
 protected:
   void setDiffuse(const QString &path) { diffuseImage->setSource(QUrl(path)); }

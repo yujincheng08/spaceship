@@ -60,7 +60,7 @@ void Controller::frameAction(float) {
 
   // bullet
 
-  // conflic test
+  // collison test
 }
 
 bool Controller::boxCollision(const BoundingBox &a, const BoundingBox &b) {
@@ -77,6 +77,18 @@ bool Controller::boxCollision(const BoundingBox &a, const QVector3D &center,
       pointCollision(a.point, a.y, center) == 0 &&
       pointCollision(a.point, a.z, center) == 0)
     return true;
+  QVector3D checkPoint;
+  for (int i = 0; i < 8; i++) {
+    checkPoint = a.point;
+    if ((i & 1) != 0)
+      checkPoint += a.x;
+    if ((i & 2) != 0)
+      checkPoint += a.y;
+    if ((i & 4) != 0)
+      checkPoint += a.z;
+    if ((center - checkPoint).length() < r)
+      return true;
+  }
   return false;
 }
 
@@ -205,7 +217,6 @@ void Controller::initInput() {
   escapeAction->addInput(escapeActionInput);
   connect(escapeAction, &QAction::activeChanged, this, [&](bool active) {
     if (active) {
-      cameraController->setCursorLock(!cameraController->getCursorLock());
       if (state == MENU)
         continueGame();
       else if (state == GAMING)
@@ -218,7 +229,7 @@ void Controller::initInput() {
   enterAction->addInput(enterActionInput);
   connect(enterAction, &QAction::activeChanged, this, [&](bool active) {
     if (active) {
-      if (state == START)
+      if (state == START || state == END)
         startGame();
     }
   });
@@ -274,8 +285,6 @@ void Controller::initLight() {
 
 void Controller::initFrameAction() {
   connect(frame, &QFrameAction::triggered, scene, &Scene::frameAction);
-  connect(frame, &QFrameAction::triggered, infoSurface,
-          &OverlayWidget::frameAction);
   connect(frame, &QFrameAction::triggered, spaceship, &Component::frameAction);
   connect(frame, &QFrameAction::triggered, cameraController,
           &CameraController::frameAction);
@@ -313,4 +322,18 @@ void Controller::addLaserBullet(const QVector3D &pos, const float &speed) {
 void Controller::removeLaserBullet(LaserBullet *bullet) {
   disconnect(frame, &QFrameAction::triggered, bullet, &Component::frameAction);
   delete bullet;
+}
+
+void Controller::spaceshipExplode(SpaceShip *spaceship) {
+  disconnect(frame, &QFrameAction::triggered, spaceship,
+             &Component::frameAction);
+  if (spaceship == this->spaceship)
+    gameOver();
+
+  delete spaceship;
+}
+
+void Controller::gameOver() {
+  cameraController->setCursorLock(false);
+  state = END;
 }
