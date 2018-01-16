@@ -48,7 +48,8 @@ Sun::Sun(Scene *parent) : Planet(parent) {
   effect->addTechnique(t2);
   effect->addTechnique(t3);
 
-  material->setEffect(effect);
+  //  material->setEffect(effect);
+  material->setAmbient(QColor(255, 255, 255));
 
   setNormal("qrc:/assets/img/2k_sun.jpg");
   setSpecular("qrc:/assets/img/2k_sun.jpg");
