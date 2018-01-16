@@ -71,8 +71,8 @@ HEADERS += \
     src/planet/sun.h \
     src/planet/uranus.h \
     src/planet/venus.h \
-    src/boundingbox.h \        
     src/controller.h \    
     src/laserbullet.h \        
     src/overlaywidget.h \                
+    src/bounding.h
 

@@ -20,6 +20,7 @@ public:
 
   friend class InfoSurface;
   SpaceShip(Scene *parent = nullptr, Controller *root = nullptr);
+  QList<BoundingBox> boundingBoxes;
 
   void startTurnLeft() { isTurnLeft = true; }
   void startTurnRight() { isTurnRight = true; }
@@ -43,6 +44,17 @@ public:
   void setMaxMoveSpeed(qreal speed) { maxMoveSpeed = speed; }
   bool isExplode() { return isExploded; }
   void explode() override;
+
+  virtual QList<BoundingBox> getBoundingBox() const override {
+    QList<BoundingBox> transformedBoundingBoxes;
+    for (const auto &boundingBox : boundingBoxes)
+      transformedBoundingBoxes << boundingBox.applyTransform(*transform);
+    return transformedBoundingBoxes;
+  }
+
+  virtual QList<BoundingSphere> getBoundingSphere() const override {
+    return QList<BoundingSphere>();
+  }
 
   virtual ~SpaceShip() { removeComponent(sceneLoader); }
 

@@ -26,7 +26,6 @@ public:
     isRelease = true;
     target = nullptr;
   }
-
 private:
   QVector3D TransPosition(const QVector3D &up, const QVector3D &twd,
                           const QVector3D &pos, const QVector3D &trans);

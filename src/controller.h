@@ -1,7 +1,7 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 
-#include "boundingbox.h"
+#include "bounding.h"
 #include "overlaywidget.h"
 #include "scene.h"
 #include <QObject>
