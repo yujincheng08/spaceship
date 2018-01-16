@@ -19,7 +19,7 @@ SpaceShip::SpaceShip(Scene *parent, Controller *root) : Component(parent) {
   isTurnDown = isTurnLeft = isTurnRight = isTurnUp = false;
   isMoveForward = isMoveBack = false;
   isExploded = false;
-  setMaxMoveSpeed(5);
+  setMaxMoveSpeed(20);
   setMaxTurnLRSpeed(1);
   setMaxTurnUDSpeed(1);
   turnLRSpeed = turnUDSpeed = moveSpeed = 0;
@@ -73,32 +73,32 @@ void SpaceShip::frameAction(float dt) {
     if (isMoveForward && !isMoveBack) {
       direct = 1;
       if (moveSpeed < maxMoveSpeed)
-        moveSpeed += maxMoveSpeed / 25;
+        moveSpeed += maxMoveSpeed / 100;
     } else if (isMoveBack && !isMoveForward) {
       direct = -1;
       if (moveSpeed > -maxMoveSpeed)
-        moveSpeed -= maxMoveSpeed / 25;
+        moveSpeed -= maxMoveSpeed / 100;
     } else
       direct = 0;
     direct *= 3;
     if (isTurnLeft && !isTurnRight) {
       direct += 1;
       if (turnLRSpeed > -maxTurnLRSpeed)
-        turnLRSpeed -= maxTurnLRSpeed / 25;
+        turnLRSpeed -= maxTurnLRSpeed / 100;
     } else if (isTurnRight && !isTurnLeft) {
       direct -= 1;
       if (turnLRSpeed < maxTurnLRSpeed)
-        turnLRSpeed += maxTurnUDSpeed / 25;
+        turnLRSpeed += maxTurnUDSpeed / 100;
     }
     direct *= 3;
     if (isTurnUp && !isTurnDown) {
       direct += 1;
       if (turnUDSpeed < maxTurnUDSpeed)
-        turnUDSpeed += maxTurnUDSpeed / 50;
+        turnUDSpeed += maxTurnUDSpeed / 100;
     } else if (isTurnDown && !isTurnUp) {
       direct -= 1;
       if (turnUDSpeed > -maxTurnUDSpeed)
-        turnUDSpeed -= maxTurnUDSpeed / 50;
+        turnUDSpeed -= maxTurnUDSpeed / 100;
     }
 
     QVector3D twd = getToward();

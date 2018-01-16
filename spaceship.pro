@@ -42,6 +42,7 @@ SOURCES += \
 
 RESOURCES += \
     assets.qrc \
+    shaderprogram.qrc
 
 INCLUDEPATH += src
 

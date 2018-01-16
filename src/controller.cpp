@@ -68,7 +68,7 @@ bool Controller::boxCollision(const BoundingBox &a, const QVector3D &center,
       pointCollision(a.point, a.y, center) == 0 &&
       pointCollision(a.point, a.z, center) == 0)
     return true;
-  QVector3D checkpoint;
+  QVector3D checkPoint;
   for (int i = 0; i < 8; i++) {
     checkPoint = a.point;
     if ((i & 1) != 0)
@@ -77,7 +77,7 @@ bool Controller::boxCollision(const BoundingBox &a, const QVector3D &center,
       checkPoint += a.y;
     if ((i & 4) != 0)
       checkPoint += a.z;
-    if ((center - checkpoint).length() < r)
+    if ((center - checkPoint).length() < r)
       return true;
   }
   return false;
@@ -191,8 +191,8 @@ void Controller::initInput() {
     else
       spaceship->endTurnUp();
   });
-  backwardActionInput->setButtons(QVector<int>() << Qt::Key_C
-                                                 << Qt::Key_PageDown);
+  backwardActionInput->setButtons(QVector<int>()
+                                  << Qt::Key_C << Qt::Key_PageDown);
   backwardActionInput->setSourceDevice(keyboardDevice);
   backwardAction->addInput(backwardActionInput);
   connect(backwardAction, &QAction::activeChanged, this, [&](bool active) {
@@ -214,8 +214,8 @@ void Controller::initInput() {
         callOutMenu();
     }
   });
-  enterActionInput->setButtons(QVector<int>() << Qt::Key_Enter
-                                              << Qt::Key_Return);
+  enterActionInput->setButtons(QVector<int>()
+                               << Qt::Key_Enter << Qt::Key_Return);
   enterActionInput->setSourceDevice(keyboardDevice);
   enterAction->addInput(enterActionInput);
   connect(enterAction, &QAction::activeChanged, this, [&](bool active) {
