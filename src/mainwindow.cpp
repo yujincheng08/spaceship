@@ -6,9 +6,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
   setGeometry(8, 30, 1360, 768);
   setCentralWidget(container);
   container->setFocus();
+  // overlayWidget->setBackgroundWidget(container);
 }
 
 MainWindow::~MainWindow() {
+  // delete overlayWidget;
   //  makeCurrent();
   //  for (int i = 0; i < components.length(); i++)
   //    delete components.at(i);

@@ -1,12 +1,5 @@
 #include "controller.h"
 
-Controller::Controller() {
-  qsrand(time(NULL));
-  scene = new Scene;
-}
-
-Scene *Controller::getScene() { return scene; }
-
 bool Controller::isCollision(const QList<BoundingBox> &a,
                              const QList<BoundingBox> &b) {
   for (BoundingBox boxa : a)
@@ -49,10 +42,12 @@ bool Controller::boxCollision(const BoundingBox &a, const BoundingBox &b) {
 
 bool Controller::boxCollision(const BoundingBox &a, const QVector3D &center,
                               const float &r) {
+  Q_UNUSED(r)
   if (pointCollision(a.point, a.x, center) == 0 &&
       pointCollision(a.point, a.y, center) == 0 &&
       pointCollision(a.point, a.z, center) == 0)
     return true;
+  return false;
 }
 
 bool Controller::lineCollision(const QVector3D &point, const QVector3D &line,
@@ -62,11 +57,11 @@ bool Controller::lineCollision(const QVector3D &point, const QVector3D &line,
 
   for (int i = 0; i < 8; i++) {
     checkPoint = box.point;
-    if (i & 1 != 0)
+    if ((i & 1) != 0)
       checkPoint += box.x;
-    if (i & 2 != 0)
+    if ((i & 2) != 0)
       checkPoint += box.y;
-    if (i & 4 != 0)
+    if ((i & 4) != 0)
       checkPoint += box.z;
     switch (pointCollision(point, line, checkPoint)) {
     case 0:
@@ -96,4 +91,132 @@ int Controller::pointCollision(const QVector3D &point, const QVector3D &line,
     return 2;
 
   return 0;
+}
+
+void Controller::initInput() {
+  mouseHandler->setSourceDevice(mouseDevice);
+  connect(mouseHandler, &QMouseHandler::pressed, this,
+          [&](QMouseEvent *) { spaceship->startShoot(); });
+  connect(mouseHandler, &QMouseHandler::released, this,
+          [&](QMouseEvent *) { spaceship->endShoot(); });
+  upActionInput->setButtons(QVector<int>() << Qt::Key_W << Qt::Key_Up);
+  upActionInput->setSourceDevice(keyboardDevice);
+  upAction->addInput(upActionInput);
+  connect(upAction, &QAction::activeChanged, this, [&](bool active) {
+    if (active)
+      spaceship->startTurnUp();
+    else
+      spaceship->endTurnUp();
+  });
+  downActionInput->setButtons(QVector<int>() << Qt::Key_S << Qt::Key_Down);
+  downActionInput->setSourceDevice(keyboardDevice);
+  downAction->addInput(downActionInput);
+  connect(downAction, &QAction::activeChanged, this, [&](bool active) {
+    if (active)
+      spaceship->startTurnDown();
+    else
+      spaceship->endTurnDown();
+  });
+  leftActionInput->setButtons(QVector<int>() << Qt::Key_A << Qt::Key_Left);
+  leftActionInput->setSourceDevice(keyboardDevice);
+  leftAction->addInput(leftActionInput);
+  connect(leftAction, &QAction::activeChanged, this, [&](bool active) {
+    if (active)
+      spaceship->startTurnLeft();
+    else
+      spaceship->endTurnLeft();
+  });
+  rightActionInput->setButtons(QVector<int>() << Qt::Key_D << Qt::Key_Right);
+  rightActionInput->setSourceDevice(keyboardDevice);
+  rightAction->addInput(rightActionInput);
+  connect(rightAction, &QAction::activeChanged, this, [&](bool active) {
+    if (active)
+      spaceship->startTurnRight();
+    else
+      spaceship->endTurnRight();
+  });
+  forwardActionInput->setButtons(QVector<int>() << Qt::Key_E << Qt::Key_PageUp);
+  forwardActionInput->setSourceDevice(keyboardDevice);
+  forwardAction->addInput(forwardActionInput);
+  connect(forwardAction, &QAction::activeChanged, this, [&](bool active) {
+    if (active)
+      spaceship->startMoveForward();
+    else
+      spaceship->endMoveForward();
+  });
+  backwardActionInput->setButtons(QVector<int>() << Qt::Key_C
+                                                 << Qt::Key_PageDown);
+  backwardActionInput->setSourceDevice(keyboardDevice);
+  backwardAction->addInput(backwardActionInput);
+  connect(backwardAction, &QAction::activeChanged, this, [&](bool active) {
+    if (active)
+      spaceship->startMoveBack();
+    else
+      spaceship->endMoveBack();
+  });
+  escapeActionInput->setButtons(QVector<int>() << Qt::Key_Escape);
+  escapeActionInput->setSourceDevice(keyboardDevice);
+  escapeAction->addInput(escapeActionInput);
+  connect(escapeAction, &QAction::activeChanged, this, [&](bool active) {
+    if (active)
+      cameraController->setCursorLock(!cameraController->getCursorLock());
+  });
+
+  logicalDevice->addAction(upAction);
+  logicalDevice->addAction(downAction);
+  logicalDevice->addAction(leftAction);
+  logicalDevice->addAction(rightAction);
+  logicalDevice->addAction(forwardAction);
+  logicalDevice->addAction(backwardAction);
+  logicalDevice->addAction(escapeAction);
+}
+
+void Controller::initScene() {
+  initCamera();
+  initPlanets();
+  initSpaceship();
+  initLight();
+  initFrameAction();
+}
+
+void Controller::initCamera() {
+  scene->camera()->lens()->setPerspectiveProjection(45.0f, 16.0f / 9.0f, 0.1f,
+                                                    20000000.0f);
+  scene->camera()->setPosition(QVector3D(0, 0, -20.0f));
+  scene->camera()->setViewCenter(QVector3D(0, 0, 0));
+  cameraController->setTraceTarget(spaceship);
+  cameraController->setCursorLock(true);
+  cameraController->setCamera(scene->camera());
+}
+
+void Controller::initPlanets() { earth->setPosition({0, 2, 0}); }
+
+void Controller::initSpaceship() {
+  spaceship->setInitialDirection({0, 0, -1}, {0, 1, 0});
+}
+
+void Controller::initLight() {
+  // dummy
+}
+
+void Controller::initFrameAction() {
+  connect(frame, &QFrameAction::triggered, scene, &Scene::frameAction);
+  connect(frame, &QFrameAction::triggered, spaceship, &Component::frameAction);
+  connect(frame, &QFrameAction::triggered, cameraController,
+          &CameraController::frameAction);
+}
+
+void Controller::addLaserBullet(const QVector3D &pos,
+                                const QVector3D &velocity) {
+  LaserBullet *bullet = new LaserBullet(pos, velocity, scene);
+  connect(frame, &QFrameAction::triggered, bullet, &Component::frameAction);
+}
+
+void Controller::addLaserBullet(const QVector3D &pos, const float &speed) {
+  addLaserBullet(pos, speed * cameraController->getToward());
+}
+
+void Controller::removeLaserBullet(LaserBullet *bullet) {
+  disconnect(frame, &QFrameAction::triggered, bullet, &Component::frameAction);
+  delete bullet;
 }

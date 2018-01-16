@@ -5,7 +5,7 @@
 
 class Light : public Component {
 public:
-  Light(QNode *parent = nullptr);
+  Light(Scene *parent = nullptr);
   virtual ~Light();
 };
 

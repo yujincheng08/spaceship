@@ -5,7 +5,7 @@
 
 class Earth : public Planet {
 public:
-  Earth(QNode *parent = nullptr);
+  Earth(Scene *parent = nullptr);
 };
 
 #endif // EARTH_H

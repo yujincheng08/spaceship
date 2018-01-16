@@ -30,7 +30,7 @@ protected:
   QPropertyAnimation *rotateAnimation = new QPropertyAnimation(this);
 
 public:
-  Planet(QNode *parent = nullptr);
+  Planet(Scene *parent = nullptr);
   virtual ~Planet() override {}
   void setRotateSpeed(qreal speed) { rotateSpeed = speed; }
   void setRadius(float radius) { mesh->setRadius(radius); }
