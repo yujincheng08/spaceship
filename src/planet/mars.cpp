@@ -5,9 +5,10 @@ Mars::Mars(Scene *parent) : Planet(parent) {
   setNormal("qrc:/assets/img/2k_mars.jpg");
   setSpecular("qrc:/assets/img/2k_mars.jpg");
   setDiffuse("qrc:/assets/img/2k_mars.jpg");
-  setOriginPosition(QVector3D(-100, 100, 0));
+  setOriginPosition({-100, 100, 0});
+  setPosition(getOriginPosition());
   setRadius(30);
-  setRotateSpeed(0.05);
+  setRotateSpeed(5);
   setAngle(240);
-  setSpinSpeed(0.6);
+  setSpinSpeed(60);
 }

@@ -33,12 +33,13 @@ protected:
 public:
   Planet(Scene *parent = nullptr);
   virtual ~Planet() override {}
+  void setOrbitPlanet(Planet *orbitPlanet) { this->orbitPlanet = orbitPlanet; }
+  Planet *getOrbitPlanet() const { return orbitPlanet; }
   void setRotateSpeed(qreal speed) { rotateSpeed = speed; }
   void setRadius(float radius) { mesh->setRadius(radius); }
   void setSlices(int slices) { mesh->setSlices(slices); }
   void setRings(int rings) { mesh->setRings(rings); }
   QVector3D getOriginPosition() { return this->originPosition; }
-  void orbit(Planet *planet);
   void spin();
   virtual QList<BoundingSphere> getBoundingSphere() const override {
     return QList<BoundingSphere>() << BoundingSphere{
@@ -53,12 +54,14 @@ protected:
   void setNormal(const QString &path) { normalImage->setSource(QUrl(path)); }
   void addMaterial() { addComponent(material); }
   void setOriginPosition(QVector3D pos) { originPosition = pos; }
-  void setAngle(qreal angle) { currentAngle = angle; }
   void setSpinSpeed(qreal speed) { spinSpeed = speed; }
-  qreal getAngle() { return this->currentAngle; }
+  void setAngle(qreal angle) {
+    currentAngle = angle;
+    // transform->matrix().rotate(angle, orbitNormal);
+  }
   qreal getRotateSpeed() { return rotateSpeed; }
 
-protected slots:
+public slots:
   void frameAction(float dt) override;
 
 protected:
@@ -67,6 +70,12 @@ protected:
   qreal spinAngle = 0.0;
   qreal spinSpeed = 0.0;
   QVector3D originPosition;
+  QVector3D orbitNormal = {0, 1, 0};
+  void setOrbitNormal(const QVector3D &normal) {
+    orbitNormal = normal;
+    orbitNormal.normalize();
+  }
+  Planet *orbitPlanet = nullptr;
 };
 
 #endif // PLANET_H

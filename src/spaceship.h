@@ -20,7 +20,6 @@ public:
 
   friend class InfoSurface;
   SpaceShip(Scene *parent = nullptr, Controller *root = nullptr);
-  QList<BoundingBox> boundingBoxes;
 
   void startTurnLeft() { isTurnLeft = true; }
   void startTurnRight() { isTurnRight = true; }
@@ -70,6 +69,7 @@ private:
   qreal turnLRSpeed, turnUDSpeed, moveSpeed, shootWait;
   qreal maxTurnLRSpeed, maxTurnUDSpeed, maxMoveSpeed, shootInterval;
   QMap<QString, QMaterial *> materials;
+  QList<BoundingBox> boundingBoxes;
 
   bool isTurnLeft, isTurnRight, isTurnUp, isTurnDown, isMoveForward, isMoveBack,
       isShooting;

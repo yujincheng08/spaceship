@@ -29,6 +29,8 @@ SpaceShip::SpaceShip(Scene *parent, Controller *root) : Component(parent) {
 }
 
 void SpaceShip::explode() {
+  if (isExplode())
+    return;
   explodeList = new QList<QTransform *>;
   for (const auto &entity : sceneLoader->entityNames())
     if (((QString)entity)[2] != 's') {
@@ -214,7 +216,7 @@ void SpaceShip::boundingBox(const QString &entityName) {
       }
     }
   boundingBoxes << BoundingBox{
-      {mx, my, mz}, {Mx - mx, my, mz}, {mx, My - my, mz}, {mx, my, Mz - mz}};
+      {mx, mz, my}, {Mx - mx, mz, my}, {mx, Mz - mz, my}, {mx, mz, My - my}};
 }
 
 void SpaceShip::loadingStatusChanged(Qt3DRender::QSceneLoader::Status status) {

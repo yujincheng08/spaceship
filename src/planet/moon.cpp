@@ -5,9 +5,10 @@ Moon::Moon(Scene *parent) : Planet(parent) {
   setNormal("qrc:/assets/img/2k_moon.jpg");
   setSpecular("qrc:/assets/img/2k_moon.jpg");
   setDiffuse("qrc:/assets/img/2k_moon.jpg");
-  setOriginPosition(QVector3D(10, 100, 0));
+  setOriginPosition({10, 100, 0});
+  setPosition(getOriginPosition());
   setRadius(17);
-  setRotateSpeed(1);
+  setRotateSpeed(100);
   setAngle(0);
-  setSpinSpeed(0.2);
+  setSpinSpeed(20);
 }

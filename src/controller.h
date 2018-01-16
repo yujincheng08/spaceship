@@ -4,6 +4,7 @@
 #include "bounding.h"
 #include "overlaywidget.h"
 #include "scene.h"
+#include <QList>
 #include <QObject>
 #include <QTime>
 #include <Qt3DInput/QInputAspect>
@@ -40,21 +41,11 @@ private:
   Scene *scene = new Scene();
   SpaceShip *spaceship = new SpaceShip(scene, this);
   SpaceShip *spaceshipAI = new SpaceShip(scene, this);
-  Earth *earth = new Earth(scene);
-  Sun *sun = new Sun(scene);
-  Moon *moon = new Moon(scene);
-  Mercury *mercury = new Mercury(scene);
-  Venus *venus = new Venus(scene);
-  Mars *mars = new Mars(scene);
-  Jupiter *jupiter = new Jupiter(scene);
-  Saturn *saturn = new Saturn(scene);
-  Neptune *neptune = new Neptune(scene);
-  Uranus *uranus = new Uranus(scene);
+  QList<Planet *> planets;
 
   CameraController *cameraController = new CameraController(scene);
   QFrameAction *frame = new QFrameAction(scene->getRoot());
   Starfield *starfield = new Starfield(scene);
-
   QKeyboardDevice *keyboardDevice = new QKeyboardDevice();
   QMouseDevice *mouseDevice = new QMouseDevice();
   QMouseHandler *mouseHandler = new QMouseHandler(scene->getRoot());
@@ -89,10 +80,8 @@ public:
 
   bool isCollision(const QList<BoundingBox> &a, const QList<BoundingBox> &b);
   bool isCollision(const QList<BoundingBox> &a, const QVector3D &point);
-  bool isCollision(const QList<BoundingBox> &a, const QVector3D &center,
-                   const float &r);
-  bool isCollision(const QVector3D &point, const QVector3D &center,
-                   const float &r);
+  bool isCollision(const QList<BoundingBox> &a, const QList<BoundingSphere> &b);
+  bool isCollision(const QVector3D &point, const BoundingSphere &b);
 
   void keyPressEvent(QKeyEvent *e);
   void keyReleaseEvent(QKeyEvent *e);
@@ -113,8 +102,7 @@ public slots:
 
 private:
   bool boxCollision(const BoundingBox &a, const BoundingBox &b);
-  bool boxCollision(const BoundingBox &a, const QVector3D &center,
-                    const float &r);
+  bool boxCollision(const BoundingBox &a, const BoundingSphere &b);
   bool lineCollision(const QVector3D &point, const QVector3D &line,
                      const BoundingBox &box);
   int pointCollision(const QVector3D &point, const QVector3D &line,
@@ -131,6 +119,8 @@ private:
   void callOutMenu();
   void startGame();
   void gameOver();
+  bool collisonDectect();
+  bool detectCollision();
 };
 
 #endif // CONTROLLER_H
