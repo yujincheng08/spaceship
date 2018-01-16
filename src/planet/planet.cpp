@@ -19,7 +19,7 @@ void Planet::frameAction(float dt) {
   const qreal pi = M_PI;
   qreal alpha = currentAngle;
   alpha = alpha + getRotateSpeed() * dt;
-  if (alpha >= 360)
+  while (alpha >= 360)
     alpha = alpha - 360;
   setAngle(alpha);
   QVector3D pos = getOriginPosition();
