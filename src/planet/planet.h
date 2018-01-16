@@ -42,8 +42,8 @@ public:
   QVector3D getOriginPosition() { return this->originPosition; }
   void spin();
   virtual QList<BoundingSphere> getBoundingSphere() const override {
-    return QList<BoundingSphere>() << BoundingSphere{
-               transform->matrix().map(QVector3D{0, 0, 0}), mesh->radius()};
+    return QList<BoundingSphere>()
+           << BoundingSphere{getPostion(), mesh->radius()};
   }
 
 protected:
@@ -55,10 +55,7 @@ protected:
   void addMaterial() { addComponent(material); }
   void setOriginPosition(QVector3D pos) { originPosition = pos; }
   void setSpinSpeed(qreal speed) { spinSpeed = speed; }
-  void setAngle(qreal angle) {
-    currentAngle = angle;
-    // transform->matrix().rotate(angle, orbitNormal);
-  }
+  void setAngle(qreal angle) { currentAngle = angle; }
   qreal getRotateSpeed() { return rotateSpeed; }
 
 public slots:

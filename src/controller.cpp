@@ -4,7 +4,6 @@ OverlayWidget *Controller::getInfoSurface() const { return infoSurface; }
 
 bool Controller::isCollision(const QList<BoundingBox> &a,
                              const QList<BoundingBox> &b) {
-  auto P = spaceship->getPostion();
   for (BoundingBox boxa : a)
     for (BoundingBox boxb : b)
       if (boxCollision(boxa, boxb))
@@ -48,7 +47,10 @@ bool Controller::detectCollision() {
   return false;
 }
 
-void Controller::frameAction(float) {}
+void Controller::frameAction(float) {
+  if (detectCollision())
+    spaceship->explode();
+}
 
 bool Controller::boxCollision(const BoundingBox &a, const BoundingBox &b) {
   bool xCollision = lineCollision(a.point, a.x, b),
@@ -184,8 +186,8 @@ void Controller::initInput() {
     else
       spaceship->endTurnUp();
   });
-  backwardActionInput->setButtons(QVector<int>()
-                                  << Qt::Key_C << Qt::Key_PageDown);
+  backwardActionInput->setButtons(QVector<int>() << Qt::Key_C
+                                                 << Qt::Key_PageDown);
   backwardActionInput->setSourceDevice(keyboardDevice);
   backwardAction->addInput(backwardActionInput);
   connect(backwardAction, &QAction::activeChanged, this, [&](bool active) {
@@ -207,8 +209,8 @@ void Controller::initInput() {
         callOutMenu();
     }
   });
-  enterActionInput->setButtons(QVector<int>()
-                               << Qt::Key_Enter << Qt::Key_Return);
+  enterActionInput->setButtons(QVector<int>() << Qt::Key_Enter
+                                              << Qt::Key_Return);
   enterActionInput->setSourceDevice(keyboardDevice);
   enterAction->addInput(enterActionInput);
   connect(enterAction, &QAction::activeChanged, this, [&](bool active) {
@@ -345,8 +347,7 @@ void Controller::spaceshipExplode(SpaceShip *spaceship) {
              &Component::frameAction);
   if (spaceship == this->spaceship)
     gameOver();
-
-  delete spaceship;
+  spaceship->setParent((Qt3DCore::QNode *)0);
 }
 
 void Controller::gameOver() {

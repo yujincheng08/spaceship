@@ -57,6 +57,7 @@ public:
   virtual QList<BoundingSphere> getBoundingSphere() const {
     return QList<BoundingSphere>();
   }
+  virtual ~Component() {}
 };
 
 #endif // COMPONENT_H
