@@ -174,12 +174,20 @@ void OverlayWidget::paintEvent(QPaintEvent *) {
   pter.setOpacity(gamingOpacity);
   pter.drawLine(cx - shootSize, cy, cx + shootSize, cy);
   pter.drawLine(cx, cy - shootSize, cx, cy + shootSize);
-  pter.setFont(QFont("Arial", 10, 2));
+  pter.setFont(QFont("Arial", 20, 2));
   if (abs(SpaceshipSpeed) < 1e-6)
     setSpeed(0);
-  QString st = QString::number(SpaceshipSpeed);
-  pter.drawText(0, 0, this->width() / 8, this->height() / 8, Qt::AlignCenter,
-                "Speed:" + st);
+  if (SpaceshipSpeed > 20)
+    setSpeed(20);
+  qreal t = sqrt(Dir.x() * Dir.x() + Dir.y() * Dir.y() + Dir.z() * Dir.z());
+  QString st = "Speed:" + QString::number(SpaceshipSpeed) +
+               "\nX: " + QString::number(Dir.x() * SpaceshipSpeed, 'f', 4) +
+               " Y: " + QString::number(Dir.y() * SpaceshipSpeed, 'f', 4) +
+               " Z: " + QString::number(Dir.z() * SpaceshipSpeed, 'f', 4) +
+               "\nPosition:" + "\nX = " + QString::number(Pos.x(), 'f', 4) +
+               "Y = " + QString::number(Pos.y(), 'f', 4) +
+               "Z = " + QString::number(Pos.z(), 'f', 4);
+  pter.drawText(0, 0, this->width() / 2, this->height() / 4, Qt::AlignLeft, st);
 
   // paint end
   pter.setFont(QFont("Arial", 30, 5));

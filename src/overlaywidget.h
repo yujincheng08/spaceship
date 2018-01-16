@@ -6,6 +6,7 @@
 #include <QObject>
 #include <QPainter>
 #include <QTimer>
+#include <QVector3D>
 #include <QWidget>
 #include <QWindow>
 
@@ -24,7 +25,8 @@ public: // member functions
   void setTransparent(bool transparent);
   void setOpacity(const float &opacity = 0.8);
   void setSpeed(qreal speed) { SpaceshipSpeed = speed; }
-  qreal getSpeed(qreal speed) { return SpaceshipSpeed; }
+  void setPosition(QVector3D pos) { Pos = pos; }
+  void setDirection(QVector3D dir) { Dir = dir; }
   void frameAction();
 
 protected: // member functions
@@ -44,6 +46,10 @@ private: // member variables
   QTimer timer;
 
   qreal SpaceshipSpeed;
+
+  QVector3D Pos;
+
+  QVector3D Dir;
 };
 
 #endif // OVERLAYMAINWINDOW_H
