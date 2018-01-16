@@ -38,6 +38,10 @@ SOURCES += \
     src/controller.cpp \    
     src/laserbullet.cpp \    
     src/overlaywidget.cpp \
+    src/planet/planetmaterial.cpp \
+    src/planet/planeteffect.cpp \
+    src/planet/planetlight.cpp \
+    src/planet/planetframegraph.cpp
 
 
 RESOURCES += \
@@ -75,5 +79,9 @@ HEADERS += \
     src/controller.h \    
     src/laserbullet.h \        
     src/overlaywidget.h \                
-    src/bounding.h
+    src/bounding.h \
+    src/planet/planetmaterial.h \
+    src/planet/planeteffect.h \
+    src/planet/planetlight.h \
+    src/planet/planetframegraph.h
 

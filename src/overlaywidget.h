@@ -24,7 +24,7 @@ public: // member functions
   void setTransparent(bool transparent);
   void setOpacity(const float &opacity = 0.8);
   void setSpeed(qreal speed) { SpaceshipSpeed = speed; }
-  qreal getSpeed(qreal speed) { return SpaceshipSpeed; }
+  qreal getSpeed() { return SpaceshipSpeed; }
   void frameAction();
 
 protected: // member functions

@@ -1,0 +1,53 @@
+#include "planetmaterial.h"
+
+PlanetMaterial::PlanetMaterial(QNode *parent) : QMaterial(parent) {
+  ambientParameter->setName("ambient");
+  diffuseParameter->setName("diffuse");
+  specularParameter->setName("specular");
+  shinessParameter->setName("shininess");
+  diffuseTextureParameter->setName("diffuseTexture");
+  specularTextureParameter->setName("specularTexture");
+  normalTextureParameter->setName("normalTexture");
+  texCoordScaleParameter->setName("texCoordScale");
+  opacityParameter->setName("opacity");
+  ambientParameter->setValue(QVector3D{0.1f, 0.1f, 0.1f});
+  diffuseParameter->setValue(QVector3D{0.7f, 0.7f, 0.7f});
+  specularParameter->setValue(QVector3D{0.5f, 0.5f, 0.5f});
+  shinessParameter->setValue(qreal(150.0f));
+  diffuseTexture->addTextureImage(diffuseImage);
+  diffuseTexture->setMinificationFilter(QTexture2D::LinearMipMapLinear);
+  diffuseTexture->setMagnificationFilter(QTexture2D::Linear);
+  diffuseTexture->setGenerateMipMaps(true);
+  diffuseTexture->setMaximumAnisotropy(16.0);
+  diffuseTexture->wrapMode()->setX(QTextureWrapMode::Repeat);
+  diffuseTexture->wrapMode()->setY(QTextureWrapMode::Repeat);
+  diffuseTextureParameter->setValue(QVariant::fromValue(diffuseTexture));
+  specularImage->setSource(QUrl("qrc:/assets/img/uranusmap.jpg"));
+  specularTexture->addTextureImage(specularImage);
+  specularTexture->setMinificationFilter(QTexture2D::LinearMipMapLinear);
+  specularTexture->setMagnificationFilter(QTexture2D::Linear);
+  specularTexture->setGenerateMipMaps(true);
+  specularTexture->setMaximumAnisotropy(16.0);
+  specularTexture->wrapMode()->setX(QTextureWrapMode::Repeat);
+  specularTexture->wrapMode()->setY(QTextureWrapMode::Repeat);
+  specularTextureParameter->setValue(QVariant::fromValue(specularTexture));
+  normalImage->setSource(QUrl("qrc:/assets/img/uranusmap.jpg"));
+  normalTexture->addTextureImage(normalImage);
+  normalTexture->setMinificationFilter(QTexture2D::Linear);
+  normalTexture->setMagnificationFilter(QTexture2D::Linear);
+  normalTexture->setMaximumAnisotropy(16.0);
+  normalTexture->wrapMode()->setX(QTextureWrapMode::Repeat);
+  normalTexture->wrapMode()->setY(QTextureWrapMode::Repeat);
+  normalTextureParameter->setValue(QVariant::fromValue(normalTexture));
+  texCoordScaleParameter->setValue(1.0);
+  opacityParameter->setValue(1.0f);
+  addParameter(ambientParameter);
+  addParameter(diffuseParameter);
+  addParameter(specularParameter);
+  addParameter(shinessParameter);
+  addParameter(diffuseTextureParameter);
+  addParameter(specularTextureParameter);
+  addParameter(normalTextureParameter);
+  addParameter(texCoordScaleParameter);
+  addParameter(opacityParameter);
+}

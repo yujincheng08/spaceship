@@ -4,5 +4,21 @@
         <file>shaders/gl3/sun.vert</file>
         <file>shaders/es2/sun.frag</file>
         <file>shaders/es2/sun.vert</file>
+        <file>shaders/es2/planetD.frag</file>
+        <file>shaders/es2/planetD.vert</file>
+        <file>shaders/es2/planetDB.frag</file>
+        <file>shaders/es2/planetDB.vert</file>
+        <file>shaders/es2/planetDS.frag</file>
+        <file>shaders/es2/planetDSB.frag</file>
+        <file>shaders/gl3/planetD.frag</file>
+        <file>shaders/gl3/planetD.vert</file>
+        <file>shaders/gl3/planetDB.frag</file>
+        <file>shaders/gl3/planetDB.vert</file>
+        <file>shaders/gl3/planetDS.frag</file>
+        <file>shaders/gl3/planetDSB.frag</file>
+        <file>shaders/gl3/planetDShadow.frag</file>
+        <file>shaders/gl3/planetDShadow.vert</file>
+        <file>shaders/gl3/shadowmap.frag</file>
+        <file>shaders/gl3/shadowmap.vert</file>
     </qresource>
 </RCC>

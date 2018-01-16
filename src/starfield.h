@@ -2,15 +2,16 @@
 #define STARFIELD_H
 
 #include "component.h"
-#include <Qt3DExtras/QDiffuseMapMaterial>
+#include <planet/planeteffect.h>
+#include <planet/planetlight.h>
+#include <planet/planetmaterial.h>
 
 class Starfield : public Component {
-public:
-  using QDiffuseMapMaterial = Qt3DExtras::QDiffuseMapMaterial;
-
 private:
   QMesh *mesh = new QMesh(this);
-  QDiffuseMapMaterial *material = new QDiffuseMapMaterial(this);
+  PlanetMaterial *material = new PlanetMaterial(this);
+  PlanetEffect *effect = new PlanetEffect(this);
+  PlanetLight *light = new PlanetLight(this);
   QTextureImage *textureImage = new QTextureImage;
   QTexture2D *texture = new QTexture2D(this);
 

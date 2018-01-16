@@ -17,6 +17,7 @@
 #include <planet/mercury.h>
 #include <planet/moon.h>
 #include <planet/neptune.h>
+#include <planet/planetframegraph.h>
 #include <planet/saturn.h>
 #include <planet/sun.h>
 #include <planet/uranus.h>
@@ -46,6 +47,7 @@ private:
   CameraController *cameraController = new CameraController(scene);
   QFrameAction *frame = new QFrameAction(scene->getRoot());
   Starfield *starfield = new Starfield(scene);
+  PlanetFrameGraph *planeFrameGraph = new PlanetFrameGraph(scene->getRoot());
   QKeyboardDevice *keyboardDevice = new QKeyboardDevice();
   QMouseDevice *mouseDevice = new QMouseDevice();
   QMouseHandler *mouseHandler = new QMouseHandler(scene->getRoot());
