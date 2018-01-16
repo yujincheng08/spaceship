@@ -1,7 +1,10 @@
 #include "spaceship.h"
 #include "scene.h"
+#include <Qt3DRender/QAttribute>
+#include <Qt3DRender/QBuffer>
 #include <QtDebug>
 #include <QtMath>
+#include <limits>
 
 SpaceShip::SpaceShip(QNode *parent, Scene *root) : Component(parent) {
   this->root = root;
@@ -135,11 +138,51 @@ void SpaceShip::initMaterials() {
   glassMaterial->setSpecular(QColor::fromRgbF(0.8f, 0.8f, 0.8f));
 }
 
+void SpaceShip::boundingBox(const QString &entityName) {
+  auto geometry = dynamic_cast<Qt3DRender::QGeometryRenderer *>(
+                      sceneLoader->component(
+                          entityName, QSceneLoader::GeometryRendererComponent))
+                      ->geometry();
+  float Mx, My, Mz, mx, my, mz;
+  Mx = My = Mz = std::numeric_limits<float>::lowest();
+  mx = my = mz = std::numeric_limits<float>::max();
+  for (auto &attribute : geometry->attributes())
+    if (attribute->name() ==
+        Qt3DRender::QAttribute::defaultPositionAttributeName()) {
+      auto buffer = attribute->buffer();
+      const auto &data = buffer->data();
+      for (uint i = 0u; i < attribute->count(); ++i) {
+        int vertexOffset = i * attribute->byteStride();
+        int offset = vertexOffset + attribute->byteOffset();
+        const char *rawData = &(data.constData()[offset]);
+
+        // replace float with your data type
+        float x = *reinterpret_cast<const float *>(rawData);
+        float y = *reinterpret_cast<const float *>(rawData + 8);
+        float z = *reinterpret_cast<const float *>(rawData + 16);
+        if (x > Mx)
+          Mx = x;
+        if (x < mx)
+          mx = x;
+        if (y > My)
+          My = y;
+        if (y < my)
+          my = y;
+        if (z > Mz)
+          Mz = x;
+        if (z < mz)
+          mz = z;
+      }
+    }
+  qDebug() << entityName << Mx << mx << My << my << Mz << mz;
+}
+
 void SpaceShip::loadingStatusChanged(Qt3DRender::QSceneLoader::Status status) {
   switch (status) {
   case QSceneLoader::Ready:
     for (const auto &entity : sceneLoader->entityNames()) {
       removeDefaultMaterial(entity);
+      boundingBox(entity);
       sceneLoader->entity(entity)->addComponent(materials[entity]);
       if (((QString)entity) == "GasUL")
         sceneLoader->entity(entity)->addComponent(gasTransUL);
@@ -155,6 +198,7 @@ void SpaceShip::loadingStatusChanged(Qt3DRender::QSceneLoader::Status status) {
     break;
   case QSceneLoader::Error:
     qDebug() << "Error";
+    break;
   case QSceneLoader::Loading:
     qDebug() << "Still loading...";
     break;
