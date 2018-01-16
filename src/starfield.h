@@ -18,7 +18,7 @@ protected slots:
   void frameAction(float) override {}
 
 public:
-  Starfield(QNode *parent = nullptr);
+  Starfield(Scene *parent = nullptr);
 
 private:
 };

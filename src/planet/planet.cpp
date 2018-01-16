@@ -1,6 +1,6 @@
 #include "planet.h"
 
-Planet::Planet(QNode *parent) : Component(parent) {
+Planet::Planet(Scene *parent) : Component(parent) {
   setRings(64);
   setSlices(64);
   diffuseTexture->addTextureImage(diffuseImage);
@@ -15,7 +15,7 @@ Planet::Planet(QNode *parent) : Component(parent) {
   addComponent(material);
 }
 
-void Planet::frameAction(float dt) {}
+void Planet::frameAction(float dt) { Q_UNUSED(dt) }
 
 // void Planet::gltDrawSphere(GLfloat fRadius, GLint iSlices, GLint iStacks) {
 //  GLfloat drho = (GLfloat)(3.141592653589) / (GLfloat)iStacks;

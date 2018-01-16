@@ -9,7 +9,7 @@ public:
   using QDirectionalLight = Qt3DRender::QDirectionalLight;
 
 public:
-  DirectionalLight(QNode *parent = nullptr);
+  DirectionalLight(Scene *parent = nullptr);
 
 private:
   QDirectionalLight *light = new QDirectionalLight;

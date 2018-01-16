@@ -2,7 +2,7 @@
 #include "scene.h"
 
 LaserBullet::LaserBullet(const QVector3D &startPos, const QVector3D &velocity,
-                         QNode *parent, Scene *root)
+                         Scene *parent)
     : Component(parent) {
 
   this->root = root;
@@ -32,6 +32,6 @@ void LaserBullet::frameAction(float dt) {
   setPosition(getPostion() + velocity * dt);
   existTime += dt;
   if (existTime * velocity.length() > 200) {
-    root->removeLaserBullet(this);
+    // root->removeLaserBullet(this);
   }
 }

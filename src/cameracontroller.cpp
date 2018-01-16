@@ -14,6 +14,7 @@ inline float zoomDistance(QVector3D firstPoint, QVector3D secondPoint) {
 }
 
 void CameraController::setCursorLock(bool lock) {
+  auto root = parentScene();
   if (lock) {
     QRect geometry = root->geometry();
     int cx = geometry.x() + geometry.width() / 2,
@@ -90,6 +91,7 @@ void CameraController::frameAction(float dt) {
   auto targetUp = target->getUp();
   auto targetPos = target->getPostion();
   auto targetTwd = target->getToward();
+  auto root = parentScene();
 
   camera->setPosition(TransPosition(targetUp, targetTwd, targetPos, posTrans));
   camera->setViewCenter(

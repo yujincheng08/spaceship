@@ -22,7 +22,6 @@ public:
   using QNode = Qt3DCore::QNode;
   using QEntity = Qt3DCore::QEntity;
   using QDirectionalLight = Qt3DRender::QDirectionalLight;
-  using QFrameAction = Qt3DLogic::QFrameAction;
 
 private:
   QEntity *root = new QEntity();
@@ -44,6 +43,7 @@ private:
 
 public:
   Scene(QScreen *parent = nullptr);
+  QEntity *getRoot() { return root; }
   virtual ~Scene() final { delete root; }
 
   SpaceShip *getSpaceship() { return spaceship; }
@@ -60,15 +60,8 @@ public:
   }
 
 private:
-  void initCamera();
-  void initPlanets();
-  void initSpaceship();
-  void initLight();
-  void initFrame();
-
-  void gameOver();
-private slots:
-  void frameAction(float dt);
+public slots:
+  void frameAction(float dt) { Q_UNUSED(dt) }
 };
 
 #endif // SCENE_H

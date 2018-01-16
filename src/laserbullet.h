@@ -15,7 +15,7 @@ public:
 
 public:
   LaserBullet(const QVector3D &startPos, const QVector3D &velocity,
-              QNode *parent = nullptr, Scene *root = nullptr);
+              Scene *parent = nullptr);
   virtual ~LaserBullet() override {}
 
 protected:

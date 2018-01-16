@@ -6,7 +6,7 @@
 #include <QtMath>
 #include <limits>
 
-SpaceShip::SpaceShip(QNode *parent, Scene *root) : Component(parent) {
+SpaceShip::SpaceShip(Scene *parent) : Component(parent) {
   this->root = root;
   initMaterials();
   textureImage->setSource(QUrl("qrc:/assets/img/earthmap2k.jpg"));
@@ -66,7 +66,7 @@ void SpaceShip::frameAction(float dt) {
     }
     explodeTime += dt;
     if (explodeTime > 10)
-      root->spaceshipExplode(this);
+      ; // root->spaceshipExplode(this);
   } else {
     int direct;
     // move
@@ -126,7 +126,7 @@ void SpaceShip::frameAction(float dt) {
     if (shootWait < shootInterval)
       return;
     shootWait -= shootInterval;
-    root->addLaserBullet(this->getPostion(), 100);
+    // parentScene()->addLaserBullet(this->getPostion(), 100);
   }
 }
 

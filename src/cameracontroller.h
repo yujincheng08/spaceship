@@ -9,9 +9,7 @@ class SpaceShip;
 class CameraController : public Component {
 public:
   using QCamera = Qt3DRender::QCamera;
-  explicit CameraController(QNode *parent = nullptr, Scene *root = nullptr)
-      : Component(parent) {
-    this->root = root;
+  explicit CameraController(Scene *parent = nullptr) : Component(parent) {
     cursorLock = true;
     posTrans = QVector3D(0, 4, -20);
     ctrTrans = QVector3D(0, 4, 0);
@@ -39,7 +37,6 @@ public slots:
   void frameAction(float dt);
 
 protected:
-  Scene *root = nullptr;
   Component *target = nullptr;
   QCamera *camera = nullptr;
   bool cursorLock = true;

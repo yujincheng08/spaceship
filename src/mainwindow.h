@@ -20,6 +20,7 @@ public:
 private:
   Controller *controller = new Controller;
   Scene *scene = controller->getScene();
+  // OverlayWidget *overlayWidget = new OverlayWidget;
 
   QWidget *container = QWidget::createWindowContainer(scene, this);
   OverlayWidget *infoSurface = new OverlayWidget;
@@ -38,7 +39,6 @@ protected:
   //  void initializeGL();
   // void paintGL() override;
   // void resizeGL(int width, int height) override;
-
   //  void paintEvent(QPaintEvent *e);
 
   //  //  void mousePressEvent(QMouseEvent *e) override;

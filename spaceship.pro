@@ -56,6 +56,3 @@ HEADERS += \
     src/controller.h \
     src/boundingbox.h \
     src/overlaywidget.h
-
-
-

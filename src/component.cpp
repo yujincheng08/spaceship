@@ -1,4 +1,5 @@
 #include "component.h"
+#include "scene.h"
 #include <QBitmap>
 #include <QDebug>
 #include <fstream>
@@ -7,7 +8,8 @@
 
 using namespace std;
 
-Component::Component(QNode *parent) : QEntity(parent) {
+Component::Component(Scene *parent)
+    : QEntity(parent ? parent->getRoot() : nullptr), m_parentScene(parent) {
   addComponent(transform);
 }
 
