@@ -197,7 +197,7 @@ void Controller::initInput() {
   enterAction->addInput(enterActionInput);
   connect(enterAction, &QAction::activeChanged, this, [&](bool active) {
     if (active) {
-      if (state == START)
+      if (state == START || state == END)
         startGame();
     }
   });
@@ -290,4 +290,7 @@ void Controller::spaceshipExplode(SpaceShip *spaceship) {
   delete spaceship;
 }
 
-void Controller::gameOver() { qDebug() << "Game Over"; }
+void Controller::gameOver() {
+  cameraController->setCursorLock(false);
+  state = END;
+}

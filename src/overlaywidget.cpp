@@ -152,13 +152,24 @@ void OverlayWidget::paintEvent(QPaintEvent *) {
                 "Press Enter to Start Game...");
 
   // paint menu
+  pter.setFont(QFont("Arial", 20, 2));
+  pter.setOpacity(menuOpacity);
+  pter.drawText(0, 0, this->width(), this->height(), Qt::AlignCenter,
+                "Use W / S to move forward / back.\n\n"
+                "Use A / D / E / C to turn left / right / up / down.\n\n"
+                "Press left button to shoot.\n\n"
+                "Shrink your mouse to rotate the view.\n\n"
+                "Use Esc to pause / continue the game.");
 
   // paint gaming
+  int cx = this->width() / 2, cy = this->height() * 21 / 40;
   pter.setOpacity(gamingOpacity);
-  pter.drawLine(this->width() / 2 - shootSize, this->height() / 2,
-                this->width() / 2 + shootSize, this->height() / 2);
-  pter.drawLine(this->width() / 2, this->height() / 2 - shootSize,
-                this->width() / 2, this->height() / 2 + shootSize);
+  pter.drawLine(cx - shootSize, cy, cx + shootSize, cy);
+  pter.drawLine(cx, cy - shootSize, cx, cy + shootSize);
 
   // paint end
+  pter.setFont(QFont("Arial", 30, 5));
+  pter.setOpacity(endOpacity);
+  pter.drawText(0, this->height() / 2, this->width(), 30, Qt::AlignCenter,
+                "You Lose! Press Esc to Quit Game.");
 }
