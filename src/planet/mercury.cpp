@@ -8,4 +8,5 @@ Mercury::Mercury(Scene *parent) : Planet(parent) {
   setOriginPosition(QVector3D(870, 100, 0));
   setRadius(20);
   setAngle(120);
+  setSpinSpeed(0.2);
 }

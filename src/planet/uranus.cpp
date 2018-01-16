@@ -8,5 +8,6 @@ Uranus::Uranus(Scene *parent) : Planet(parent) {
   setOriginPosition(QVector3D(-1200, 100, 0));
   setRadius(150);
   setRotateSpeed(0.04);
-  setAngle(270);
+  setAngle(150);
+  setSpinSpeed(0.3);
 }

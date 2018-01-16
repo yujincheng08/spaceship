@@ -46,6 +46,15 @@ void Controller::frameAction(float) {
   jupiter->orbit(sun);
   saturn->orbit(sun);
   uranus->orbit(sun);
+  earth->spin();
+  moon->spin();
+  mercury->spin();
+  venus->spin();
+  mars->spin();
+  neptune->spin();
+  jupiter->spin();
+  saturn->spin();
+  uranus->spin();
 
   // state control
 
@@ -268,6 +277,8 @@ void Controller::initPlanets() {
 
 void Controller::initSpaceship() {
   spaceship->setInitialDirection({0, 0, -1}, {0, 1, 0});
+  spaceshipAI->setInitialDirection({0, 0, 1}, {0, 1, 0});
+  spaceshipAI->setPosition({0, 0, 100});
 }
 
 void Controller::initLight() {

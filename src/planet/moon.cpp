@@ -9,4 +9,5 @@ Moon::Moon(Scene *parent) : Planet(parent) {
   setRadius(17);
   setRotateSpeed(1);
   setAngle(0);
+  setSpinSpeed(0.2);
 }

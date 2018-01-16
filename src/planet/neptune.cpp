@@ -9,4 +9,5 @@ Neptune::Neptune(Scene *parent) : Planet(parent) {
   setRadius(150);
   setRotateSpeed(0.01);
   setAngle(90);
+  setSpinSpeed(0.4);
 }

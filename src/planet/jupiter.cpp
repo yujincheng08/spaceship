@@ -9,4 +9,5 @@ Jupiter::Jupiter(Scene *parent) : Planet(parent) {
   setRadius(200);
   setRotateSpeed(0.06);
   setAngle(0);
+  setSpinSpeed(0.2);
 }
