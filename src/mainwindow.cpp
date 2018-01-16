@@ -4,7 +4,7 @@
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
   initInfoSurface();
   initScene();
-  scene->addObserver(infoSurface);
+  //  scene->addObserver(infoSurface);
   setGeometry(8, 30, 1360, 768);
   setCentralWidget(container);
   container->setFocus();

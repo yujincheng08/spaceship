@@ -19,7 +19,7 @@ public:
   QTexture2D *texture = new QTexture2D;
 
   friend class InfoSurface;
-  SpaceShip(QNode *parent = nullptr, Scene *root = nullptr);
+  SpaceShip(Scene *parent = nullptr);
 
   void startTurnLeft() { isTurnLeft = true; }
   void startTurnRight() { isTurnRight = true; }
