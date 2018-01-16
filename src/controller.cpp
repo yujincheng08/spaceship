@@ -48,7 +48,9 @@ bool Controller::detectCollision() {
   return false;
 }
 
-void Controller::frameAction(float) {}
+void Controller::frameAction(float) {
+  infoSurface->setSpeed(spaceship->getSpeed());
+}
 
 bool Controller::boxCollision(const BoundingBox &a, const BoundingBox &b) {
   bool xCollision = lineCollision(a.point, a.x, b),
