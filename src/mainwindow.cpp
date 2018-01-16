@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include <Qt3DExtras/QForwardRenderer>
 #include <QtDebug>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {

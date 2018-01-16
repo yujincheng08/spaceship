@@ -213,7 +213,8 @@ void SpaceShip::boundingBox(const QString &entityName) {
           mz = z;
       }
     }
-  qDebug() << entityName << Mx << mx << My << my << Mz << mz;
+  boundingBoxes << BoundingBox{
+      {mx, my, mz}, {Mx - mx, my, mz}, {mx, My - my, mz}, {mx, my, Mz - mz}};
 }
 
 void SpaceShip::loadingStatusChanged(Qt3DRender::QSceneLoader::Status status) {

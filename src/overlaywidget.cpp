@@ -9,7 +9,10 @@ OverlayWidget::OverlayWidget(Controller *controller, QWidget *parent)
   this->controller = controller;
   setWindowFlags(windowFlags() | Qt::SubWindow);
   setWindowFlags(windowFlags() | Qt::WindowStaysOnTopHint);
+  setWindowFlags(windowFlags() | Qt::X11BypassWindowManagerHint);
+  // setCursor(Qt::BlankCursor);
   setTransparent(true);
+  setFocusPolicy(Qt::NoFocus);
 }
 
 OverlayWidget::~OverlayWidget() {}
@@ -123,12 +126,17 @@ bool OverlayWidget::eventFilter(QObject *obj, QEvent *event) {
       else
         show();
     }
+    if (event->type() == QEvent::CursorChange) {
+      qDebug() << "Changed";
+      setCursor(m_pBackgroundWidget->cursor());
+    }
   }
 
   return false;
 }
 
 void OverlayWidget::changeEvent(QEvent *event) {
+  qDebug() << event->type();
   if (event->type() == QEvent::ActivationChange) {
     if (!isActiveWindow() & !m_pBackgroundWidget->isActiveWindow())
       hide();

@@ -51,7 +51,7 @@ void Controller::frameAction(float) {
 
   // bullet
 
-  // conflic test
+  // collison test
 }
 
 bool Controller::boxCollision(const BoundingBox &a, const BoundingBox &b) {
@@ -179,8 +179,8 @@ void Controller::initInput() {
     else
       spaceship->endTurnUp();
   });
-  backwardActionInput->setButtons(QVector<int>()
-                                  << Qt::Key_C << Qt::Key_PageDown);
+  backwardActionInput->setButtons(QVector<int>() << Qt::Key_C
+                                                 << Qt::Key_PageDown);
   backwardActionInput->setSourceDevice(keyboardDevice);
   backwardAction->addInput(backwardActionInput);
   connect(backwardAction, &QAction::activeChanged, this, [&](bool active) {
@@ -203,8 +203,8 @@ void Controller::initInput() {
         callOutMenu();
     }
   });
-  enterActionInput->setButtons(QVector<int>()
-                               << Qt::Key_Enter << Qt::Key_Return);
+  enterActionInput->setButtons(QVector<int>() << Qt::Key_Enter
+                                              << Qt::Key_Return);
   enterActionInput->setSourceDevice(keyboardDevice);
   enterAction->addInput(enterActionInput);
   connect(enterAction, &QAction::activeChanged, this, [&](bool active) {
