@@ -174,6 +174,12 @@ void OverlayWidget::paintEvent(QPaintEvent *) {
   pter.setOpacity(gamingOpacity);
   pter.drawLine(cx - shootSize, cy, cx + shootSize, cy);
   pter.drawLine(cx, cy - shootSize, cx, cy + shootSize);
+  pter.setFont(QFont("Arial", 10, 2));
+  if (abs(SpaceshipSpeed) < 1e-6)
+    setSpeed(0);
+  QString st = QString::number(SpaceshipSpeed);
+  pter.drawText(0, 0, this->width() / 8, this->height() / 8, Qt::AlignCenter,
+                "Speed:" + st);
 
   // paint end
   pter.setFont(QFont("Arial", 30, 5));

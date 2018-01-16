@@ -55,7 +55,7 @@ void Controller::frameAction(float) {
   jupiter->spin();
   saturn->spin();
   uranus->spin();
-
+  infoSurface->setSpeed(spaceship->getSpeed());
   // state control
 
   // bullet

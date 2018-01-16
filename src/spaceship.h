@@ -43,6 +43,7 @@ public:
   void setMaxTurnUDSpeed(qreal speed) { maxTurnUDSpeed = speed; }
   void setMaxMoveSpeed(qreal speed) { maxMoveSpeed = speed; }
   bool isExplode() { return isExploded; }
+  qreal getSpeed() { return moveSpeed; }
   void explode() override;
 
   virtual QList<BoundingBox> getBoundingBox() const override {
