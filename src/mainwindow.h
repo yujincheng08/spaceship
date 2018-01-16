@@ -9,8 +9,6 @@
 #include <Qt3DExtras>
 #include <QtOpenGL>
 
-class InfoSurface;
-
 class MainWindow : public QMainWindow {
   friend class InfoSurface;
 
@@ -20,10 +18,9 @@ public:
 private:
   Controller *controller = new Controller;
   Scene *scene = controller->getScene();
-  // OverlayWidget *overlayWidget = new OverlayWidget;
 
   QWidget *container = QWidget::createWindowContainer(scene, this);
-  OverlayWidget *infoSurface = new OverlayWidget;
+  OverlayWidget *infoSurface = controller->getInfoSurface();
 
 public:
   MainWindow(QWidget *parent = nullptr);
@@ -58,8 +55,6 @@ private:
 
   QBasicTimer timer;
   QTimer *cursorTimer;
-
-  InfoSurface *is;
 };
 
 #endif // MAINWINDOW_H

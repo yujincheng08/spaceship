@@ -5,6 +5,7 @@
 #include <Qt3DExtras/QConeMesh>
 #include <Qt3DExtras/QNormalDiffuseSpecularMapMaterial>
 
+class Controller;
 class Scene;
 
 class LaserBullet : public Component {
@@ -15,7 +16,7 @@ public:
 
 public:
   LaserBullet(const QVector3D &startPos, const QVector3D &velocity,
-              Scene *parent = nullptr);
+              Scene *parent = nullptr, Controller *root = nullptr);
   virtual ~LaserBullet() override {}
 
 protected:
@@ -26,7 +27,7 @@ protected slots:
   void frameAction(float dt) override;
 
 private:
-  Scene *root;
+  Controller *root;
   QColor color;
   float length;
   QVector3D velocity;

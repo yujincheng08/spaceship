@@ -1,12 +1,12 @@
 #include "spaceship.h"
-#include "scene.h"
+#include "controller.h"
 #include <Qt3DRender/QAttribute>
 #include <Qt3DRender/QBuffer>
 #include <QtDebug>
 #include <QtMath>
 #include <limits>
 
-SpaceShip::SpaceShip(Scene *parent) : Component(parent) {
+SpaceShip::SpaceShip(Scene *parent, Controller *root) : Component(parent) {
   this->root = root;
   initMaterials();
   textureImage->setSource(QUrl("qrc:/assets/img/earthmap2k.jpg"));
@@ -126,7 +126,7 @@ void SpaceShip::frameAction(float dt) {
     if (shootWait < shootInterval)
       return;
     shootWait -= shootInterval;
-    // parentScene()->addLaserBullet(this->getPostion(), 100);
+    root->addLaserBullet(this->getPostion(), 100);
   }
 }
 

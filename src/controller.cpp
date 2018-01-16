@@ -1,5 +1,7 @@
 #include "controller.h"
 
+OverlayWidget *Controller::getInfoSurface() const { return infoSurface; }
+
 bool Controller::isCollision(const QList<BoundingBox> &a,
                              const QList<BoundingBox> &b) {
   for (BoundingBox boxa : a)
@@ -31,6 +33,14 @@ bool Controller::isCollision(const QList<BoundingBox> &a,
 bool Controller::isCollision(const QVector3D &point, const QVector3D &center,
                              const float &r) {
   return (center - point).length() < r;
+}
+
+void Controller::frameAction(float) {
+  // state control
+
+  // bullet
+
+  // conflic test
 }
 
 bool Controller::boxCollision(const BoundingBox &a, const BoundingBox &b) {
@@ -95,32 +105,42 @@ int Controller::pointCollision(const QVector3D &point, const QVector3D &line,
 
 void Controller::initInput() {
   mouseHandler->setSourceDevice(mouseDevice);
-  connect(mouseHandler, &QMouseHandler::pressed, this,
-          [&](QMouseEvent *) { spaceship->startShoot(); });
-  connect(mouseHandler, &QMouseHandler::released, this,
-          [&](QMouseEvent *) { spaceship->endShoot(); });
+  connect(mouseHandler, &QMouseHandler::pressed, this, [&](QMouseEvent *) {
+    if (state == GAMING)
+      spaceship->startShoot();
+  });
+  connect(mouseHandler, &QMouseHandler::released, this, [&](QMouseEvent *) {
+    if (state == GAMING)
+      spaceship->endShoot();
+  });
   upActionInput->setButtons(QVector<int>() << Qt::Key_W << Qt::Key_Up);
   upActionInput->setSourceDevice(keyboardDevice);
   upAction->addInput(upActionInput);
   connect(upAction, &QAction::activeChanged, this, [&](bool active) {
+    if (state != GAMING)
+      return;
     if (active)
-      spaceship->startTurnUp();
+      spaceship->startMoveForward();
     else
-      spaceship->endTurnUp();
+      spaceship->endMoveForward();
   });
   downActionInput->setButtons(QVector<int>() << Qt::Key_S << Qt::Key_Down);
   downActionInput->setSourceDevice(keyboardDevice);
   downAction->addInput(downActionInput);
   connect(downAction, &QAction::activeChanged, this, [&](bool active) {
+    if (state != GAMING)
+      return;
     if (active)
-      spaceship->startTurnDown();
+      spaceship->startMoveBack();
     else
-      spaceship->endTurnDown();
+      spaceship->endMoveBack();
   });
   leftActionInput->setButtons(QVector<int>() << Qt::Key_A << Qt::Key_Left);
   leftActionInput->setSourceDevice(keyboardDevice);
   leftAction->addInput(leftActionInput);
   connect(leftAction, &QAction::activeChanged, this, [&](bool active) {
+    if (state != GAMING)
+      return;
     if (active)
       spaceship->startTurnLeft();
     else
@@ -130,6 +150,8 @@ void Controller::initInput() {
   rightActionInput->setSourceDevice(keyboardDevice);
   rightAction->addInput(rightActionInput);
   connect(rightAction, &QAction::activeChanged, this, [&](bool active) {
+    if (state != GAMING)
+      return;
     if (active)
       spaceship->startTurnRight();
     else
@@ -139,27 +161,46 @@ void Controller::initInput() {
   forwardActionInput->setSourceDevice(keyboardDevice);
   forwardAction->addInput(forwardActionInput);
   connect(forwardAction, &QAction::activeChanged, this, [&](bool active) {
+    if (state != GAMING)
+      return;
     if (active)
-      spaceship->startMoveForward();
+      spaceship->startTurnUp();
     else
-      spaceship->endMoveForward();
+      spaceship->endTurnUp();
   });
-  backwardActionInput->setButtons(QVector<int>() << Qt::Key_C
-                                                 << Qt::Key_PageDown);
+  backwardActionInput->setButtons(QVector<int>()
+                                  << Qt::Key_C << Qt::Key_PageDown);
   backwardActionInput->setSourceDevice(keyboardDevice);
   backwardAction->addInput(backwardActionInput);
   connect(backwardAction, &QAction::activeChanged, this, [&](bool active) {
+    if (state != GAMING)
+      return;
     if (active)
-      spaceship->startMoveBack();
+      spaceship->startTurnDown();
     else
-      spaceship->endMoveBack();
+      spaceship->endTurnDown();
   });
   escapeActionInput->setButtons(QVector<int>() << Qt::Key_Escape);
   escapeActionInput->setSourceDevice(keyboardDevice);
   escapeAction->addInput(escapeActionInput);
   connect(escapeAction, &QAction::activeChanged, this, [&](bool active) {
-    if (active)
+    if (active) {
       cameraController->setCursorLock(!cameraController->getCursorLock());
+      if (state == MENU)
+        continueGame();
+      else if (state == GAMING)
+        callOutMenu();
+    }
+  });
+  enterActionInput->setButtons(QVector<int>()
+                               << Qt::Key_Enter << Qt::Key_Return);
+  enterActionInput->setSourceDevice(keyboardDevice);
+  enterAction->addInput(enterActionInput);
+  connect(enterAction, &QAction::activeChanged, this, [&](bool active) {
+    if (active) {
+      if (state == START)
+        startGame();
+    }
   });
 
   logicalDevice->addAction(upAction);
@@ -169,6 +210,7 @@ void Controller::initInput() {
   logicalDevice->addAction(forwardAction);
   logicalDevice->addAction(backwardAction);
   logicalDevice->addAction(escapeAction);
+  logicalDevice->addAction(enterAction);
 }
 
 void Controller::initScene() {
@@ -185,7 +227,7 @@ void Controller::initCamera() {
   scene->camera()->setPosition(QVector3D(0, 0, -20.0f));
   scene->camera()->setViewCenter(QVector3D(0, 0, 0));
   cameraController->setTraceTarget(spaceship);
-  cameraController->setCursorLock(true);
+  cameraController->setCursorLock(false);
   cameraController->setCamera(scene->camera());
 }
 
@@ -201,14 +243,35 @@ void Controller::initLight() {
 
 void Controller::initFrameAction() {
   connect(frame, &QFrameAction::triggered, scene, &Scene::frameAction);
+  connect(frame, &QFrameAction::triggered, infoSurface,
+          &OverlayWidget::frameAction);
   connect(frame, &QFrameAction::triggered, spaceship, &Component::frameAction);
   connect(frame, &QFrameAction::triggered, cameraController,
           &CameraController::frameAction);
+  connect(frame, &QFrameAction::triggered, this, &Controller::frameAction);
+}
+
+void Controller::continueGame() {
+  cameraController->setCursorLock(true);
+  frame->blockSignals(false);
+  state = GAMING;
+}
+
+void Controller::callOutMenu() {
+  cameraController->setCursorLock(false);
+  frame->blockSignals(true);
+  state = MENU;
+}
+
+void Controller::startGame() {
+  cameraController->setCursorLock(true);
+  frame->blockSignals(false);
+  state = GAMING;
 }
 
 void Controller::addLaserBullet(const QVector3D &pos,
                                 const QVector3D &velocity) {
-  LaserBullet *bullet = new LaserBullet(pos, velocity, scene);
+  LaserBullet *bullet = new LaserBullet(pos, velocity, scene, this);
   connect(frame, &QFrameAction::triggered, bullet, &Component::frameAction);
 }
 

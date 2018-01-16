@@ -1,9 +1,12 @@
 #include "overlaywidget.h"
+#include "controller.h"
 #include <QTime>
 #include <QWindowStateChangeEvent>
 #define WAIT_TIME_TO_MAXIMIZE_OVERLAY_MS 300
 
-OverlayWidget::OverlayWidget(QWidget *parent) : QWidget(parent, Qt::SubWindow) {
+OverlayWidget::OverlayWidget(Controller *controller, QWidget *parent)
+    : QWidget(parent, Qt::SubWindow) {
+  this->controller = controller;
   setWindowFlags(windowFlags() | Qt::SubWindow);
   setWindowFlags(windowFlags() | Qt::WindowStaysOnTopHint);
   setTransparent(true);
@@ -39,19 +42,20 @@ void OverlayWidget::setOpacity(const float &opacity) {
 }
 
 void OverlayWidget::frameAction(float dt) {
-  if (states == START)
+  Controller::STATE state = controller->getState();
+  if (state == Controller::START)
     startOpacity += dt;
   else
     startOpacity -= dt;
-  if (states == MENU)
+  if (state == Controller::MENU)
     menuOpacity += dt;
   else
     menuOpacity -= dt;
-  if (states == GAMING)
+  if (state == Controller::GAMING)
     gamingOpacity += dt;
   else
     gamingOpacity -= dt;
-  if (states == END)
+  if (state == Controller::END)
     endOpacity += dt;
   else
     endOpacity -= dt;

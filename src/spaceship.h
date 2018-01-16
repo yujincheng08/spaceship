@@ -6,7 +6,7 @@
 #include <QTime>
 #include <QtOpenGL>
 
-class Scene;
+class Controller;
 
 class SpaceShip : public Component {
   using QPhongAlphaMaterial = Qt3DExtras::QPhongAlphaMaterial;
@@ -19,7 +19,7 @@ public:
   QTexture2D *texture = new QTexture2D;
 
   friend class InfoSurface;
-  SpaceShip(Scene *parent = nullptr);
+  SpaceShip(Scene *parent = nullptr, Controller *root = nullptr);
 
   void startTurnLeft() { isTurnLeft = true; }
   void startTurnRight() { isTurnRight = true; }
@@ -45,6 +45,10 @@ public:
   void explode() override;
 
   virtual ~SpaceShip() { removeComponent(sceneLoader); }
+
+signals:
+  void triggerBullet(QVector3D pos, QVector3D velocity);
+  void triggerBullet(QVector3D pos, float speed);
 
 protected slots:
   virtual void frameAction(float dt) override;
@@ -77,7 +81,7 @@ private:
   QTransform *gasTransDL = new QTransform;
   QTransform *gasTransDR = new QTransform;
 
-  Scene *root;
+  Controller *root;
   QList<QTransform *> *explodeList;
   float explodeTime;
 
