@@ -5,6 +5,7 @@
 #include <QMainWindow>
 #include <QObject>
 #include <QPainter>
+#include <QTimer>
 #include <QWidget>
 #include <QWindow>
 
@@ -23,7 +24,7 @@ public: // member functions
   void setTransparent(bool transparent);
   void setOpacity(const float &opacity = 0.8);
 
-  void frameAction(float dt);
+  void frameAction();
 
 protected: // member functions
   bool eventFilter(QObject *obj, QEvent *event);
@@ -38,6 +39,8 @@ private: // member variables
   float startOpacity = 0, menuOpacity = 0, gamingOpacity = 0, endOpacity = 0;
 
   Controller *controller;
+
+  QTimer timer;
 };
 
 #endif // OVERLAYMAINWINDOW_H

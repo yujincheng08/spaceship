@@ -66,7 +66,7 @@ void SpaceShip::frameAction(float dt) {
     }
     explodeTime += dt;
     if (explodeTime > 10)
-      ; // root->spaceshipExplode(this);
+      root->spaceshipExplode(this);
   } else {
     int direct;
     // move

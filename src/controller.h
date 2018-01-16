@@ -87,6 +87,7 @@ public:
 
   void removeLaserBullet(LaserBullet *bullet);
 
+  void spaceshipExplode(SpaceShip *spaceship);
 public slots:
   void frameAction(float);
 
@@ -109,6 +110,7 @@ private:
   void continueGame();
   void callOutMenu();
   void startGame();
+  void gameOver();
 };
 
 #endif // CONTROLLER_H

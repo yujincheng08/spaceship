@@ -10,6 +10,9 @@ OverlayWidget::OverlayWidget(Controller *controller, QWidget *parent)
   setWindowFlags(windowFlags() | Qt::SubWindow);
   setWindowFlags(windowFlags() | Qt::WindowStaysOnTopHint);
   setTransparent(true);
+
+  connect(&timer, &QTimer::timeout, this, &OverlayWidget::frameAction);
+  timer.start(100);
 }
 
 OverlayWidget::~OverlayWidget() {}
@@ -41,7 +44,8 @@ void OverlayWidget::setOpacity(const float &opacity) {
   opacityEffect->setOpacity(opacity);
 }
 
-void OverlayWidget::frameAction(float dt) {
+void OverlayWidget::frameAction() {
+  float dt = 0.1;
   Controller::STATE state = controller->getState();
   if (state == Controller::START)
     startOpacity += dt;

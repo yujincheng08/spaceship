@@ -185,7 +185,6 @@ void Controller::initInput() {
   escapeAction->addInput(escapeActionInput);
   connect(escapeAction, &QAction::activeChanged, this, [&](bool active) {
     if (active) {
-      cameraController->setCursorLock(!cameraController->getCursorLock());
       if (state == MENU)
         continueGame();
       else if (state == GAMING)
@@ -243,8 +242,6 @@ void Controller::initLight() {
 
 void Controller::initFrameAction() {
   connect(frame, &QFrameAction::triggered, scene, &Scene::frameAction);
-  connect(frame, &QFrameAction::triggered, infoSurface,
-          &OverlayWidget::frameAction);
   connect(frame, &QFrameAction::triggered, spaceship, &Component::frameAction);
   connect(frame, &QFrameAction::triggered, cameraController,
           &CameraController::frameAction);
@@ -283,3 +280,14 @@ void Controller::removeLaserBullet(LaserBullet *bullet) {
   disconnect(frame, &QFrameAction::triggered, bullet, &Component::frameAction);
   delete bullet;
 }
+
+void Controller::spaceshipExplode(SpaceShip *spaceship) {
+  disconnect(frame, &QFrameAction::triggered, spaceship,
+             &Component::frameAction);
+  if (spaceship == this->spaceship)
+    gameOver();
+
+  delete spaceship;
+}
+
+void Controller::gameOver() { qDebug() << "Game Over"; }
