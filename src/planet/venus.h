@@ -5,7 +5,7 @@
 
 class Venus : public Planet {
 public:
-  Venus(QNode *parent = nullptr);
+  Venus(Scene *parent = nullptr);
 };
 
 #endif // VENUS_H

@@ -26,15 +26,19 @@ SOURCES += \
     src/cameracontroller.cpp \
     src/planet/earth.cpp \
     src/planet/planet.cpp \
-    src/planet/sun.cpp \
-    src/planet/moon.cpp \
-    src/planet/mercury.cpp \
-    src/planet/venus.cpp \
-    src/planet/mars.cpp \
     src/planet/jupiter.cpp \
-    src/planet/saturn.cpp \
+    src/planet/mars.cpp \
+    src/planet/mercury.cpp \
+    src/planet/moon.cpp \
     src/planet/neptune.cpp \
-    src/planet/uranus.cpp
+    src/planet/saturn.cpp \
+    src/planet/sun.cpp \    
+    src/planet/uranus.cpp \
+    src/planet/venus.cpp \    
+    src/controller.cpp \    
+    src/laserbullet.cpp \    
+    src/overlaywidget.cpp \
+
 
 RESOURCES += \
     assets.qrc \
@@ -58,15 +62,17 @@ HEADERS += \
     src/starfield.h \
     src/planet/earth.h \
     src/planet/planet.h \
-    src/planet/sun.h \
-    src/planet/moon.h \
-    src/planet/mercury.h \
-    src/planet/venus.h \
-    src/planet/mars.h \
     src/planet/jupiter.h \
-    src/planet/saturn.h \
+    src/planet/mars.h \
+    src/planet/mercury.h \
+    src/planet/moon.h \
     src/planet/neptune.h \
-    src/planet/uranus.h
-
-
+    src/planet/saturn.h \
+    src/planet/sun.h \
+    src/planet/uranus.h \
+    src/planet/venus.h \
+    src/boundingbox.h \        
+    src/controller.h \    
+    src/laserbullet.h \        
+    src/overlaywidget.h \                
 

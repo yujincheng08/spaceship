@@ -1,7 +1,7 @@
 #include "mars.h"
 #include <QtDebug>
 
-Mars::Mars(QNode *parent) : Planet(parent) {
+Mars::Mars(Scene *parent) : Planet(parent) {
   setNormal("qrc:/assets/img/2k_mars.jpg");
   setSpecular("qrc:/assets/img/2k_mars.jpg");
   setDiffuse("qrc:/assets/img/2k_mars.jpg");

@@ -5,7 +5,7 @@
 
 class Jupiter : public Planet {
 public:
-  Jupiter(QNode *parent = nullptr);
+  Jupiter(Scene *parent = nullptr);
 };
 
 #endif // JUPITER_H

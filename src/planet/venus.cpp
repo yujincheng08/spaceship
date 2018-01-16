@@ -1,7 +1,7 @@
 #include "venus.h"
 #include <QtDebug>
 
-Venus::Venus(QNode *parent) : Planet(parent) {
+Venus::Venus(Scene *parent) : Planet(parent) {
   setNormal("qrc:/assets/img/2k_venus_surface.jpg");
   setSpecular("qrc:/assets/img/2k_venus_surface.jpg");
   setDiffuse("qrc:/assets/img/2k_venus_surface.jpg");

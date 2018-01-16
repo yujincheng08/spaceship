@@ -16,6 +16,8 @@
 #include <Qt3DRender/QTexture>
 #include <Qt3DRender/QTextureImage>
 
+class Scene;
+
 class Component : public Qt3DCore::QEntity {
 public:
   using QMesh = Qt3DRender::QMesh;
@@ -28,18 +30,28 @@ public:
   using QPhongAlphaMaterial = Qt3DExtras::QPhongAlphaMaterial;
   using QPhongMaterial = Qt3DExtras::QPhongMaterial;
 
+private:
+  Scene *m_parentScene = nullptr;
+
 public:
   void setPosition(QVector3D translation);
+  virtual void explode() {}
+  Scene *parentScene() const { return m_parentScene; }
 
 protected:
   QTransform *transform = new QTransform;
+  QQuaternion initDir;
 
 public slots:
   virtual void frameAction(float dt) = 0;
 
 public:
-  Component(QNode *parent = nullptr);
+  Component(Scene *parent = nullptr);
   QVector3D getPostion() const;
+  QVector3D getToward() const;
+  QVector3D getUp() const;
+  void setInitialDirection(const QVector3D &toward, const QVector3D &up);
+  void setDirection(const QVector3D &toward, const QVector3D &up);
 };
 
 #endif // COMPONENT_H

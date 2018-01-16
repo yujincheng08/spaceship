@@ -5,7 +5,7 @@
 
 class Saturn : public Planet {
 public:
-  Saturn(QNode *parent = nullptr);
+  Saturn(Scene *parent = nullptr);
 };
 
 #endif // SATURN_H

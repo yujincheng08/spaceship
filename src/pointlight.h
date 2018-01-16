@@ -10,7 +10,7 @@ public:
 
 public:
   void frameAction(float) {}
-  PointLight(QNode *parent = nullptr);
+  PointLight(Scene *parent = nullptr);
 
 private:
   QPointLight *light = new QPointLight;

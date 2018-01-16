@@ -1,7 +1,7 @@
 #include "uranus.h"
 #include <QtDebug>
 
-Uranus::Uranus(QNode *parent) : Planet(parent) {
+Uranus::Uranus(Scene *parent) : Planet(parent) {
   setNormal("qrc:/assets/img/2k_uranus.jpg");
   setSpecular("qrc:/assets/img/2k_uranus.jpg");
   setDiffuse("qrc:/assets/img/2k_uranus.jpg");

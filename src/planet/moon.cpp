@@ -1,7 +1,7 @@
 #include "moon.h"
 #include <QtDebug>
 
-Moon::Moon(QNode *parent) : Planet(parent) {
+Moon::Moon(Scene *parent) : Planet(parent) {
   setNormal("qrc:/assets/img/2k_moon.jpg");
   setSpecular("qrc:/assets/img/2k_moon.jpg");
   setDiffuse("qrc:/assets/img/2k_moon.jpg");

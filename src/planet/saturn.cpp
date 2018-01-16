@@ -1,7 +1,7 @@
 #include "saturn.h"
 #include <QtDebug>
 
-Saturn::Saturn(QNode *parent) : Planet(parent) {
+Saturn::Saturn(Scene *parent) : Planet(parent) {
   setNormal("qrc:/assets/img/2k_saturn.jpg");
   setSpecular("qrc:/assets/img/2k_saturn.jpg");
   setDiffuse("qrc:/assets/img/2k_saturn.jpg");

@@ -1,6 +1,6 @@
 #include "starfield.h"
 
-Starfield::Starfield(QNode *parent) : Component(parent) {
+Starfield::Starfield(Scene *parent) : Component(parent) {
   mesh->setSource(QUrl("qrc:/assets/starfield.obj"));
   textureImage->setSource(QUrl("qrc:/assets/img/galaxy_starfield.jpg"));
   texture->addTextureImage(textureImage);

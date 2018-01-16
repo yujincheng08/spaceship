@@ -1,7 +1,7 @@
 #include "sun.h"
 #include <QtDebug>
 
-Sun::Sun(QNode *parent) : Planet(parent) {
+Sun::Sun(Scene *parent) : Planet(parent) {
   setNormal("qrc:/assets/img/2k_sun.jpg");
   setSpecular("qrc:/assets/img/2k_sun.jpg");
   setDiffuse("qrc:/assets/img/2k_sun.jpg");

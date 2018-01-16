@@ -5,7 +5,7 @@
 
 class Mars : public Planet {
 public:
-  Mars(QNode *parent = nullptr);
+  Mars(Scene *parent = nullptr);
 };
 
 #endif // MARS_H

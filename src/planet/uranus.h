@@ -5,7 +5,7 @@
 
 class Uranus : public Planet {
 public:
-  Uranus(QNode *parent = nullptr);
+  Uranus(Scene *parent = nullptr);
 };
 
 #endif // URANUS_H

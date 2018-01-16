@@ -5,6 +5,6 @@
 
 class Neptune : public Planet {
 public:
-  Neptune(QNode *parent = nullptr);
+  Neptune(Scene *parent = nullptr);
 };
 #endif // NEPTUNE_H

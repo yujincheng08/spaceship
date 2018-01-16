@@ -1,7 +1,7 @@
 #include "jupiter.h"
 #include <QtDebug>
 
-Jupiter::Jupiter(QNode *parent) : Planet(parent) {
+Jupiter::Jupiter(Scene *parent) : Planet(parent) {
   setNormal("qrc:/assets/img/2k_jupiter.jpg");
   setSpecular("qrc:/assets/img/2k_jupiter.jpg");
   setDiffuse("qrc:/assets/img/2k_jupiter.jpg");

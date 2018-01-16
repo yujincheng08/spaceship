@@ -1,7 +1,7 @@
 #include "mercury.h"
 #include <QtDebug>
 
-Mercury::Mercury(QNode *parent) : Planet(parent) {
+Mercury::Mercury(Scene *parent) : Planet(parent) {
   setNormal("qrc:/assets/img/2k_mercury.jpg");
   setSpecular("qrc:/assets/img/2k_mercury.jpg");
   setDiffuse("qrc:/assets/img/2k_mercury.jpg");

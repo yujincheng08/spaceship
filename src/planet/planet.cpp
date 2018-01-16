@@ -1,6 +1,6 @@
 #include "planet.h"
 
-Planet::Planet(QNode *parent) : Component(parent) {
+Planet::Planet(Scene *parent) : Component(parent) {
   setRings(64);
   setSlices(64);
   diffuseTexture->addTextureImage(diffuseImage);
@@ -15,10 +15,10 @@ Planet::Planet(QNode *parent) : Component(parent) {
   addComponent(material);
 }
 
-void Planet::frameAction(float dt) {}
+void Planet::frameAction(float dt) { Q_UNUSED(dt) }
 
 void Planet::orbit(Planet *planet) {
-  const qreal pi = 3.1415926;
+  const qreal pi = M_PI;
   qreal alpha = getAngle();
   alpha = alpha + getRotateSpeed();
   if (alpha >= 360)

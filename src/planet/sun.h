@@ -5,7 +5,7 @@
 
 class Sun : public Planet {
 public:
-  Sun(QNode *parent = nullptr);
+  Sun(Scene *parent = nullptr);
 };
 
 #endif // SUN_H

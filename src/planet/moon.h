@@ -5,7 +5,7 @@
 
 class Moon : public Planet {
 public:
-  Moon(QNode *parent = nullptr);
+  Moon(Scene *parent = nullptr);
 };
 
 #endif // MOON_H

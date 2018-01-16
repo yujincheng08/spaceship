@@ -13,21 +13,36 @@ inline float zoomDistance(QVector3D firstPoint, QVector3D secondPoint) {
   return (secondPoint - firstPoint).lengthSquared();
 }
 
-void CameraController::setTraceTarget(SpaceShip *target) {
-  this->target = target;
-}
-
 void CameraController::setCursorLock(bool lock) {
+  auto root = parentScene();
   if (lock) {
     QRect geometry = root->geometry();
     int cx = geometry.x() + geometry.width() / 2,
         cy = geometry.y() + geometry.height() / 2;
     QCursor::setPos(cx, cy);
-  }
+    if (root)
+      root->setCursor(Qt::BlankCursor);
+  } else if (root)
+    root->setCursor(Qt::ArrowCursor);
   cursorLock = lock;
 }
 
-bool CameraController::getCursorLock() { return cursorLock; }
+QVector3D CameraController::getToward() {
+  if (camera == nullptr)
+    return {0, 0, 0};
+  else
+    return (camera->viewCenter() - camera->position()).normalized();
+}
+
+void CameraController::zoom(const bool &direction) {
+  QVector3D dis = posTrans - ctrTrans;
+  float dist = dis.length();
+  if (!direction && dist > 9)
+    dist -= 0.5;
+  if (direction && dist < 40)
+    dist += 0.5;
+  posTrans = ctrTrans + dis.normalized() * dist;
+}
 
 QVector3D CameraController::TransPosition(const QVector3D &up,
                                           const QVector3D &twd,
@@ -60,37 +75,52 @@ QVector3D CameraController::getTransPosition(const QVector3D &up,
 }
 
 void CameraController::frameAction(float dt) {
-  Qt3DRender::QCamera *theCamera = camera();
-  if (theCamera == nullptr)
+  if (isRelease) {
+    camera->setPosition(
+        (camera->position() - camera->viewCenter()).normalized() *
+            ((camera->position() - camera->viewCenter()).length() + dt) +
+        camera->viewCenter());
+  }
+
+  if (camera == nullptr)
     return;
 
   // trace the spaceship
   if (target == nullptr)
     return;
-  QVector3D targetUp = target->getUp();
-  QVector3D targetPos = target->getPostion();
-  QVector3D targetTwd = target->getToward();
+  auto targetUp = target->getUp();
+  auto targetPos = target->getPostion();
+  auto targetTwd = target->getToward();
+  auto root = parentScene();
 
-  theCamera->setPosition(
-      TransPosition(targetUp, targetTwd, targetPos, posTrans));
-  theCamera->setViewCenter(
+  camera->setPosition(TransPosition(targetUp, targetTwd, targetPos, posTrans));
+  camera->setViewCenter(
       TransPosition(targetUp, targetTwd, targetPos, ctrTrans));
-  theCamera->setUpVector(targetUp);
+  camera->setUpVector(targetUp);
 
   // player rotate the camera
   if (!cursorLock)
     return;
-  if (root == nullptr)
+  if (root && !root->isActive()) {
+    isActived = false;
     return;
-  QPoint cursor = root->cursor().pos();
+  }
   QRect geometry = root->geometry();
   int cx = geometry.x() + geometry.width() / 2,
       cy = geometry.y() + geometry.height() / 2;
+  if (!isActived) {
+    QCursor::setPos(cx, cy);
+  }
+  isActived = true;
+  QPoint cursor = root->cursor().pos();
   int rx = cursor.x() - cx, ry = cursor.y() - cy;
   QCursor::setPos(cx, cy);
 
-  theCamera->panAboutViewCenter((-rx * lookSpeed()) * dt, targetUp);
-  theCamera->tiltAboutViewCenter((ry * lookSpeed()) * dt);
+  camera->panAboutViewCenter(-rx * dt * 2, targetUp);
+
+  if (!(posTrans.y() < 0 && ry < 0) &&
+      !(posTrans.y() > posTrans.length() / 1.414 && ry > 0))
+    camera->tiltAboutViewCenter(ry * dt * 2);
   posTrans =
-      getTransPosition(targetUp, targetTwd, targetPos, theCamera->position());
+      getTransPosition(targetUp, targetTwd, targetPos, camera->position());
 }

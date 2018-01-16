@@ -1,7 +1,7 @@
 #include "neptune.h"
 #include <QtDebug>
 
-Neptune::Neptune(QNode *parent) : Planet(parent) {
+Neptune::Neptune(Scene *parent) : Planet(parent) {
   setNormal("qrc:/assets/img/2k_neptune.jpg");
   setSpecular("qrc:/assets/img/2k_neptune.jpg");
   setDiffuse("qrc:/assets/img/2k_neptune.jpg");
