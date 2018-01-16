@@ -2,7 +2,9 @@
 #include <QtDebug>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
+  initInfoSurface();
   initScene();
+  scene->addObserver(infoSurface);
   setGeometry(8, 30, 1360, 768);
   setCentralWidget(container);
   container->setFocus();
@@ -21,3 +23,5 @@ void MainWindow::initScene(const QColor &clearColor) {
   container->setMinimumSize(QSize(1360, 768));
   container->setMaximumSize(scene->screen()->size());
 }
+
+void MainWindow::initInfoSurface() { infoSurface->setBackgroundWidget(this); }

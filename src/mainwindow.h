@@ -3,6 +3,7 @@
 
 #include "component.h"
 #include "controller.h"
+#include "overlaywidget.h"
 #include <QBasicTimer>
 #include <QVector>
 #include <Qt3DExtras>
@@ -21,6 +22,7 @@ private:
   Scene *scene = controller->getScene();
 
   QWidget *container = QWidget::createWindowContainer(scene, this);
+  OverlayWidget *infoSurface = new OverlayWidget;
 
 public:
   MainWindow(QWidget *parent = nullptr);
@@ -49,6 +51,7 @@ protected:
 
 private:
   void initScene(const QColor &clearColor = QColor(QRgb(0x4d4d4f)));
+  void initInfoSurface();
 
   int isMousePresseed;
   double mouse_x, mouse_y;

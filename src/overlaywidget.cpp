@@ -1,7 +1,5 @@
 #include "overlaywidget.h"
-#include <QHBoxLayout>
 #include <QTime>
-#include <QVBoxLayout>
 #include <QWindowStateChangeEvent>
 #define WAIT_TIME_TO_MAXIMIZE_OVERLAY_MS 300
 
@@ -9,12 +7,6 @@ OverlayWidget::OverlayWidget(QWidget *parent) : QWidget(parent, Qt::SubWindow) {
   setWindowFlags(windowFlags() | Qt::SubWindow);
   setWindowFlags(windowFlags() | Qt::WindowStaysOnTopHint);
   setTransparent(true);
-  // setTransparent(false);
-
-  QPushButton *m_modelButton = new QPushButton("Load model");
-  QHBoxLayout *layout = new QHBoxLayout;
-  layout->addWidget(m_modelButton);
-  this->setLayout(layout);
 }
 
 OverlayWidget::~OverlayWidget() {}
@@ -25,7 +17,6 @@ void OverlayWidget::setBackgroundWidget(QWidget *widget) {
 }
 
 void OverlayWidget::show() {
-
   setGeometry(m_pBackgroundWidget->geometry());
   QWidget::show();
 }
@@ -47,11 +38,47 @@ void OverlayWidget::setOpacity(const float &opacity) {
   opacityEffect->setOpacity(opacity);
 }
 
+void OverlayWidget::frameAction(float dt) {
+  if (states == START)
+    startOpacity += dt;
+  else
+    startOpacity -= dt;
+  if (states == MENU)
+    menuOpacity += dt;
+  else
+    menuOpacity -= dt;
+  if (states == GAMING)
+    gamingOpacity += dt;
+  else
+    gamingOpacity -= dt;
+  if (states == END)
+    endOpacity += dt;
+  else
+    endOpacity -= dt;
+  if (startOpacity < 0)
+    startOpacity = 0;
+  if (startOpacity > 1)
+    startOpacity = 1;
+  if (menuOpacity < 0)
+    menuOpacity = 0;
+  if (menuOpacity > 1)
+    menuOpacity = 1;
+  if (gamingOpacity < 0)
+    gamingOpacity = 0;
+  if (gamingOpacity > 1)
+    gamingOpacity = 1;
+  if (endOpacity < 0)
+    endOpacity = 0;
+  if (endOpacity > 1)
+    endOpacity = 1;
+  repaint();
+}
+
 /** receives the events from the event dispatcher before the background widget,
-*if returns true the background widget will not receive the events
-*	For backgreound to delegate event handling to this we have to call the
-*inherited qobject function ==> background->installEventFilter(overlay);
-*/
+ *if returns true the background widget will not receive the events
+ *	For backgreound to delegate event handling to this we have to call the
+ *inherited qobject function ==> background->installEventFilter(overlay);
+ */
 bool OverlayWidget::eventFilter(QObject *obj, QEvent *event) {
   if (obj == m_pBackgroundWidget) {
     if (event->type() == QEvent::Show)
@@ -104,4 +131,26 @@ void OverlayWidget::changeEvent(QEvent *event) {
     else
       this->show();
   }
+}
+
+void OverlayWidget::paintEvent(QPaintEvent *) {
+  QPainter pter(this);
+  pter.setPen(Qt::white);
+
+  // paint start
+  pter.setFont(QFont("Arial", 30, 5));
+  pter.setOpacity(startOpacity);
+  pter.drawText(0, this->height() / 2, this->width(), 30, Qt::AlignCenter,
+                "Press Enter to Start Game...");
+
+  // paint menu
+
+  // paint gaming
+  pter.setOpacity(gamingOpacity);
+  pter.drawLine(this->width() / 2 - shootSize, this->height() / 2,
+                this->width() / 2 + shootSize, this->height() / 2);
+  pter.drawLine(this->width() / 2, this->height() / 2 - shootSize,
+                this->width() / 2, this->height() / 2 + shootSize);
+
+  // paint end
 }

@@ -27,7 +27,8 @@ SOURCES += \
     src/planet/earth.cpp \
     src/planet/planet.cpp \
     src/laserbullet.cpp \
-    src/controller.cpp
+    src/controller.cpp \
+    src/overlaywidget.cpp
 
 RESOURCES += \
     assets.qrc \
@@ -53,7 +54,8 @@ HEADERS += \
     src/planet/planet.h \
     src/laserbullet.h \
     src/controller.h \
-    src/boundingbox.h
+    src/boundingbox.h \
+    src/overlaywidget.h
 
 
 

@@ -3,6 +3,7 @@
 
 #include "directionallight.h"
 #include "laserbullet.h"
+#include "overlaywidget.h"
 #include "pointlight.h"
 #include <QNode>
 #include <Qt3DCore/QEntity>
@@ -13,6 +14,8 @@
 #include <planet/earth.h>
 #include <spaceship.h>
 #include <starfield.h>
+
+class OverlayWidget;
 
 class Scene : public Qt3DExtras::Qt3DWindow {
 public:
@@ -31,6 +34,7 @@ private:
   // PointLight *light = new PointLight(root);
   QFrameAction *frame = new QFrameAction(root);
   Starfield *starfield = new Starfield(root);
+  OverlayWidget *ow;
 
   void keyPressEvent(QKeyEvent *e) override;
   void keyReleaseEvent(QKeyEvent *e) override;
@@ -49,6 +53,11 @@ public:
   void spaceshipExplode(SpaceShip *spaceship);
 
   void removeLaserBullet(LaserBullet *bullet);
+
+  void addObserver(OverlayWidget *ow) {
+    this->ow = ow;
+    connect(frame, &QFrameAction::triggered, ow, &OverlayWidget::frameAction);
+  }
 
 private:
   void initCamera();

@@ -19,7 +19,7 @@ public:
   QTexture2D *texture = new QTexture2D;
 
   friend class InfoSurface;
-  SpaceShip(Scene *parent = nullptr);
+  SpaceShip(QNode *parent = nullptr, Scene *root = nullptr);
 
   void startTurnLeft() { isTurnLeft = true; }
   void startTurnRight() { isTurnRight = true; }
@@ -86,8 +86,8 @@ private:
   void initMaterials();
   void checkTailFire(const int &direct);
   float noise(const float &orgFLT);
-  void boundingBox(const QString &entityName);
   float noise(const float &low, const float &high);
+  void boundingBox(const QString &entityName);
 private slots:
   void loadingStatusChanged(QSceneLoader::Status status);
 };
