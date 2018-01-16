@@ -56,7 +56,10 @@ public:
     return QList<BoundingSphere>();
   }
 
-  virtual ~SpaceShip() { removeComponent(sceneLoader); }
+  virtual ~SpaceShip() {
+    qDebug() << "D";
+    removeComponent(sceneLoader);
+  }
 
 signals:
   void triggerBullet(QVector3D pos, QVector3D velocity);
