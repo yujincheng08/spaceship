@@ -50,6 +50,7 @@ bool Controller::detectCollision() {
 void Controller::frameAction(float) {
   if (detectCollision())
     spaceship->explode();
+  infoSurface->setSpeed(spaceship->getSpeed());
 }
 
 bool Controller::boxCollision(const BoundingBox &a, const BoundingBox &b) {
