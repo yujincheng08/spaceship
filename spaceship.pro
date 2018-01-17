@@ -1,4 +1,4 @@
-QT += widgets quickwidgets 3dcore 3drender 3dinput 3dquick 3dlogic qml quick 3dquickextras gamepad datavisualization
+QT += widgets quickwidgets 3dcore 3drender 3dinput 3dquick 3dlogic qml quick 3dquickextras gamepad datavisualization opengl core gui
 CONFIG += c++11
 
 # The following define makes your compiler emit warnings if you use
@@ -6,6 +6,7 @@ CONFIG += c++11
 # depend on your compiler). Please consult the documentation of the
 # deprecated API in order to know how to port your code away from it.
 DEFINES += QT_DEPRECATED_WARNINGS
+DEFINES -= UNICODE
 
 # You can also make your code fail to compile if you use deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -14,30 +15,65 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     src/main.cpp \
-    src/mainwindow.cpp
+    src/mainwindow.cpp \
+    src/component.cpp \
+    src/spaceship.cpp \
+    src/scene.cpp \
+    src/light.cpp \
+    src/directionallight.cpp \
+    src/pointlight.cpp \
+    src/starfield.cpp \
+    src/cameracontroller.cpp \
+    src/planet/earth.cpp \
+    src/planet/planet.cpp \
+    src/planet/jupiter.cpp \
+    src/planet/mars.cpp \
+    src/planet/mercury.cpp \
+    src/planet/moon.cpp \
+    src/planet/neptune.cpp \
+    src/planet/saturn.cpp \
+    src/planet/sun.cpp \    
+    src/planet/uranus.cpp \
+    src/planet/venus.cpp \    
+    src/controller.cpp \    
+    src/laserbullet.cpp \    
+    src/overlaywidget.cpp \
+
 
 RESOURCES += \
     assets.qrc \
-    qml.qrc \
+    shaderprogram.qrc
 
 INCLUDEPATH += src
-
-OTHER_FILES += \
-    qml/main.qml
-
-# Additional import path used to resolve QML modules in Qt Creator's code model
-QML_IMPORT_PATH =
-
-# Additional import path used to resolve QML modules just for Qt Quick Designer
-QML_DESIGNER_IMPORT_PATH =
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-DISTFILES += \
-    qml/CameraController.qml
-
 HEADERS += \
-    src/mainwindow.h
+    src/mainwindow.h \
+    src/component.h \
+    src/spaceship.h \
+    src/scene.h \
+    src/cameracontroller.h \
+    src/light.h \
+    src/directionallight.h \
+    src/pointlight.h \
+    src/starfield.h \
+    src/planet/earth.h \
+    src/planet/planet.h \
+    src/planet/jupiter.h \
+    src/planet/mars.h \
+    src/planet/mercury.h \
+    src/planet/moon.h \
+    src/planet/neptune.h \
+    src/planet/saturn.h \
+    src/planet/sun.h \
+    src/planet/uranus.h \
+    src/planet/venus.h \
+    src/controller.h \    
+    src/laserbullet.h \        
+    src/overlaywidget.h \                
+    src/bounding.h
+

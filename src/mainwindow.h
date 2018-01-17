@@ -1,28 +1,58 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QMainWindow>
-#include <QQuickWidget>
-#include <QMenu>
-#include <QAction>
+#include "component.h"
+#include "controller.h"
+#include "overlaywidget.h"
+#include <QBasicTimer>
+#include <QVector>
 
-class MainWindow : public QMainWindow
-{
-    Q_OBJECT
-    QQuickWidget *quickWidget = new QQuickWidget(this);
-    QMenu *fileMenu = new QMenu(tr("File"), this);
-    QMenu *aboutMenu = new QMenu(tr("About"), this);
-    QAction *exitAction = new QAction(tr("Exit"), this);
-    QAction *aboutQtAction = new QAction(tr("About Qt"), this);
+class MainWindow : public QMainWindow {
+  friend class InfoSurface;
 
-    void createWidgets();
-    void createConnections();
 public:
-    explicit MainWindow(QWidget *parent = nullptr);
+  using Qt3DWindow = Qt3DExtras::Qt3DWindow;
 
-signals:
+private:
+  Controller *controller = new Controller;
+  Scene *scene = controller->getScene();
 
-public slots:
+  QWidget *container = QWidget::createWindowContainer(scene, this);
+  OverlayWidget *infoSurface = controller->getInfoSurface();
+
+public:
+  MainWindow(QWidget *parent = nullptr);
+  virtual ~MainWindow() final;
+
+protected:
+  //  void initParams();
+  //  void initWidget();
+  //  void initElement();
+  //  void initTimer();
+  //  void initLight();
+  //  void loadTextures();
+  //  void initializeGL();
+  // void paintGL() override;
+  // void resizeGL(int width, int height) override;
+  //  void paintEvent(QPaintEvent *e);
+
+  //  //  void mousePressEvent(QMouseEvent *e) override;
+  //  //  void mouseMoveEvent(QMouseEvent *e) override;
+  //  //  void mouseReleaseEvent(QMouseEvent *e) override;
+  //
+  //  void timerEvent(QTimerEvent *e) override;
+
+  //  void closeEvent(QCloseEvent *e) override;
+
+private:
+  void initScene(const QColor &clearColor = QColor(QRgb(0x4d4d4f)));
+  void initInfoSurface();
+
+  int isMousePresseed;
+  double mouse_x, mouse_y;
+
+  QBasicTimer timer;
+  QTimer *cursorTimer;
 };
 
 #endif // MAINWINDOW_H

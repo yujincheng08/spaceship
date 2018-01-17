@@ -1,27 +1,30 @@
 #include "mainwindow.h"
-#include <QMenuBar>
-#include <QApplication>
+#include <Qt3DExtras/QForwardRenderer>
+#include <QtDebug>
 
-MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
-{
-    createWidgets();
-    setCentralWidget(quickWidget);
-    createConnections();
+MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
+  initInfoSurface();
+  initScene();
+  //  scene->addObserver(infoSurface);
+  setGeometry(8, 30, 1360, 768);
+  setCentralWidget(container);
+  container->setFocus();
+  // overlayWidget->setBackgroundWidget(container);
 }
 
-void MainWindow::createWidgets()
-{
-    quickWidget->setSource(QUrl("qrc:/qml/main.qml"));
-    quickWidget->setMinimumSize(300, 300);
-    quickWidget->setResizeMode(QQuickWidget::SizeRootObjectToView);
-    fileMenu->addAction(exitAction);
-    aboutMenu->addAction(aboutQtAction);
-    menuBar()->addMenu(fileMenu);
-    menuBar()->addMenu(aboutMenu);
+MainWindow::~MainWindow() {
+  // delete overlayWidget;
+  //  makeCurrent();
+  //  for (int i = 0; i < components.length(); i++)
+  //    delete components.at(i);
+  //  delete cursorTimer;
+  //  doneCurrent();
 }
 
-void MainWindow::createConnections()
-{
-    connect(exitAction, &QAction::triggered, qApp, &QApplication::exit);
-    connect(aboutQtAction, &QAction::triggered, qApp, &QApplication::aboutQt);
+void MainWindow::initScene(const QColor &clearColor) {
+  scene->defaultFrameGraph()->setClearColor(clearColor);
+  container->setMinimumSize(QSize(1360, 768));
+  container->setMaximumSize(scene->screen()->size());
 }
+
+void MainWindow::initInfoSurface() { infoSurface->setBackgroundWidget(this); }

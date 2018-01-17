@@ -1,5 +1,19 @@
 <RCC>
     <qresource prefix="/">
-        <file>assets/SpaceShip.dae</file>
+        <file>assets/img/earthmap2k.jpg</file>
+        <file>assets/spaceship.obj</file>
+        <file>assets/img/galaxy_starfield.jpg</file>
+        <file>assets/starfield.obj</file>
+        <file>assets/img/earthnormal2k.jpg</file>
+        <file>assets/img/earthspec2k.jpg</file>
+        <file>assets/img/2k_moon.jpg</file>
+        <file>assets/img/2k_sun.jpg</file>
+        <file>assets/img/2k_jupiter.jpg</file>
+        <file>assets/img/2k_mars.jpg</file>
+        <file>assets/img/2k_mercury.jpg</file>
+        <file>assets/img/2k_saturn.jpg</file>
+        <file>assets/img/2k_venus_surface.jpg</file>
+        <file>assets/img/2k_neptune.jpg</file>
+        <file>assets/img/2k_uranus.jpg</file>
     </qresource>
 </RCC>

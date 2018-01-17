@@ -26,11 +26,10 @@ Item {
                 upVector: Qt.vector3d( 0.0, 1.0, 0.0 )
                 viewCenter: Qt.vector3d( 0.0, 0.0, 0.0 )
             }
-            Entity
-            {
+            Entity {
                 SceneLoader {
                     id: sceneLoader
-                    source: "qrc:/assets/SpaceShip.dae"
+                    source: "qrc:/assets/fj.obj"
                     onStatusChanged: {
                         console.log("SceneLoader status: " + status);
                         if (status === SceneLoader.Ready) {
@@ -39,8 +38,20 @@ Item {
                         }
                     }
                 }
+
                 components: [sceneLoader]
                 InputSettings { }
+            }
+
+            Transform {
+                id: sphereTransform
+                property real userAngle: 0.0
+                matrix: {
+                    var m = Qt.matrix4x4();
+                    m.rotate(userAngle, Qt.vector3d(0, 1, 0))
+                    m.translate(Qt.vector3d(20, 0, 0));
+                    return m;
+                }
             }
 
             CameraController {
@@ -69,4 +80,3 @@ Item {
         }
     }
 }
-
